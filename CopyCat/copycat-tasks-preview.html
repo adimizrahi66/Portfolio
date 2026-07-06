@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CopyCat — Tasks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-50:#ECEDFE; --green-100:#DDDFFB; --green-500:#6C76F4; --green-600:#5C67F2; --green-700:#4A55E0;
+  --blue-50:#EFF8FF; --blue-100:#D1E9FF; --blue-500:#2E90FA; --blue-600:#1570EF;
+  --amber-50:#FFFAEB; --amber-100:#FEF0C7; --amber-400:#FDB022; --amber-500:#F79009; --amber-600:#DC6803;
+  --red-500:#F04438;
+  --white:#FFFFFF; --gray-50:#F9FAFB; --gray-100:#F2F4F7; --gray-200:#EAECF0; --gray-300:#D0D5DD;
+  --gray-500:#667085; --gray-700:#344054; --gray-900:#101828; --navy-900:#1A2233;
+  --pink-bg:#FBCFE8; --pink-text:#9D174D;
+  --purple-bg:#DDD6FE; --purple-text:#5B21B6;
+  --yellow-bg:#FEF08A; --yellow-text:#854D0E;
+  --bluechip-bg:#BFDBFE; --bluechip-text:#1E40AF;
+  --redchip-bg:#FECACA; --redchip-text:#991B1B;
+  --orangechip-bg:#FED7AA; --orangechip-text:#9A3412;
+  --greenchip-bg:#BBF7D0; --greenchip-text:#166534;
+  --cyanchip-bg:#A5F3FC; --cyanchip-text:#155E75;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--gray-100);color:var(--gray-900);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+.app{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:240px;flex-shrink:0;background:var(--navy-900);color:#C5CBD6;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:20px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.brand .logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--green-500),var(--green-700));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
+.brand .name{color:#fff;font-weight:700;font-size:16px;letter-spacing:-.2px}
+.brand .sub{font-size:11px;color:#7E8799}
+.nav{padding:14px 12px;flex:1;overflow:auto}
+.nav .group{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#6B7488;padding:14px 10px 6px}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:8px;color:#C5CBD6;text-decoration:none;font-weight:500;font-size:13.5px;margin-bottom:2px}
+.nav a svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav a.active{background:var(--green-600);color:#fff}
+.nav a .badge{margin-left:auto;background:rgba(255,255,255,.16);color:#fff;font-size:11px;font-weight:600;padding:1px 7px;border-radius:20px}
+.sidebar .me{display:flex;align-items:center;gap:10px;padding:14px 16px;border-top:1px solid rgba(255,255,255,.08)}
+.sidebar .me .av{width:30px;height:30px;border-radius:50%;background:var(--green-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+.sidebar .me .txt{font-size:12.5px;color:#fff;font-weight:600}
+.sidebar .me .txt span{display:block;color:#7E8799;font-weight:400;font-size:11px}
+
+/* Main */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{background:var(--white);border-bottom:1px solid var(--gray-200);padding:16px 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:30}
+.topbar h1{font-size:20px;font-weight:700;letter-spacing:-.3px}
+.topbar .crumb{color:var(--gray-500);font-size:13px}
+.topbar .search{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--gray-100);border:1px solid var(--gray-200);border-radius:9px;padding:8px 12px;width:260px;color:var(--gray-500)}
+.topbar .search input{border:0;background:transparent;outline:0;font:inherit;width:100%;color:var(--gray-900)}
+.topbar .search input::placeholder{color:#98A2B3}
+.btn{display:inline-flex;align-items:center;gap:7px;border:0;border-radius:9px;font:inherit;font-weight:600;font-size:13.5px;padding:9px 15px;cursor:pointer;white-space:nowrap}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-primary{background:var(--green-600);color:#fff}
+.btn-primary:hover{background:var(--green-700)}
+.btn-ghost{background:var(--white);color:var(--gray-700);border:1px solid var(--gray-300)}
+.btn-ghost:hover{background:var(--gray-50)}
+
+.content{padding:24px 28px 60px}
+.page-title{display:flex;align-items:center;gap:10px;margin:2px 0 16px}
+.page-title h2{font-size:17px;font-weight:700;color:var(--gray-900)}
+.page-title .spacer{flex:1}
+
+/* Board */
+.board{background:var(--white);border:1px solid var(--gray-200);border-radius:14px;overflow:hidden}
+.board-head{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--gray-200);flex-wrap:wrap}
+.board-head .title{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.board-head .title .sq{width:14px;height:14px;border-radius:4px;background:var(--blue-500)}
+.tabs{display:flex;gap:2px;margin-left:8px}
+.tabs button{font:inherit;font-size:12.5px;color:var(--gray-500);background:transparent;border:0;cursor:pointer;padding:6px 12px;border-radius:7px;font-weight:500}
+.tabs button:hover{background:var(--gray-100);color:var(--gray-900)}
+.tabs button.active{background:var(--green-50);color:var(--green-700);font-weight:600}
+.board-head .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);display:flex;align-items:center;justify-content:center;color:var(--gray-500);cursor:pointer}
+.icon-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+
+.panel{display:none}
+.panel.active{display:block}
+
+.scroll-hint{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--gray-500);padding:8px 18px;background:var(--gray-50);border-bottom:1px solid var(--gray-200)}
+.scroll-hint svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* Table */
+.tbl-scroll{overflow-x:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:2400px}
+thead th{position:sticky;top:0;background:var(--gray-50);text-align:left;font-size:11px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.4px;padding:10px 24px;border-bottom:1px solid var(--gray-200);white-space:nowrap;z-index:5}
+tbody td{padding:13px 24px;border-bottom:1px solid var(--gray-100);font-size:13px;color:var(--gray-700);white-space:nowrap;vertical-align:middle;background:var(--white)}
+tbody tr:hover td{background:var(--green-50)}
+
+/* sticky Name (left) */
+th.sticky-l,td.sticky-l{position:sticky;left:0;z-index:6;box-shadow:1px 0 0 var(--gray-200)}
+thead th.sticky-l{z-index:8}
+/* sticky Actions (right) */
+th.sticky-r,td.sticky-r{position:sticky;right:0;z-index:6;box-shadow:-1px 0 0 var(--gray-200)}
+thead th.sticky-r{z-index:8}
+
+.task-name{display:flex;align-items:center;gap:10px;min-width:280px}
+.task-name .t{font-weight:600;color:var(--gray-900)}
+.task-name .t small{display:block;font-weight:400;color:var(--gray-500);font-size:11.5px}
+
+/* rounded checkbox */
+.rcheck{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.8px solid var(--gray-300);border-radius:50%;cursor:pointer;flex-shrink:0;position:relative;transition:.12s}
+.rcheck:hover{border-color:var(--green-500)}
+.rcheck:checked{background:var(--green-600);border-color:var(--green-600)}
+.rcheck:checked::after{content:"";position:absolute;left:5px;top:2px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+
+.owner{display:flex;align-items:center;gap:8px}
+.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.chip .cd{width:6px;height:6px;border-radius:50%}
+.muted{color:var(--gray-500)}
+.link{color:var(--bluechip-text);text-decoration:none}
+.link:hover{text-decoration:underline}
+.trunc{max-width:220px;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:middle}
+.code{font-variant-numeric:tabular-nums;color:var(--gray-700)}
+
+/* row actions */
+.row-actions{display:flex;gap:6px;justify-content:flex-end}
+.act{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:11.5px;font-weight:600;border-radius:7px;padding:5px 9px;cursor:pointer;white-space:nowrap}
+.act svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.act-article{background:var(--white);color:var(--gray-700);border:1px solid var(--gray-300)}
+.act-article:hover{background:var(--gray-50)}
+.act-creative{background:var(--green-50);color:var(--green-700);border:1px solid var(--green-100)}
+.act-creative:hover{background:var(--green-100)}
+.act-created{background:var(--green-600);color:#fff;border:1px solid var(--green-600)}
+.act-created:hover{background:var(--green-700)}
+.act-created svg{stroke:#fff}
+.act-created .pen{margin-left:4px;opacity:.9}
+
+.grouprow td{background:var(--white);padding:12px 14px;font-weight:700;font-size:13px;color:var(--gray-900);border-bottom:1px solid var(--gray-200)}
+.grouprow .gtag{display:inline-flex;align-items:center;gap:8px}
+.grouprow .gtag .bar{width:4px;height:16px;border-radius:3px;background:var(--green-500)}
+.grouprow .count{color:var(--gray-500);font-weight:500;font-size:12px;margin-left:6px}
+
+.foot{padding:12px 18px;border-top:1px solid var(--gray-200);font-size:12.5px;color:var(--gray-500);display:flex;align-items:center;gap:8px}
+.foot a{color:var(--green-700);font-weight:600;text-decoration:none}
+
+/* ===== Dashboard panel ===== */
+.dash{padding:22px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.stat{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:14px;padding:18px 20px}
+.stat .label{font-size:12.5px;color:var(--gray-500);font-weight:500;display:flex;align-items:center;gap:8px}
+.stat .dot{width:8px;height:8px;border-radius:50%}
+.stat .num{font-size:34px;font-weight:800;letter-spacing:-1px;margin-top:6px;line-height:1}
+.stat .meta{font-size:12px;color:var(--gray-500);margin-top:8px}
+.stat .up{color:var(--green-600);font-weight:600}
+.charts{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px}
+.card{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:14px;padding:18px 20px}
+.card .ch-title{font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:4px}
+.card .ch-sub{font-size:11.5px;color:var(--gray-500);margin-bottom:16px}
+.legend{display:flex;gap:14px;margin-bottom:14px;font-size:11.5px;color:var(--gray-500)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.gbars{display:flex;align-items:flex-end;gap:18px;height:150px;padding-top:8px}
+.gbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;justify-content:flex-end;height:100%}
+.gbar .cols{display:flex;align-items:flex-end;gap:5px;height:100%;width:100%;justify-content:center}
+.gbar .col{width:18px;border-radius:5px 5px 0 0;position:relative}
+.gbar .col .v{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:600;color:var(--gray-700);white-space:nowrap}
+.gbar .name{font-size:11px;color:var(--gray-500);text-align:center}
+.sbars{display:flex;align-items:flex-end;gap:16px;height:150px;padding-top:18px}
+.sbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;justify-content:flex-end;height:100%}
+.sbar .b{width:34px;background:var(--purple-text);border-radius:6px 6px 0 0;position:relative;opacity:.85}
+.sbar .b .v{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;color:var(--gray-700)}
+.sbar .name{font-size:11px;color:var(--gray-500);text-align:center;line-height:1.2}
+.donut-wrap{display:flex;align-items:center;gap:18px}
+.donut{width:130px;height:130px;border-radius:50%;flex-shrink:0;
+  background:conic-gradient(var(--purple-text) 0 32%,var(--cyanchip-text) 32% 55%,var(--pink-text) 55% 72%,var(--bluechip-text) 72% 85%,var(--orangechip-text) 85% 94%,var(--greenchip-text) 94% 100%);position:relative}
+.donut::after{content:"";position:absolute;inset:26px;background:var(--gray-50);border-radius:50%}
+.donut .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1}
+.donut .center b{font-size:20px;font-weight:800}
+.donut .center small{font-size:10px;color:var(--gray-500)}
+.dlegend{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--gray-700)}
+.dlegend span{display:inline-flex;align-items:center;gap:8px}
+.dlegend i{width:10px;height:10px;border-radius:3px}
+.dlegend b{margin-left:auto;color:var(--gray-500);font-weight:600}
+
+/* ===== Create Article modal ===== */
+.overlay{position:fixed;inset:0;background:rgba(16,24,40,.55);backdrop-filter:blur(2px);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:40px 16px;overflow:auto}
+.overlay.open{display:flex}
+.modal{background:var(--white);width:100%;max-width:920px;border-radius:18px;box-shadow:0 24px 60px rgba(16,24,40,.28);overflow:hidden;animation:pop .18s ease}
+@keyframes pop{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.m-head{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--gray-200);position:sticky;top:0;background:var(--white);z-index:2}
+.m-head .ai-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-50);color:var(--green-700);border:1px solid var(--green-100);font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:20px}
+.m-head .ai-badge svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.m-head .htxt{font-weight:700;font-size:15px}
+.m-head .spacer{flex:1}
+.m-close{width:34px;height:34px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-500);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.m-close:hover{background:var(--gray-50)}
+.m-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.m-body{padding:22px;max-height:calc(100vh - 200px);overflow:auto}
+.m-intro{font-size:12.5px;color:var(--gray-500);margin:-6px 0 20px;display:flex;align-items:center;gap:7px}
+.m-intro svg{width:15px;height:15px;stroke:var(--green-600);fill:none;stroke-width:2;flex-shrink:0}
+
+.fld{margin-bottom:20px}
+.fld-top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.fld-top label{font-size:11px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px}
+.fld-top .from{font-size:10.5px;font-weight:600;color:var(--purple-text);background:var(--purple-bg);padding:2px 8px;border-radius:20px}
+.fld-top .spacer{flex:1}
+.regen{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:11.5px;font-weight:600;color:var(--green-700);background:transparent;border:0;cursor:pointer;padding:3px 6px;border-radius:6px}
+.regen:hover{background:var(--green-50)}
+.regen svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;transition:transform .5s}
+.regen.spin svg{transform:rotate(360deg)}
+
+.inp,.ta{width:100%;font:inherit;font-size:14px;color:var(--gray-900);border:1px solid var(--gray-300);border-radius:10px;padding:11px 13px;background:var(--white);outline:none;resize:vertical}
+.inp:focus,.ta:focus{border-color:var(--green-500);box-shadow:0 0 0 3px var(--green-50)}
+select.inp{appearance:none;background:var(--white) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e") no-repeat right 12px center/18px;padding-right:40px;cursor:pointer}
+.ta{line-height:1.55}
+.ta.shimmer{background:linear-gradient(100deg,var(--gray-50) 30%,var(--green-50) 50%,var(--gray-50) 70%);background-size:200% 100%;animation:sh 1s linear infinite;color:transparent}
+@keyframes sh{from{background-position:200% 0}to{background-position:-200% 0}}
+
+.grid2{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}
+.banner{position:relative;border:1px solid var(--gray-200);border-radius:12px;height:210px;overflow:hidden;background:var(--gray-100);display:flex;align-items:center;justify-content:center}
+.banner .img{position:absolute;inset:0;background:linear-gradient(135deg,#6C76F4,#0891B2)}
+.banner .img .cap{position:absolute;left:16px;bottom:14px;color:#fff;font-weight:700;font-size:16px;max-width:80%;text-shadow:0 1px 6px rgba(0,0,0,.3)}
+.banner .ph{color:var(--gray-500);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.banner .ph svg{width:30px;height:30px;stroke:var(--gray-300);fill:none;stroke-width:1.6}
+.banner .tools{position:absolute;top:10px;right:10px;display:flex;gap:6px;z-index:2}
+.banner .tbtn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.92);border:1px solid var(--gray-200);color:var(--gray-700);font:inherit;font-size:11.5px;font-weight:600;border-radius:8px;padding:6px 9px;cursor:pointer}
+.banner .tbtn:hover{background:#fff}
+.banner .tbtn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.banner .load{position:absolute;inset:0;background:rgba(255,255,255,.75);display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;z-index:3;color:var(--green-700);font-size:12.5px;font-weight:600}
+.banner.loading .load{display:flex}
+.spinner{width:26px;height:26px;border:3px solid var(--green-100);border-top-color:var(--green-600);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.prompt-wrap{position:relative}
+.prompt-wrap .go{position:absolute;right:8px;bottom:8px;width:30px;height:30px;border-radius:8px;border:0;background:var(--green-600);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.prompt-wrap .go:hover{background:var(--green-700)}
+.prompt-wrap .go svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+
+.opts{display:flex;gap:8px;margin-top:10px}
+.opts button{font:inherit;font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:9px;border:1px solid var(--gray-300);background:var(--white);color:var(--gray-700);cursor:pointer}
+.opts button:hover{background:var(--gray-50)}
+.opts button.active{background:var(--green-600);color:#fff;border-color:var(--green-600)}
+
+.m-foot{display:flex;align-items:center;gap:12px;padding:16px 22px;border-top:1px solid var(--gray-200);position:sticky;bottom:0;background:var(--white)}
+.m-foot .note{font-size:12px;color:var(--gray-500);display:flex;align-items:center;gap:6px}
+.m-foot .note svg{width:14px;height:14px;stroke:var(--green-600);fill:none;stroke-width:2}
+.m-foot .spacer{flex:1}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">C</div>
+      <div>
+        <div class="name">CopyCat</div>
+        <div class="sub">Content CRM</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+      <a href="#" class="active"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Tasks<span class="badge">75</span></a>
+      <a href="#"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Articles</a>
+      <a href="#"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives</a>
+      <a href="#"><svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg>Storefronts</a>
+      <div class="group">Insights</div>
+      <a href="#"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Reports</a>
+      <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.3 1a7 7 0 0 0-1.7-1L14.5 2h-5l-.4 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.4L5 11a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.4 2.5h5l.4-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z"/></svg>Settings</a>
+    </nav>
+    <div class="me">
+      <div class="av">RF</div>
+      <div class="txt">Roundforest<span>subscr@roundforest.com</span></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <h1>Tasks</h1>
+      <div class="crumb">CRM · Facebook Creative Pipeline</div>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input placeholder="Search tasks, articles, owners…">
+      </div>
+      <button class="btn btn-ghost"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filter</button>
+      <button class="btn btn-primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New task</button>
+    </header>
+
+    <div class="content">
+      <div class="page-title">
+        <h2>Facebook Creative Pipeline</h2>
+        <div class="spacer"></div>
+      </div>
+
+      <div class="board">
+        <div class="board-head">
+          <div class="title"><span class="sq"></span>Board 1: Facebook Creative Pipeline</div>
+          <div class="tabs">
+            <button onclick="showTab('list',this)" class="active">Full List</button>
+            <button onclick="showTab('dash',this)">Dashboard</button>
+            <button onclick="showTab('list',this)">Kit List</button>
+            <button onclick="showTab('list',this)">Day List</button>
+          </div>
+          <div class="right">
+            <button class="icon-btn" title="Filter"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></button>
+            <button class="icon-btn" title="Sort"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+            <button class="btn btn-primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add task</button>
+          </div>
+        </div>
+
+        <!-- ===== FULL LIST PANEL ===== -->
+        <div id="panel-list" class="panel active">
+          <div class="scroll-hint">
+            <svg viewBox="0 0 24 24"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5"/></svg>
+            Scroll sideways to see all columns — Name and Actions stay pinned
+          </div>
+          <div class="tbl-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="sticky-l">Name</th>
+                  <th>Page title</th>
+                  <th>Storefront link</th>
+                  <th>PID</th>
+                  <th>Creatives ready?</th>
+                  <th>Old article PID</th>
+                  <th>Creative PID</th>
+                  <th>Assignee</th>
+                  <th>Task Description</th>
+                  <th>PPC Owner</th>
+                  <th>Priority</th>
+                  <th>Created on</th>
+                  <th>Article status</th>
+                  <th>Category</th>
+                  <th>DWS store</th>
+                  <th>General tags</th>
+                  <th class="sticky-r" style="text-align:right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="grouprow">
+                  <td class="sticky-l"><span class="gtag"><span class="bar"></span>Incoming / Recycling <span class="count">· 7 tasks</span></span></td>
+                  <td colspan="15"></td>
+                  <td class="sticky-r"></td>
+                </tr>
+
+                <tr>
+                  <td class="sticky-l"><div class="task-name"><input type="checkbox" class="rcheck" checked><span class="t">New Article Task<small>#A-1042</small></span></div></td>
+                  <td><span class="trunc">Pop-Eye Tees That Make a Splash This Summer</span></td>
+                  <td><a class="link" href="#">storefront.com/pop-eye</a></td>
+                  <td class="code pid-cell">96412</td>
+                  <td><span class="chip" style="background:var(--greenchip-bg);color:var(--greenchip-text)">Yes</span></td>
+                  <td class="code muted">88207</td>
+                  <td class="code">96513</td>
+                  <td><div class="owner"><span class="av" style="background:#6D28D9">DK</span>Dana K.</div></td>
+                  <td><span class="trunc muted">Refresh hero + 3 carousel cards</span></td>
+                  <td><div class="owner"><span class="av" style="background:#1D4ED8">CC</span>Cara Cohen</div></td>
+                  <td><span class="chip" style="background:var(--redchip-bg);color:var(--redchip-text)">High</span></td>
+                  <td class="muted">Jun 10</td>
+                  <td><span class="chip" style="background:var(--greenchip-bg);color:var(--greenchip-text)"><span class="cd" style="background:var(--greenchip-text)"></span>Generated</span></td>
+                  <td><span class="chip" style="background:var(--purple-bg);color:var(--purple-text)">Apparel</span></td>
+                  <td class="muted">Summer Picks</td>
+                  <td><span class="chip" style="background:var(--bluechip-bg);color:var(--bluechip-text)">Prime Day</span></td>
+                  <td class="sticky-r"><div class="row-actions">
+                    <button class="act act-article" title="Create new article" onclick="openArticle(this)"><svg viewBox="0 0 24 24"><path d="M4 4h12l4 4v12H4z"/><path d="M8 13h8M8 17h5"/></svg>Article</button>
+                    <button class="act act-creative" title="Create creatives"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives</button>
+                  </div></td>
+                </tr>
+
+                <tr>
+                  <td class="sticky-l"><div class="task-name"><input type="checkbox" class="rcheck"><span class="t">New Article Task<small>#A-1043</small></span></div></td>
+                  <td><span class="trunc">Boys Tees That Look Way Cooler Than Last Year</span></td>
+                  <td><a class="link" href="#">storefront.com/boys-tees</a></td>
+                  <td class="code muted pid-cell" data-pid="96420">—</td>
+                  <td><span class="chip" style="background:var(--gray-100);color:var(--gray-500)">No</span></td>
+                  <td class="code muted">—</td>
+                  <td class="code muted">—</td>
+                  <td><div class="owner"><span class="av" style="background:#0E7490">RM</span>Roni M.</div></td>
+                  <td><span class="trunc muted">Draft outline + sourcing images</span></td>
+                  <td><div class="owner"><span class="av" style="background:#C2410C">CA</span>Chad Avis</div></td>
+                  <td><span class="chip" style="background:var(--yellow-bg);color:var(--yellow-text)">Medium</span></td>
+                  <td class="muted">Jun 11</td>
+                  <td><span class="chip" style="background:var(--bluechip-bg);color:var(--bluechip-text)"><span class="cd" style="background:var(--bluechip-text)"></span>Submitted</span></td>
+                  <td><span class="chip" style="background:var(--purple-bg);color:var(--purple-text)">Apparel</span></td>
+                  <td class="muted">Kids Corner</td>
+                  <td><span class="chip" style="background:var(--bluechip-bg);color:var(--bluechip-text)">Prime Day</span></td>
+                  <td class="sticky-r"><div class="row-actions">
+                    <button class="act act-article" title="Create new article" onclick="openArticle(this)"><svg viewBox="0 0 24 24"><path d="M4 4h12l4 4v12H4z"/><path d="M8 13h8M8 17h5"/></svg>Article</button>
+                    <button class="act act-creative" title="Create creatives"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives</button>
+                  </div></td>
+                </tr>
+
+                <tr>
+                  <td class="sticky-l"><div class="task-name"><input type="checkbox" class="rcheck"><span class="t">New Article Task<small>#A-1044</small></span></div></td>
+                  <td><span class="trunc">Early Prime Day Deals Worth Grabbing Now</span></td>
+                  <td><a class="link" href="#">storefront.com/prime-deals</a></td>
+                  <td class="code muted pid-cell" data-pid="96437">—</td>
+                  <td><span class="chip" style="background:var(--yellow-bg);color:var(--yellow-text)">In progress</span></td>
+                  <td class="code muted">87110</td>
+                  <td class="code">96540</td>
+                  <td><div class="owner"><span class="av" style="background:#6D28D9">DK</span>Dana K.</div></td>
+                  <td><span class="trunc muted">Update pricing + add 2 statics</span></td>
+                  <td><div class="owner"><span class="av" style="background:#1D4ED8">CC</span>Cara Cohen</div></td>
+                  <td><span class="chip" style="background:var(--redchip-bg);color:var(--redchip-text)">High</span></td>
+                  <td class="muted">Jun 11</td>
+                  <td><span class="chip" style="background:var(--yellow-bg);color:var(--yellow-text)"><span class="cd" style="background:var(--yellow-text)"></span>In Review</span></td>
+                  <td><span class="chip" style="background:var(--cyanchip-bg);color:var(--cyanchip-text)">Home</span></td>
+                  <td class="muted">Prime Hub</td>
+                  <td><span class="chip" style="background:var(--bluechip-bg);color:var(--bluechip-text)">Prime Day</span></td>
+                  <td class="sticky-r"><div class="row-actions">
+                    <button class="act act-article" title="Create new article" onclick="openArticle(this)"><svg viewBox="0 0 24 24"><path d="M4 4h12l4 4v12H4z"/><path d="M8 13h8M8 17h5"/></svg>Article</button>
+                    <button class="act act-creative" title="Create creatives"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives</button>
+                  </div></td>
+                </tr>
+
+                <tr>
+                  <td class="sticky-l"><div class="task-name"><input type="checkbox" class="rcheck" checked><span class="t">New Article Task<small>#A-1045</small></span></div></td>
+                  <td><span class="trunc">Cozy Throw Blankets Under $30</span></td>
+                  <td><a class="link" href="#">storefront.com/throws</a></td>
+                  <td class="code pid-cell">96448</td>
+                  <td><span class="chip" style="background:var(--greenchip-bg);color:var(--greenchip-text)">Yes</span></td>
+                  <td class="code muted">85901</td>
+                  <td class="code">96551</td>
+                  <td><div class="owner"><span class="av" style="background:#0E7490">RM</span>Roni M.</div></td>
+                  <td><span class="trunc muted">Seasonal recycle — winter set</span></td>
+                  <td><div class="owner"><span class="av" style="background:#15803D">ML</span>Maya Levi</div></td>
+                  <td><span class="chip" style="background:var(--yellow-bg);color:var(--yellow-text)">Medium</span></td>
+                  <td class="muted">Jun 09</td>
+                  <td><span class="chip" style="background:var(--greenchip-bg);color:var(--greenchip-text)"><span class="cd" style="background:var(--greenchip-text)"></span>Generated</span></td>
+                  <td><span class="chip" style="background:var(--cyanchip-bg);color:var(--cyanchip-text)">Home</span></td>
+                  <td class="muted">Cozy Living</td>
+                  <td><span class="chip" style="background:var(--bluechip-bg);color:var(--bluechip-text)">Prime Day</span></td>
+                  <td class="sticky-r"><div class="row-actions">
+                    <button class="act act-article" title="Create new article" onclick="openArticle(this)"><svg viewBox="0 0 24 24"><path d="M4 4h12l4 4v12H4z"/><path d="M8 13h8M8 17h5"/></svg>Article</button>
+                    <button class="act act-creative" title="Create creatives"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives</button>
+                  </div></td>
+                </tr>
+
+                <tr>
+                  <td class="sticky-l"><div class="task-name"><input type="checkbox" class="rcheck"><span class="t">New Article Task<small>#A-1046</small></span></div></td>
+                  <td><span class="trunc">Glow Serums Reviewers Swear By</span></td>
+                  <td><a class="link" href="#">storefront.com/glow</a></td>
+                  <td class="code muted pid-cell" data-pid="96455">—</td>
+                  <td><span class="chip" style="background:var(--gray-100);color:var(--gray-500)">No</span></td>
+                  <td class="code muted">—</td>
+                  <td class="code muted">—</td>
+                  <td><div class="owner"><span class="av" style="background:#BE185D">DK</span>Dana K.</div></td>
+                  <td><span class="trunc muted">On hold — awaiting brand approval</span></td>
+                  <td><div class="owner"><span class="av" style="background:#1D4ED8">CC</span>Cara Cohen</div></td>
+                  <td><span class="chip" style="background:var(--gray-100);color:var(--gray-500)">Low</span></td>
+                  <td class="muted">Jun 12</td>
+                  <td><span class="chip" style="background:var(--orangechip-bg);color:var(--orangechip-text)"><span class="cd" style="background:var(--orangechip-text)"></span>On Hold</span></td>
+                  <td><span class="chip" style="background:var(--pink-bg);color:var(--pink-text)">Beauty</span></td>
+                  <td class="muted">Beauty Edit</td>
+                  <td class="muted">—</td>
+                  <td class="sticky-r"><div class="row-actions">
+                    <button class="act act-article" title="Create new article" onclick="openArticle(this)"><svg viewBox="0 0 24 24"><path d="M4 4h12l4 4v12H4z"/><path d="M8 13h8M8 17h5"/></svg>Article</button>
+                    <button class="act act-creative" title="Create creatives"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives</button>
+                  </div></td>
+                </tr>
+
+                <tr>
+                  <td class="sticky-l"><div class="task-name"><input type="checkbox" class="rcheck"><span class="t">New Article Task<small>#A-1047</small></span></div></td>
+                  <td><span class="trunc">Wireless Earbuds That Punch Above Their Price</span></td>
+                  <td><a class="link" href="#">storefront.com/earbuds</a></td>
+                  <td class="code muted pid-cell" data-pid="96461">—</td>
+                  <td><span class="chip" style="background:var(--greenchip-bg);color:var(--greenchip-text)">Yes</span></td>
+                  <td class="code muted">84300</td>
+                  <td class="code">96560</td>
+                  <td><div class="owner"><span class="av" style="background:#6D28D9">RM</span>Roni M.</div></td>
+                  <td><span class="trunc muted">Scale winner — 4 new variants</span></td>
+                  <td><div class="owner"><span class="av" style="background:#15803D">TR</span>Tom Raz</div></td>
+                  <td><span class="chip" style="background:var(--redchip-bg);color:var(--redchip-text)">High</span></td>
+                  <td class="muted">Jun 12</td>
+                  <td><span class="chip" style="background:var(--bluechip-bg);color:var(--bluechip-text)"><span class="cd" style="background:var(--bluechip-text)"></span>Submitted</span></td>
+                  <td><span class="chip" style="background:var(--bluechip-bg);color:var(--bluechip-text)">Tech</span></td>
+                  <td class="muted">Audio Lab</td>
+                  <td><span class="chip" style="background:var(--bluechip-bg);color:var(--bluechip-text)">Prime Day</span></td>
+                  <td class="sticky-r"><div class="row-actions">
+                    <button class="act act-article" title="Create new article" onclick="openArticle(this)"><svg viewBox="0 0 24 24"><path d="M4 4h12l4 4v12H4z"/><path d="M8 13h8M8 17h5"/></svg>Article</button>
+                    <button class="act act-creative" title="Create creatives"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives</button>
+                  </div></td>
+                </tr>
+
+                <tr>
+                  <td class="sticky-l"><div class="task-name"><input type="checkbox" class="rcheck" checked><span class="t">New Article Task<small>#A-1048</small></span></div></td>
+                  <td><span class="trunc">Air Fryers Worth the Counter Space</span></td>
+                  <td><a class="link" href="#">storefront.com/air-fryers</a></td>
+                  <td class="code pid-cell">96470</td>
+                  <td><span class="chip" style="background:var(--greenchip-bg);color:var(--greenchip-text)">Yes</span></td>
+                  <td class="code muted">83755</td>
+                  <td class="code">96571</td>
+                  <td><div class="owner"><span class="av" style="background:#0E7490">DK</span>Dana K.</div></td>
+                  <td><span class="trunc muted">Recycle Q1 winner for Prime</span></td>
+                  <td><div class="owner"><span class="av" style="background:#C2410C">CA</span>Chad Avis</div></td>
+                  <td><span class="chip" style="background:var(--yellow-bg);color:var(--yellow-text)">Medium</span></td>
+                  <td class="muted">Jun 08</td>
+                  <td><span class="chip" style="background:var(--greenchip-bg);color:var(--greenchip-text)"><span class="cd" style="background:var(--greenchip-text)"></span>Generated</span></td>
+                  <td><span class="chip" style="background:var(--orangechip-bg);color:var(--orangechip-text)">Kitchen</span></td>
+                  <td class="muted">Kitchen Pro</td>
+                  <td class="muted">—</td>
+                  <td class="sticky-r"><div class="row-actions">
+                    <button class="act act-article" title="Create new article" onclick="openArticle(this)"><svg viewBox="0 0 24 24"><path d="M4 4h12l4 4v12H4z"/><path d="M8 13h8M8 17h5"/></svg>Article</button>
+                    <button class="act act-creative" title="Create creatives"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives</button>
+                  </div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="foot">Showing 7 of 75 open tasks · <a href="#">View full board →</a></div>
+        </div>
+
+        <!-- ===== DASHBOARD PANEL (Task Overview) ===== -->
+        <div id="panel-dash" class="panel">
+          <div class="dash">
+            <div class="stats">
+              <div class="stat">
+                <div class="label"><span class="dot" style="background:var(--green-500)"></span>Total completed tasks</div>
+                <div class="num">2,928</div>
+                <div class="meta"><span class="up">▲ 6.2%</span> vs last 30 days</div>
+              </div>
+              <div class="stat">
+                <div class="label"><span class="dot" style="background:var(--amber-500)"></span>Total incomplete tasks</div>
+                <div class="num">75</div>
+                <div class="meta">7 due this week</div>
+              </div>
+              <div class="stat">
+                <div class="label"><span class="dot" style="background:var(--blue-500)"></span>Total Articles</div>
+                <div class="num">3,003</div>
+                <div class="meta">Across 12 storefronts</div>
+              </div>
+            </div>
+            <div class="charts">
+              <div class="card">
+                <div class="ch-title">Total tasks by PPC Owner &amp; completion status</div>
+                <div class="ch-sub">Completed vs incomplete, last 90 days</div>
+                <div class="legend">
+                  <span><i style="background:var(--green-500)"></i>Completed</span>
+                  <span><i style="background:var(--green-100)"></i>Incomplete</span>
+                </div>
+                <div class="gbars">
+                  <div class="gbar"><div class="cols"><div class="col" style="height:90%;background:var(--green-500)"><span class="v">2.2K</span></div><div class="col" style="height:22%;background:var(--green-100)"><span class="v">41</span></div></div><div class="name">Cara C.</div></div>
+                  <div class="gbar"><div class="cols"><div class="col" style="height:42%;background:var(--green-500)"><span class="v">696</span></div><div class="col" style="height:14%;background:var(--green-100)"><span class="v">18</span></div></div><div class="name">Chad A.</div></div>
+                  <div class="gbar"><div class="cols"><div class="col" style="height:30%;background:var(--green-500)"><span class="v">421</span></div><div class="col" style="height:10%;background:var(--green-100)"><span class="v">11</span></div></div><div class="name">Maya L.</div></div>
+                  <div class="gbar"><div class="cols"><div class="col" style="height:18%;background:var(--green-500)"><span class="v">188</span></div><div class="col" style="height:6%;background:var(--green-100)"><span class="v">5</span></div></div><div class="name">Tom R.</div></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="ch-title">Total incomplete tasks by section</div>
+                <div class="ch-sub">Where the 75 open tasks sit</div>
+                <div class="sbars">
+                  <div class="sbar"><div class="b" style="height:62%"><span class="v">34</span></div><div class="name">Incoming</div></div>
+                  <div class="sbar"><div class="b" style="height:70%"><span class="v">38</span></div><div class="name">Recycling</div></div>
+                  <div class="sbar"><div class="b" style="height:40%"><span class="v">22</span></div><div class="name">Scaling</div></div>
+                  <div class="sbar"><div class="b" style="height:12%"><span class="v">6</span></div><div class="name">Archive</div></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="ch-title">Total tasks by Category</div>
+                <div class="ch-sub">Share of all 3,003 articles</div>
+                <div class="donut-wrap">
+                  <div class="donut"><div class="center"><b>3,003</b><small>articles</small></div></div>
+                  <div class="dlegend">
+                    <span><i style="background:var(--purple-text)"></i>Apparel <b>32%</b></span>
+                    <span><i style="background:var(--cyanchip-text)"></i>Home <b>23%</b></span>
+                    <span><i style="background:var(--pink-text)"></i>Beauty <b>17%</b></span>
+                    <span><i style="background:var(--bluechip-text)"></i>Tech <b>13%</b></span>
+                    <span><i style="background:var(--orangechip-text)"></i>Kitchen <b>9%</b></span>
+                    <span><i style="background:var(--greenchip-text)"></i>Outdoor <b>6%</b></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Create Article modal ===== -->
+<div class="overlay" id="articleOverlay" onclick="if(event.target===this)closeArticle()">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="m-head">
+      <span class="ai-badge"><svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6z"/><path d="M5 17l.8 2.2L8 20l-2.2.8L5 23l-.8-2.2L2 20l2.2-.8z"/></svg>Article Generator</span>
+      <span class="htxt">Create Article</span>
+      <div class="spacer"></div>
+      <button class="m-close" onclick="closeArticle()" title="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+
+    <div class="m-body">
+      <div class="m-intro">
+        <svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg>
+        AI drafted this article from the task's page title. Review each field, regenerate anything you don't like, then save.
+      </div>
+
+      <!-- Page title -->
+      <div class="fld">
+        <div class="fld-top">
+          <label>Page Title</label>
+          <span class="from">auto-filled from task</span>
+        </div>
+        <select class="inp" id="pageTitle">
+          <option>Retro Home Decor Finds That Add Personality to a Boring Rental</option>
+        </select>
+      </div>
+
+      <!-- Banner + prompt -->
+      <div class="grid2">
+        <div class="fld" style="margin-bottom:0">
+          <div class="fld-top">
+            <label>Banner Image</label>
+            <span class="from">AI generated</span>
+          </div>
+          <div class="banner" id="banner">
+            <div class="img" id="bannerImg"><span class="cap" id="bannerCap">Retro Home Decor Finds</span></div>
+            <div class="tools">
+              <button class="tbtn" onclick="regenBanner()"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button>
+              <button class="tbtn" title="Upload your own"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg>Upload</button>
+            </div>
+            <div class="load"><div class="spinner"></div>Generating banner…</div>
+          </div>
+        </div>
+
+        <div class="fld" style="margin-bottom:0">
+          <div class="fld-top">
+            <label>Banner Prompt</label>
+            <button class="regen" onclick="regenField(this,'bannerPrompt')"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button>
+          </div>
+          <div class="prompt-wrap">
+            <textarea class="ta" id="bannerPrompt" rows="5">Cozy retro-styled living room in a rental apartment, warm vintage palette, mid-century furniture, soft natural light, lifestyle product photography.</textarea>
+            <button class="go" title="Generate banner from this prompt" onclick="regenBanner()"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:20px"></div>
+
+      <!-- Description 1 -->
+      <div class="fld">
+        <div class="fld-top">
+          <label>Description 1</label>
+          <span class="from">AI generated</span>
+          <div class="spacer"></div>
+          <button class="regen" onclick="regenField(this,'desc1')"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button>
+        </div>
+        <textarea class="ta" id="desc1" rows="5">Renters need [al]Retro Home Decor Finds[/al] to add personality without losing the deposit. Nothing feels worse than staring at beige builder-grade walls you can't paint. We picked easy, damage-free [al]Retro Home Decor Finds[/al] that deliver instant character. Visit our [al]Amazon store[/al] to see the full [al]top 15 picks[/al]! [al]✨ Shop the Edit ✨[/al]</textarea>
+      </div>
+
+      <!-- Description 2 -->
+      <div class="fld">
+        <div class="fld-top">
+          <label>Description 2</label>
+          <span class="from">AI generated</span>
+          <div class="spacer"></div>
+          <button class="regen" onclick="regenField(this,'desc2')"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button>
+        </div>
+        <textarea class="ta" id="desc2" rows="8">[al]Lean into peel-and-stick wallpaper[/al] - Removable patterned panels add a bold focal wall and peel away cleanly at move-out, protecting your deposit while transforming a dull room.
+[al]Layer in warm vintage lighting[/al] - Swap cold overhead bulbs for amber-toned plug-in lamps to instantly warm up a sterile rental and create a cozy, lived-in glow.
+[al]Anchor the room with a textured rug[/al] - A retro-pattern area rug hides worn carpet, defines the space, and brings color without any permanent changes.
+[al]Style open shelving with thrifted finds[/al] - Mix ceramics, books, and small plants on freestanding shelves for personality you can pack up and take to the next place.</textarea>
+      </div>
+
+      <!-- Sharing description -->
+      <div class="fld" style="margin-bottom:0">
+        <div class="fld-top">
+          <label>Sharing Description</label>
+          <span class="from">AI generated · 3 options</span>
+          <div class="spacer"></div>
+          <button class="regen" onclick="regenField(this,'share')"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button>
+        </div>
+        <textarea class="ta" id="share" rows="3">Rental glow-up alert: these retro home decor finds add instant personality—peel-and-stick wallpaper, warm vintage lamps, and textured rugs. Zero damage, all character. Grab the edit now ✨🏠</textarea>
+        <div class="opts">
+          <button class="active" onclick="pickOpt(this,0)">Option 1</button>
+          <button onclick="pickOpt(this,1)">Option 2</button>
+          <button onclick="pickOpt(this,2)">Option 3</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-foot">
+      <span class="note"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Saved as Draft automatically</span>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="closeArticle()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveArticle()"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Save Article</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---- Create Article modal ---- */
+var bannerGradients=[
+  'linear-gradient(135deg,#6C76F4,#0891B2)',
+  'linear-gradient(135deg,#7C3AED,#DB2777)',
+  'linear-gradient(135deg,#1570EF,#6C76F4)',
+  'linear-gradient(135deg,#DC6803,#DB2777)',
+  'linear-gradient(135deg,#0891B2,#7C3AED)'
+];
+var bannerIdx=0;
+var shareOptions=[
+  "Rental glow-up alert: these retro home decor finds add instant personality—peel-and-stick wallpaper, warm vintage lamps, and textured rugs. Zero damage, all character. Grab the edit now ✨🏠",
+  "Renting doesn't mean boring. We found 15 retro decor pieces that bring vintage charm to any beige rental—no paint, no drills, no lost deposit. See the full list 👀",
+  "Your landlord said no painting? Say less. These removable retro finds transform a dull rental in an afternoon. Tap to shop our top 15 picks before they sell out 🔥"
+];
+
+var currentArticleBtn=null;
+function openArticle(btn){
+  currentArticleBtn=btn;
+  var row=btn.closest('tr');
+  var title=row.querySelector('.trunc') ? row.querySelector('.trunc').textContent.trim() : 'New Article';
+  var sel=document.getElementById('pageTitle');
+  sel.innerHTML='<option>'+title+'</option>';
+  document.getElementById('bannerCap').textContent=title.length>34?title.slice(0,34)+'…':title;
+  document.getElementById('articleOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function markCreated(btn){
+  btn.classList.remove('act-article');
+  btn.classList.add('act-created');
+  btn.title='Article created — click to edit';
+  btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Article<svg class="pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+}
+function saveArticle(){
+  if(currentArticleBtn){
+    var row=currentArticleBtn.closest('tr');
+    var cell=row.querySelector('.pid-cell');
+    if(cell && cell.dataset.pid){cell.textContent=cell.dataset.pid;cell.classList.remove('muted');}
+    markCreated(currentArticleBtn);
+  }
+  closeArticle();
+}
+/* mark rows that already have an article (PID already present) */
+document.querySelectorAll('tbody .pid-cell').forEach(function(c){
+  if(/[0-9]/.test(c.textContent)){
+    var b=c.closest('tr').querySelector('.act-article');
+    if(b) markCreated(b);
+  }
+});
+function closeArticle(){
+  document.getElementById('articleOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function regenBanner(){
+  var b=document.getElementById('banner');
+  b.classList.add('loading');
+  setTimeout(function(){
+    bannerIdx=(bannerIdx+1)%bannerGradients.length;
+    document.getElementById('bannerImg').style.background=bannerGradients[bannerIdx];
+    b.classList.remove('loading');
+  },1000);
+}
+function regenField(btn,id){
+  btn.classList.add('spin');
+  var ta=document.getElementById(id);
+  var keep=ta.value;
+  ta.classList.add('shimmer');
+  setTimeout(function(){
+    ta.classList.remove('shimmer');
+    btn.classList.remove('spin');
+  },900);
+}
+function pickOpt(btn,i){
+  document.querySelectorAll('.opts button').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  document.getElementById('share').value=shareOptions[i];
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeArticle()});
+
+function showTab(which, el){
+  document.getElementById('panel-list').classList.toggle('active', which==='list');
+  document.getElementById('panel-dash').classList.toggle('active', which==='dash');
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>

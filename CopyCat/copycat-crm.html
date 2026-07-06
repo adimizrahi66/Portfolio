@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CopyCat — CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#5C67F2; --primary-hover:#4A55E0; --primary-10:#ECEDFE; --primary-20:#DADCFB; --primary-grey:#6B70A0;
+  --bg:#F4F5FA; --surface:#FFFFFF; --border:#E7E7EF; --border-soft:#F0F1F6;
+  --text:#1C1B2E; --muted:#8A8FA3; --soft:#B6B9C9;
+  --navy:#1E1B39;
+  --green:#2FD39A; --green-d:#0E9F76; --green-bg:#E2F9F1;
+  --amber:#F5A623; --amber-d:#B9770F; --amber-bg:#FEF3E2;
+  --red:#FF6B6B; --red-d:#E03E3E; --red-bg:#FFECEC;
+  --purple:#8B8BD8; --purple-d:#5B5BC7; --purple-bg:#EEEEFA;
+  --cyan:#3CCBDA; --cyan-d:#0E8C9B; --cyan-bg:#E2F7FA;
+  --done-bg:#F1FBF7;
+  --shadow:0 1px 3px rgba(28,27,46,.06),0 1px 2px rgba(28,27,46,.04);
+  --shadow-md:0 8px 24px rgba(28,27,46,.10);
+  --shadow-lg:0 24px 60px rgba(28,27,46,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.app{display:flex;min-height:100vh}
+.spacer{flex:1}
+/* sidebar */
+.sidebar{width:240px;flex-shrink:0;background:var(--navy);color:#B9BAD0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:20px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+.brand .logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#6C76F4,#4A55E0);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+.brand .name{color:#fff;font-weight:700;font-size:16px}
+.brand .sub{font-size:11px;color:#7E80A0}
+.nav{padding:14px 12px;flex:1;overflow:auto}
+.nav .group{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#646690;padding:14px 10px 6px}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:9px;color:#B9BAD0;text-decoration:none;font-weight:500;font-size:13.5px;margin-bottom:2px;cursor:pointer}
+.nav a svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav a.active{background:var(--primary);color:#fff}
+.nav a .badge{margin-left:auto;background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:600;padding:1px 8px;border-radius:20px}
+.sidebar .me{display:flex;align-items:center;gap:10px;padding:14px 16px;border-top:1px solid rgba(255,255,255,.07)}
+.sidebar .me .av{width:30px;height:30px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+.sidebar .me .txt{font-size:12.5px;color:#fff;font-weight:600}
+.sidebar .me .txt span{display:block;color:#7E80A0;font-weight:400;font-size:11px}
+/* main */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:15px 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:40}
+.topbar h1{font-size:19px;font-weight:700}
+.topbar .crumb{color:var(--muted);font-size:13px}
+.topbar .search{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;width:240px;color:var(--muted)}
+.topbar .search input{border:0;background:transparent;outline:0;font:inherit;width:100%;color:var(--text)}
+.topbar .search input::placeholder{color:var(--soft)}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;border:0;border-radius:10px;font:inherit;font-weight:600;font-size:13.5px;padding:9px 16px;cursor:pointer;white-space:nowrap;transition:.12s}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
+.btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border)}.btn-ghost:hover{background:var(--bg)}
+.btn-soft{background:var(--primary-10);color:var(--primary);border:1px solid var(--primary-20)}.btn-soft:hover{background:var(--primary-20)}
+.btn-green{background:var(--green-d);color:#fff}.btn-green:hover{filter:brightness(1.05)}
+.btn-lg{padding:12px 22px;font-size:14.5px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer}
+.icon-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.icon-btn:hover{background:var(--bg)}
+/* screens */
+.screen{display:none}.screen.active{display:block}
+.content{padding:24px 28px 80px}
+.page-title{display:flex;align-items:center;gap:10px;margin:2px 0 16px}
+.page-title h2{font-size:17px;font-weight:700}
+/* board */
+.board{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.board-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.board-head .title{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.board-head .title .sq{width:14px;height:14px;border-radius:4px;background:var(--primary)}
+.tabs{display:flex;gap:3px;margin-left:8px;background:var(--bg);padding:3px;border-radius:10px}
+.tabs button{font:inherit;font-size:12.5px;color:var(--muted);background:transparent;border:0;cursor:pointer;padding:6px 13px;border-radius:8px;font-weight:600}
+.tabs button.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow)}
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--surface)}
+.toolbar .tb{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:7px 12px;cursor:pointer}
+.toolbar .tb:hover{background:var(--bg);color:var(--text)}
+.toolbar .tb svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.scroll-hint{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted);padding:8px 18px;background:var(--bg);border-bottom:1px solid var(--border)}
+.scroll-hint svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.tbl-scroll{overflow-x:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:3360px}
+thead th{position:sticky;top:0;background:var(--bg);text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:11px 20px;border-bottom:1px solid var(--border);white-space:nowrap;z-index:5}
+tbody td{padding:13px 20px;border-bottom:1px solid var(--border-soft);font-size:13px;color:var(--text);white-space:nowrap;vertical-align:middle;background:var(--surface)}
+tbody tr:hover td{background:#FAFAFE}
+.c-name{width:200px;min-width:200px}.c-page{width:180px;min-width:140px;max-width:180px}
+.c-page-cell{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+th.s1,td.s1{position:sticky;left:0;z-index:6}
+th.s2,td.s2{position:sticky;left:200px;z-index:6;transition:box-shadow .15s;padding-left:12px}
+.tbl-scroll.scrolled th.s2,.tbl-scroll.scrolled td.s2{box-shadow:8px 0 10px -6px rgba(28,27,46,.16)}
+thead th.s1,thead th.s2{z-index:8}
+th.sr,td.sr{position:sticky;right:0;z-index:6;box-shadow:-1px 0 0 var(--border);width:280px;text-align:center;padding-left:10px;padding-right:10px}
+thead th.sr{z-index:8}
+.task-name{display:flex;align-items:center;gap:11px}
+.task-name .t{font-weight:600}.task-name .t small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+.rcheck{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.7px solid var(--soft);border-radius:6px;cursor:pointer;flex-shrink:0;position:relative;transition:.12s}
+.rcheck:hover{border-color:var(--primary)}
+.rcheck:checked{background:var(--primary);border-color:var(--primary)}
+.rcheck:checked::after{content:"";position:absolute;left:5px;top:2px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.rcheck-locked{border-color:var(--border);border-style:dashed;background:var(--border-soft);cursor:not-allowed;opacity:.7}
+.rcheck-locked:hover{border-color:var(--border)}
+.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;flex-shrink:0}
+.owner{display:flex;align-items:center;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:7px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.link{color:var(--primary);text-decoration:none}.link:hover{text-decoration:underline}
+.code{font-variant-numeric:tabular-nums}.muted{color:var(--muted)}
+/* group rows */
+.grouprow td{background:var(--bg);font-weight:700;font-size:12.5px;border-bottom:1px solid var(--border);border-top:1px solid var(--border)}
+.gtag{display:inline-flex;align-items:center;gap:8px}
+.gtag .bar{width:4px;height:15px;border-radius:3px}
+.gtag .cnt{color:var(--muted);font-weight:500;margin-left:4px}
+/* completed row */
+tr.row-done td{background:#F5FDF8}
+tr.row-done:hover td{background:#EDFAF2}
+/* workflow / actions column */
+.wf{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:nowrap}
+.wf-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:7px;white-space:nowrap;cursor:pointer;transition:.12s;border:1.5px solid;line-height:1.3;font-family:inherit;flex-shrink:0;background:none}
+.wf-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;flex-shrink:0}
+/* todo — neutral ghost: available action */
+.wf-todo{color:var(--text);border-color:var(--border);background:var(--surface)}
+.wf-todo:hover{background:var(--bg);border-color:var(--primary-20);color:var(--primary)}
+/* done — soft green: completed */
+.wf-ck{color:#15803D;border-color:#BBF7D0;background:#DCFCE7}
+.wf-ck:hover{background:#BBF7D0;border-color:#86EFAC}
+/* disabled — muted: not yet available */
+.wf-dis{color:var(--soft);border-color:var(--border-soft);background:transparent;cursor:not-allowed;opacity:.55}
+/* divider pip between art/cr buttons */
+.wf-pip{width:4px;height:4px;border-radius:50%;background:var(--border);flex-shrink:0}
+.foot{padding:13px 18px;border-top:1px solid var(--border);font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:8px}
+
+/* ===== CREATIVE FLOW ===== */
+.cv-header{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:14px}
+/* minimized header for steps 2+ */
+.cv-header.mini{padding:11px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.cv-header.mini .backlink{order:-1;font-size:12.5px}
+.cv-header.mini .cv-task{display:flex;align-items:center;gap:10px}
+.cv-header.mini .cv-task h2{font-size:15px;margin-top:0}
+.cv-header.mini .cv-task .pg{display:none}
+.cv-header.mini .cv-meta{margin-top:0;margin-left:auto}
+.cv-header.mini .meta-pill{padding:5px 10px;font-size:12px}
+.backlink{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;background:none;border:0}
+.backlink svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.cv-task h2{font-size:20px;font-weight:700;margin-top:8px}
+.cv-task .pg{color:var(--muted);font-size:13px;margin-top:2px}
+.cv-meta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.meta-pill{display:inline-flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:7px 12px;font-size:12.5px}
+.meta-pill b{font-weight:700}
+.meta-pill svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+/* sticky stepper */
+.stepbar{position:sticky;top:62px;z-index:35;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:14px 20px;margin-bottom:18px}
+.stepper{display:flex;align-items:center;overflow-x:auto}
+.step{display:flex;align-items:center;flex-shrink:0;cursor:pointer}
+.step .dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:var(--bg);color:var(--muted);border:1.5px solid var(--border)}
+.step .dot svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:3}
+.step .lbl{font-size:12.5px;font-weight:600;color:var(--muted);margin-left:8px;white-space:nowrap}
+.step .line{width:34px;height:2px;background:var(--border);margin:0 12px}
+.step.done .dot{background:var(--green);color:#fff;border-color:var(--green)}
+.step.active .dot{background:var(--primary);color:#fff;border-color:var(--primary)}
+.step.active .lbl,.step.done .lbl{color:var(--text)}
+.step:not(.locked):hover .lbl{color:var(--primary)}
+.step.locked{cursor:not-allowed}
+.step.locked .dot{opacity:.5}
+.step.locked .lbl{color:var(--soft)}
+.panel-step{display:none}.panel-step.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:24px}
+.card h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.card .csub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.cv-foot{display:flex;align-items:center;gap:12px;margin-top:18px}
+.setup-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+.setup-label .n{width:20px;height:20px;border-radius:50%;background:var(--primary-10);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;font-size:11px}
+.choices{display:flex;flex-wrap:wrap;gap:14px}
+.choice{width:200px;aspect-ratio:1;border:1.5px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:.12s;position:relative;display:flex;flex-direction:column}
+.choice:hover{border-color:var(--primary-20)}
+.choice.sel{border-color:var(--primary);background:var(--primary-10)}
+.choices-path .choice.sel{background:var(--surface);border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+.choices-path .choice.sel .ic{background:var(--primary-10);color:var(--primary)}
+.choice .ic{width:36px;height:36px;border-radius:10px;background:var(--primary-10);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.choice.sel .ic{background:var(--primary);color:#fff}
+.choice .ic svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.choice h4{font-size:14px;font-weight:700}
+.choice p{font-size:12px;line-height:1.4;color:var(--muted);margin-top:5px}
+.choice .radio{position:absolute;top:14px;right:14px;width:18px;height:18px;border-radius:50%;border:1.6px solid var(--soft);display:flex;align-items:center;justify-content:center}
+.choice.sel .radio{border-color:var(--primary)}.choice.sel .radio::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--primary)}
+.badge-soon{position:absolute;top:14px;right:14px;font-size:10px;font-weight:700;color:var(--amber-d);background:var(--amber-bg);padding:2px 8px;border-radius:999px}
+.dropzone{border:2px dashed var(--border);border-radius:14px;padding:30px;text-align:center;background:var(--bg);transition:.12s;cursor:pointer;margin-top:6px}
+.dropzone.drag{border-color:var(--primary);background:var(--primary-10)}
+.dropzone .ic{width:46px;height:46px;border-radius:50%;background:var(--primary-10);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.dropzone .ic svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
+.dropzone b{color:var(--primary)}
+.uploaded{display:none;align-items:center;gap:14px;border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:6px}
+.uploaded .thumb{width:64px;height:64px;border-radius:10px;background:linear-gradient(135deg,#6C76F4,#3CCBDA);flex-shrink:0}
+.uploaded .fn{font-weight:600;font-size:13.5px}
+.uploaded .meta{font-size:12px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:8px}
+.valid{display:inline-flex;align-items:center;gap:4px;color:var(--green-d);font-weight:600}
+.valid svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.5}
+/* PID */
+.field{margin-bottom:0}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:7px}
+.input{width:100%;font:inherit;font-size:14px;color:var(--text);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;background:var(--surface);outline:none}
+.input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-10)}
+.pid-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;max-width:840px}
+.sf-name{display:flex;align-items:center;gap:8px;min-width:0}
+.sf-name svg{width:16px;height:16px;color:var(--primary);flex-shrink:0}
+.sf-name b{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sf-meta{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.sf-link{display:inline-flex;align-items:center;gap:5px;color:var(--primary);font-weight:600;font-size:12.5px;text-decoration:none}
+.sf-link:hover{text-decoration:underline}
+.sf-link svg{width:13px;height:13px}
+.sf-conn{display:flex;align-items:center;gap:14px;border:1.5px solid var(--border);border-radius:14px;padding:16px 18px;max-width:840px}
+.sf-conn .ico{width:34px;height:34px;border-radius:9px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0}
+.sf-conn .ico svg{width:17px;height:17px}
+.sf-conn-txt{flex:1}
+.sf-conn-txt .t{font-weight:700;font-size:14px}
+.sf-conn-txt p{font-size:12.5px;color:var(--muted);margin-top:3px}
+/* storefront settings */
+.sf-settings-wrap{position:relative}
+.sf-gear-btn{display:flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:5px 10px;font:inherit;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:.12s}
+.sf-gear-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.sf-gear-btn:hover{background:var(--bg);color:var(--text)}
+.sf-gear-btn.active{background:var(--primary-10);color:var(--primary);border-color:var(--primary-20)}
+.sf-popover{position:absolute;top:calc(100% + 8px);right:0;width:300px;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;box-shadow:var(--shadow-md);padding:18px;z-index:200;display:none;animation:popIn .15s ease}
+.sf-popover.open{display:block}
+@keyframes popIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.sf-pop-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.sf-pop-title .close-pop{width:26px;height:26px;border-radius:7px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted)}
+.sf-pop-title .close-pop svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.sf-pop-row{margin-bottom:16px}
+.sf-pop-row:last-child{margin-bottom:0}
+.sf-pop-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+/* mapping mode toggle */
+.map-toggle{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px}
+.map-toggle button{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:transparent;border:0;border-radius:8px;padding:8px 10px;cursor:pointer;transition:.12s;text-align:center}
+.map-toggle button.active{background:var(--primary);color:#fff;box-shadow:0 1px 4px rgba(92,103,242,.3)}
+/* asin stepper */
+.asin-stepper{display:flex;align-items:center;gap:10px}
+.asin-stepper .step-lbl{font-size:13px;color:var(--text);flex:1}
+.stepper-ctrl{display:flex;align-items:center;gap:0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.stepper-ctrl button{width:32px;height:32px;border:0;background:var(--bg);color:var(--text);font-size:18px;font-weight:400;cursor:pointer;transition:.12s;display:flex;align-items:center;justify-content:center;line-height:1}
+.stepper-ctrl button:hover{background:var(--primary-10);color:var(--primary)}
+.stepper-ctrl .sv{min-width:36px;text-align:center;font-weight:700;font-size:14px;border-left:1.5px solid var(--border);border-right:1.5px solid var(--border);padding:0 4px;line-height:32px;background:var(--surface)}
+.asin-hint{font-size:11.5px;color:var(--muted);margin-top:8px;background:var(--bg);border-radius:8px;padding:8px 10px}
+/* set as default */
+.sf-pop-footer{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sf-default-badge{font-size:11px;color:var(--green-d);font-weight:600;display:none;align-items:center;gap:4px}
+.sf-default-badge svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5}
+.pid-card{border:1px solid var(--border);border-radius:14px;padding:18px}
+.status-line{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--green-d);background:var(--green-bg);padding:5px 11px;border-radius:999px;margin-top:10px}
+.status-line .cd{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.segmented{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.seg{border:1.5px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:.12s}
+.seg:hover{border-color:var(--primary-20)}
+.seg.sel{border-color:var(--primary);background:var(--primary-10)}
+.seg .h{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px}
+.seg .h .ico{width:32px;height:32px;border-radius:9px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--primary)}
+.seg .h .ico svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.seg p{font-size:12.5px;color:var(--muted);margin-top:8px}
+.toggle{width:42px;height:24px;border-radius:999px;background:var(--soft);position:relative;transition:.15s;flex-shrink:0}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s}
+.toggle.on{background:var(--primary)}.toggle.on::after{left:21px}
+/* templates */
+.reco{display:flex;align-items:center;gap:12px;background:var(--primary-10);border:1px solid var(--primary-20);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.reco .ic{width:34px;height:34px;border-radius:9px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.reco .ic svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.reco .t{font-size:13px;font-weight:600}.reco .t span{display:block;color:var(--primary-grey);font-weight:500;font-size:12px}
+.tpl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tpl{border:1.5px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);transition:.12s;position:relative;cursor:pointer}
+.tpl:hover{box-shadow:var(--shadow-md)}
+.tpl.sel{border-color:var(--primary)}
+.tpl .pic{aspect-ratio:896/1200;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;text-align:center;padding:10px}
+/* storefront strip on templates */
+.tpl-store{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:11px 14px;margin-bottom:16px;font-size:12.5px;color:var(--muted)}
+.tpl-store svg.sf-ic{width:16px;height:16px;color:var(--primary);flex-shrink:0}
+.tpl-store .tpl-store-title{font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.tpl-store .sep{color:var(--soft);flex-shrink:0}
+.tpl-store .sf-link{margin-left:auto;flex-shrink:0}
+/* view more */
+.tpl-more{display:flex;justify-content:center;margin-top:18px}
+/* floating template-count bar */
+.floatbar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg);border-radius:14px;padding:10px 12px 10px 16px;display:flex;align-items:center;gap:14px;z-index:70;opacity:0;pointer-events:none;transition:.2s}
+.floatbar.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+.floatbar .fb-ic{width:30px;height:30px;border-radius:8px;background:var(--primary-10);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.floatbar .fb-ic svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.floatbar .fb-n{font-size:13.5px;font-weight:600;white-space:nowrap}
+.floatbar .fb-n b{color:var(--primary)}
+.tpl .cb{position:absolute;top:8px;left:8px;width:20px;height:20px;border-radius:6px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center}
+.tpl.sel .cb{background:var(--primary)}
+.tpl.sel .cb::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}
+.tpl .eye{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:7px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:var(--text)}
+.tpl .eye svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.tpl .meta{padding:9px 11px 7px;display:flex;align-items:center;justify-content:space-between}
+.tpl .meta small{font-size:11px;color:var(--muted)}
+.tpl .tpl-sf-row{display:flex;align-items:center;gap:7px;padding:6px 11px 9px;cursor:pointer;border-top:1px solid var(--border-soft)}
+.tpl .tpl-sf-row:hover{background:var(--bg)}
+.tpl .tpl-sf-row .sf-lbl{font-size:11px;color:var(--muted);flex:1}
+.tpl .tpl-sf-row svg{width:12px;height:12px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0}
+.tgl-sm{width:28px;height:16px;border-radius:8px;background:var(--border);cursor:pointer;position:relative;transition:.18s;border:0;flex-shrink:0;outline:none}
+.tgl-sm::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:.18s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tgl-sm.on{background:var(--green-d)}
+.tgl-sm.on::after{left:14px}
+/* generation */
+.gen{text-align:center;padding:30px 20px}
+.gen .spinner{width:54px;height:54px;border:5px solid var(--primary-10);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 22px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gen .est{color:var(--muted);font-size:13px;margin-top:6px}
+.gen-steps{max-width:380px;margin:26px auto 0;text-align:left}
+.gen-steps .gs{display:flex;align-items:center;gap:11px;padding:9px 0;color:var(--muted);font-size:13.5px}
+.gen-steps .gs .gi{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gen-steps .gs.done{color:var(--text)}
+.gen-steps .gs.done .gi{background:var(--green);border-color:var(--green)}
+.gen-steps .gs.done .gi svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3}
+.gen-steps .gs.cur .gi{border-color:var(--primary);border-top-color:transparent;animation:spin .8s linear infinite}
+.gen-steps .gs.cur{color:var(--text);font-weight:600}
+.prog{height:7px;border-radius:7px;background:var(--border);overflow:hidden;max-width:380px;margin:24px auto 0}
+.prog span{display:block;height:100%;background:var(--primary);width:0;transition:width .4s}
+/* review */
+.review-wrap{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+.cr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cr{border:1.5px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);position:relative;transition:.12s}
+.cr:hover{box-shadow:var(--shadow-md)}
+.cr.sel{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-20)}
+.cr .pic{aspect-ratio:896/1200;position:relative;display:flex;align-items:flex-end;padding:12px;color:#fff;cursor:pointer}
+.cr .pic .ad{font-weight:800;font-size:15px;text-shadow:0 1px 6px rgba(0,0,0,.35)}
+.cr .cb{position:absolute;top:10px;left:10px;width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cr .cb.on{background:var(--primary)}
+.cr .cb.on::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}
+.cr .badge-wrap{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:5px;align-items:flex-end}
+.qa{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:700}
+.qa-good{background:var(--green-bg);color:var(--green-d)}
+.qa-review{background:var(--amber-bg);color:var(--amber-d)}
+.qa-hidden{background:var(--red-bg);color:var(--red-d)}
+.qa-logo{background:var(--purple-bg);color:var(--purple-d)}
+.qa-product{background:var(--cyan-bg);color:var(--cyan-d)}
+.cr-body{padding:11px 12px}
+.cr-id{font-size:11.5px;color:var(--muted);margin-bottom:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cr-id .asin{font-weight:600;color:var(--primary);background:var(--primary-10);padding:2px 7px;border-radius:6px}
+.cr-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.cr-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--bg);color:var(--muted)}
+.cr-acts{display:flex;gap:7px}
+.cr-acts button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;font:inherit;font-size:11.5px;font-weight:600;padding:7px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
+.cr-acts button:hover{background:var(--bg)}
+.cr-acts button svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.cr-regen{display:none;margin-top:10px;border-top:1px solid var(--border-soft);padding-top:10px}
+.cr-regen.open{display:block}
+.cr-regen label{font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px}
+.cr-regen select,.cr-regen textarea{width:100%;font:inherit;font-size:12.5px;border:1.5px solid var(--border);border-radius:9px;padding:8px 10px;outline:none;margin-bottom:8px}
+.cr-regen textarea{resize:vertical}
+.cr-regen select:focus,.cr-regen textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-10)}
+.cr-regen .rr{display:flex;gap:7px}
+.cr-regen .rr button{flex:1;font:inherit;font-size:12px;font-weight:600;padding:8px;border-radius:8px;cursor:pointer;border:1px solid var(--border)}
+.cr-regen .rr .go{background:var(--primary);color:#fff;border-color:var(--primary)}
+.cr-regen .rr .cancel{background:var(--surface);color:var(--muted)}
+/* checklist */
+.checklist{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:18px;position:sticky;top:140px}
+.checklist h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.checklist .cs{font-size:12px;color:var(--muted);margin-bottom:14px}
+.ck-item{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--border-soft);cursor:pointer;font-size:13px}
+.ck-item:last-child{border-bottom:0}
+.ck-box{width:20px;height:20px;border-radius:6px;border:1.7px solid var(--soft);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.12s}
+.ck-item.on .ck-box{background:var(--green-d);border-color:var(--green-d)}
+.ck-item.on .ck-box::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-1px}
+.ck-item.on{color:var(--text)}
+.ck-note{margin-top:12px;font-size:11.5px;color:var(--muted);background:var(--bg);border-radius:9px;padding:9px 11px}
+/* sticky select bar (sub-bar inside review) */
+.sel-bar{display:flex;align-items:center;gap:14px;background:var(--primary-10);border:1px solid var(--primary-20);border-radius:12px;padding:12px 16px;margin-bottom:16px;flex-wrap:wrap}
+.sel-bar .count{font-weight:700;color:var(--primary)}
+.sel-bar .hint{font-size:12.5px;color:var(--primary-grey)}
+/* auto-pick control */
+.autopick{display:flex;align-items:center;gap:8px}
+.autopick .ap-label{font-size:12.5px;font-weight:600;color:var(--primary-grey)}
+.autopick select{font:inherit;font-size:13px;font-weight:600;color:var(--text);border:1px solid var(--primary-20);background:var(--surface);border-radius:9px;padding:7px 10px;outline:none;cursor:pointer}
+.autopick select:focus{border-color:var(--primary)}
+/* gallery lightbox */
+.gallery-overlay{display:none;position:fixed;inset:0;background:rgba(20,18,38,.84);z-index:120}
+.gallery-overlay.open{display:flex}
+.g-stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;padding:40px;min-width:0}
+.g-imgwrap{height:80vh;max-height:80vh;aspect-ratio:896/1200;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-lg)}
+.g-image{width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;color:#fff;font-weight:800;font-size:26px;line-height:1.15;text-align:center;padding:26px}
+.g-nav{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s}
+.g-nav:hover{background:rgba(255,255,255,.30)}
+.g-prev{left:22px}.g-next{right:22px}
+.g-counter{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;background:rgba(0,0,0,.4);padding:5px 13px;border-radius:999px}
+.g-panel{width:380px;flex-shrink:0;background:var(--surface);height:100vh;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:18px}
+.g-panel-head{display:flex;align-items:center;gap:10px}
+.g-close{margin-left:auto;background:none;border:0;color:var(--muted);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.g-close:hover{color:var(--text)}
+.g-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.g-field .val{font-size:14px;color:var(--text);word-break:break-word}
+.g-field .val.code{font-variant-numeric:tabular-nums}
+.g-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.g-tag{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:999px}
+.g-tag button{background:none;border:0;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0}
+.g-tag button:hover{color:var(--red-d)}
+.g-tag-input{border:1px dashed var(--soft);border-radius:999px;padding:5px 11px;font:inherit;font-size:11.5px;outline:none;width:86px}
+.g-tag-input:focus{border-color:var(--primary)}
+.g-actions{display:flex;gap:10px;margin-top:auto;padding-top:8px}
+.g-actions button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:13px;font-weight:600;padding:11px;border-radius:10px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+.g-actions button svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.g-actions .g-switch:hover{background:var(--bg)}
+.g-actions .g-regen{background:var(--primary);color:#fff;border-color:var(--primary)}
+.g-actions .g-regen:hover{background:var(--primary-hover)}
+/* gallery regenerate panel */
+.g-regen-panel{margin-top:auto;border-top:1px solid var(--border);padding-top:16px;display:flex;flex-direction:column;gap:12px}
+.g-regen-panel .rr{display:flex;gap:10px}
+.g-regen-panel .rr button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:13px;font-weight:600;padding:11px;border-radius:10px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+.g-regen-panel .rr button svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.g-regen-panel .rr .g-cancel:hover{background:var(--bg)}
+.g-regen-panel .rr .g-go{background:var(--primary);color:#fff;border-color:var(--primary)}
+.g-regen-panel .rr .g-go:hover{background:var(--primary-hover)}
+/* switch ASIN modal */
+.asin-overlay{z-index:140}
+.asin-list{margin-top:14px;display:flex;flex-direction:column;gap:6px;max-height:54vh;overflow:auto}
+.asin-item{display:flex;align-items:center;gap:14px;padding:10px;border:1.5px solid transparent;border-radius:12px;cursor:pointer}
+.asin-item:hover{background:var(--bg)}
+.asin-item.current{border-color:var(--primary-20);background:var(--primary-10)}
+.asin-thumb{width:76px;height:76px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85)}
+.asin-thumb svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:1.6}
+.asin-info{min-width:0;flex:1}
+.asin-row{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.asin-num{font-weight:700;color:var(--primary)}
+.asin-code{font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+.asin-current{font-size:10.5px;font-weight:700;color:var(--primary);background:var(--surface);border:1px solid var(--primary-20);padding:1px 8px;border-radius:999px}
+.asin-title{font-size:13.5px;color:var(--text);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.asin-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}
+/* floating bulk banner */
+.bulkbar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(30px);max-width:calc(100vw - 24px);background:var(--navy);color:#fff;border-radius:14px;box-shadow:var(--shadow-lg);padding:8px 10px;display:flex;align-items:center;gap:7px;z-index:80;opacity:0;pointer-events:none;transition:.2s;overflow-x:auto;scrollbar-width:none}
+.bulkbar::-webkit-scrollbar{display:none}
+.bulkbar.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+.bulkbar .n{font-weight:700;font-size:12.5px;padding-right:4px;white-space:nowrap;flex-shrink:0;line-height:1.2}
+.bulkbar .div{width:1px;height:22px;background:rgba(255,255,255,.2);flex-shrink:0}
+.bb{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12px;font-weight:600;padding:8px 11px;border-radius:9px;border:0;cursor:pointer;background:rgba(255,255,255,.12);color:#fff;white-space:nowrap;flex-shrink:0}
+.bb:hover{background:rgba(255,255,255,.2)}
+.bb svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.bb-amber{background:var(--amber);color:#3a2a06}.bb-amber:hover{filter:brightness(1.05);background:var(--amber)}
+.bb-green{background:var(--green);color:#06402c}.bb-green:hover{filter:brightness(1.05);background:var(--green)}
+.bb-x{background:transparent;padding:8px}
+/* download/completion */
+.dl-summary{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 22px}
+.dl-summary .m{width:84px;height:84px;border-radius:11px;position:relative}
+.dl-summary .m::after{content:"✓";position:absolute;right:5px;bottom:5px;width:18px;height:18px;background:var(--green-d);color:#fff;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.success-ic{width:64px;height:64px;border-radius:50%;background:var(--green-bg);color:var(--green-d);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.success-ic svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:2.5}
+.done-list{max-width:400px;margin:18px auto 0;text-align:left}
+.done-list .dl{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-soft);font-size:13.5px}
+.done-list .dl:last-child{border-bottom:0}
+.done-list .dl .ck{width:22px;height:22px;border-radius:50%;background:var(--green-d);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.done-list .dl .ck svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:3}
+.done-list .dl .ts{margin-left:auto;color:var(--muted);font-size:12px}
+/* side panel (settings + reused) */
+.side-overlay{position:fixed;inset:0;background:rgba(28,27,46,.45);display:none;z-index:90}
+.side-overlay.open{display:block}
+.side{position:fixed;top:0;right:0;height:100vh;width:400px;background:var(--surface);box-shadow:var(--shadow-lg);transform:translateX(100%);transition:transform .22s;z-index:91;display:flex;flex-direction:column}
+.side.open{transform:none}
+.side-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.side-head h3{font-size:15px;font-weight:700}
+.side-body{padding:20px;overflow:auto;flex:1}
+.side-body .field{margin-bottom:16px}
+.side-foot{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:10px}
+.m-close{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.m-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+/* article modal */
+.overlay{position:fixed;inset:0;background:rgba(28,27,46,.5);backdrop-filter:blur(2px);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:40px 16px;overflow:auto}
+.overlay.open{display:flex}
+.modal{background:var(--surface);width:100%;max-width:920px;border-radius:18px;box-shadow:var(--shadow-lg);overflow:hidden;animation:pop .18s ease}
+.modal.sm{max-width:520px}
+@keyframes pop{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.m-head{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:2}
+.ai-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-10);color:var(--primary);border:1px solid var(--primary-20);font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px}
+.ai-badge svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.m-body{padding:22px;max-height:calc(100vh - 210px);overflow:auto}
+.m-intro{font-size:12.5px;color:var(--muted);margin:-4px 0 20px;display:flex;align-items:center;gap:7px}
+.m-intro svg{width:15px;height:15px;stroke:var(--primary);fill:none;stroke-width:2;flex-shrink:0}
+.fld{margin-bottom:20px}
+.fld-top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.fld-top label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.fld-top .from{font-size:10.5px;font-weight:700;color:var(--primary);background:var(--primary-10);padding:2px 8px;border-radius:999px}
+.regen{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:11.5px;font-weight:600;color:var(--primary);background:transparent;border:0;cursor:pointer;padding:3px 6px;border-radius:7px}
+.regen:hover{background:var(--primary-10)}.regen svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.banner{position:relative;border-radius:12px;height:200px;overflow:hidden;background:linear-gradient(135deg,#6C76F4,#3CCBDA)}
+.banner .cap{position:absolute;left:18px;bottom:16px;color:#fff;font-weight:800;font-size:18px;text-shadow:0 1px 8px rgba(0,0,0,.3);max-width:80%}
+.banner .tools{position:absolute;top:12px;right:12px;display:flex;gap:6px}
+.banner .tbtn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);border:0;color:var(--text);font:inherit;font-size:11.5px;font-weight:600;border-radius:9px;padding:7px 11px;cursor:pointer}
+.banner .tbtn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.grid2{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}
+.prompt-wrap{position:relative}
+.go{position:absolute;right:8px;bottom:8px;width:30px;height:30px;border-radius:9px;border:0;background:var(--primary);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.go svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.opts{display:flex;gap:8px;margin-top:10px}
+.opts button{font:inherit;font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
+.opts button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.m-foot{display:flex;align-items:center;gap:12px;padding:16px 22px;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--surface)}
+.m-foot .note{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.m-foot .note svg{width:14px;height:14px;stroke:var(--green-d);fill:none;stroke-width:2}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:12px 20px;border-radius:12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow-lg);opacity:0;transition:opacity .25s,bottom .2s,transform .25s;z-index:200;display:flex;align-items:center;gap:9px}
+/* generation success banner — top of screen */
+.gen-top-banner{position:fixed;top:-90px;left:50%;transform:translateX(-50%);background:var(--green-d);color:#fff;padding:13px 22px;border-radius:14px;box-shadow:0 8px 32px rgba(14,159,118,.35);display:flex;align-items:center;gap:12px;z-index:300;transition:top .38s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
+.gen-top-banner.show{top:20px}
+.gen-top-banner .gtb-ic{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gen-top-banner .gtb-ic svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.8}
+.gen-top-banner .gtb-txt{font-weight:700;font-size:14px}
+.gen-top-banner .gtb-sub{font-size:12px;opacity:.82;margin-top:1px}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.toast svg{width:16px;height:16px;stroke:var(--green);fill:none;stroke-width:2.5}
+.tpl-preview{width:100%;height:280px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px}
+
+/* ===== PREFERENCES ===== */
+.nav a .soon{margin-left:auto;background:rgba(245,166,35,.2);color:#F5A623;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.2px}
+.pref-outer{padding:0!important}
+.pref-layout{display:flex;height:calc(100vh - 62px);overflow:hidden}
+.pref-nav{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column;gap:2px}
+.pref-nav-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;padding:0 10px;margin-bottom:10px;margin-top:4px}
+.pref-nav-item{width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;background:transparent;border:0;cursor:pointer;font:inherit;font-size:13.5px;font-weight:500;color:var(--muted);text-align:left}
+.pref-nav-item svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
+.pref-nav-item:hover{background:var(--bg);color:var(--text)}
+.pref-nav-item.active{background:var(--primary-10);color:var(--primary);font-weight:600}
+.pref-content{flex:1;overflow:auto;padding:28px 32px}
+.pref-panel{display:none}.pref-panel.active{display:block}
+.pref-section-head{margin-bottom:22px}
+.pref-section-head h2{font-size:18px;font-weight:700;margin-bottom:4px}
+.pref-section-head p{font-size:13px;color:var(--muted);max-width:560px}
+.pref-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
+.pref-card-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg)}
+.pref-card-head h3{font-size:14px;font-weight:700;flex:1}
+.pref-card-head p{font-size:12.5px;color:var(--muted)}
+/* templates table */
+.pref-tbl{width:100%;border-collapse:collapse}
+.pref-tbl thead th{background:var(--bg);padding:10px 18px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)}
+.pref-tbl tbody td{padding:13px 18px;border-bottom:1px solid var(--border-soft);font-size:13.5px;vertical-align:middle}
+.pref-tbl tbody tr:last-child td{border-bottom:0}
+.pref-tbl tbody tr:hover td{background:#FAFAFE}
+.tpl-thumb-sm{width:32px;height:32px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px}
+.tpl-row-name{display:flex;align-items:center;gap:10px}
+/* tag editor */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.tag-pill{display:inline-flex;align-items:center;gap:3px;padding:3px 8px 3px 9px;border-radius:7px;font-size:11.5px;font-weight:600;background:var(--primary-10);color:var(--primary);border:1px solid var(--primary-20);line-height:1.4}
+.tag-pill button{background:none;border:0;cursor:pointer;color:inherit;padding:0 1px;opacity:.65;font-size:13px;line-height:1;display:flex;align-items:center}
+.tag-pill button:hover{opacity:1}
+.tag-add-btn{display:inline-flex;align-items:center;gap:4px;font:inherit;font-size:11px;font-weight:600;color:var(--muted);background:transparent;border:1.5px dashed var(--border);border-radius:7px;padding:3px 9px;cursor:pointer;white-space:nowrap}
+.tag-add-btn:hover{border-color:var(--primary-20);color:var(--primary)}
+.tag-input-inline{font:inherit;font-size:12px;border:1.5px solid var(--primary);border-radius:7px;padding:3px 8px;outline:none;width:80px;color:var(--text);display:none}
+.tag-input-inline.show{display:inline-block}
+/* toggle */
+.tgl{width:38px;height:22px;border-radius:11px;background:var(--border);cursor:pointer;position:relative;transition:.18s;border:0;flex-shrink:0}
+.tgl::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.18s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tgl.on{background:var(--green-d)}
+.tgl.on::after{left:19px}
+/* column toggle list */
+.col-list{display:flex;flex-direction:column}
+.col-item{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--border-soft)}
+.col-item:last-child{border-bottom:0}
+.col-item:hover{background:#FAFAFE}
+.col-item .col-drag{color:var(--soft);cursor:grab;display:flex;align-items:center;flex-shrink:0}
+.col-item .col-drag svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.col-item .col-text{flex:1;min-width:0}
+.col-item .col-name{font-weight:600;font-size:13.5px}
+.col-item .col-desc{font-size:12px;color:var(--muted);margin-top:2px}
+/* pref subtabs */
+.pref-subtabs{display:flex;gap:3px;background:var(--bg);padding:3px;border-radius:10px;margin-bottom:18px;width:fit-content}
+.pref-subtabs button{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:transparent;border:0;cursor:pointer;padding:7px 14px;border-radius:8px;white-space:nowrap}
+.pref-subtabs button.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow)}
+/* ai models */
+.ai-item{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border-soft)}
+.ai-item:last-child{border-bottom:0}
+.ai-item:hover{background:#FAFAFE}
+.ai-item .ai-ic{width:36px;height:36px;border-radius:10px;background:var(--primary-10);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ai-item .ai-ic svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2}
+.ai-item .ai-label{flex:1}
+.ai-item .ai-label .ai-name{font-weight:700;font-size:13.5px}
+.ai-item .ai-label .ai-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.ai-select{font:inherit;font-size:13px;font-weight:600;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:8px 32px 8px 12px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8FA3' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;min-width:194px}
+.ai-select:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-10)}
+.ai-vendor{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.ai-vendor.anthropic{background:#F0EBF8;color:#7C3AED}
+.ai-vendor.openai{background:#E6F9F1;color:#059669}
+.ai-vendor.google{background:#EEF2FF;color:#4F46E5}
+/* stub screens */
+.stub-center{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:420px;text-align:center}
+.stub-center .stub-ic{width:72px;height:72px;border-radius:20px;background:var(--primary-10);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.stub-center .stub-ic svg{width:32px;height:32px;stroke:currentColor;fill:none;stroke-width:1.6}
+.stub-center h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px}
+.stub-center p{font-size:13.5px;color:var(--muted);max-width:380px;line-height:1.7;margin:0 auto}
+.stub-chip{display:inline-flex;align-items:center;gap:6px;background:var(--amber-bg);color:var(--amber-d);font-size:11.5px;font-weight:700;padding:4px 12px;border-radius:999px;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">C</div><div><div class="name">CopyCat</div><div class="sub">Content CRM</div></div></div>
+    <nav class="nav">
+      <a id="nav-dashboard" onclick="showScreen('dashboard')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+      <a class="active" id="nav-tasks" onclick="showScreen('tasks')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Tasks<span class="badge">75</span></a>
+      <a id="nav-articles" onclick="showScreen('articles')"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Articles</a>
+      <a id="nav-creative" onclick="openCreative()"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives</a>
+      <a id="nav-storefronts" onclick="showScreen('storefronts')"><svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg>Storefronts</a>
+      <div class="group">Dashboards</div>
+      <a id="nav-bi" onclick="showScreen('bi-dashboard')"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg>BI Dashboard<span class="soon">Soon</span></a>
+      <a id="nav-articles-list" onclick="showScreen('articles-list')"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Articles List<span class="soon">Soon</span></a>
+      <a id="nav-winner" onclick="showScreen('winner-discovery')"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Winner Discovery<span class="soon">Soon</span></a>
+      <a id="nav-tasks-status" onclick="showScreen('tasks-status')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Tasks Status<span class="soon">Soon</span></a>
+      <div class="group">Settings</div>
+      <a id="nav-preferences" onclick="showScreen('preferences')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>Preferences</a>
+    </nav>
+    <div class="me"><div class="av">RF</div><div class="txt">Roundforest<span>subscr@roundforest.com</span></div></div>
+  </aside>
+
+  <div class="main">
+    <!-- ============ TASKS ============ -->
+    <section class="screen active" id="screen-tasks">
+      <header class="topbar">
+        <h1>Tasks</h1><div class="crumb">CRM · Facebook Creative Pipeline</div>
+        <div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input id="taskSearch" placeholder="Search tasks…" oninput="filterTasks(this.value)"></div>
+        <button class="btn btn-primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New task</button>
+      </header>
+      <div class="content">
+        <div class="page-title"><h2>Facebook Creative Pipeline</h2></div>
+        <div class="board">
+          <div class="board-head">
+            <div class="title"><span class="sq"></span>Board 1: Facebook Creative Pipeline</div>
+            <div class="tabs"><button class="active">Full List</button><button>Dashboard</button><button>Nir List</button><button>Guy List</button></div>
+            <div class="spacer"></div>
+            <button class="btn btn-primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add task</button>
+          </div>
+          <div class="toolbar">
+            <button class="tb"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filter</button>
+            <button class="tb"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h12M3 18h6"/></svg>Sort</button>
+            <button class="tb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Group</button>
+            <button class="tb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>Options</button>
+            <div class="spacer"></div>
+            <button class="tb" onclick="downloadCSV()"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>Download CSV</button>
+          </div>
+          <div class="scroll-hint"><svg viewBox="0 0 24 24"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5"/></svg>Scroll sideways to see all columns — checkbox, Name and Page Title stay frozen</div>
+          <div class="tbl-scroll"><table><thead><tr id="thead-row"></tr></thead><tbody id="tbody"></tbody></table></div>
+          <div class="foot">Showing <b id="rowcount">0</b> tasks across 2 sections</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CREATIVE ============ -->
+    <section class="screen" id="screen-creative">
+      <header class="topbar">
+        <h1>Creative Creation</h1><div class="crumb">CRM · Facebook Creative Pipeline</div>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost" onclick="showScreen('tasks')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back to Pipeline</button>
+      </header>
+      <div class="content">
+        <div class="cv-header">
+          <button class="backlink" onclick="showScreen('tasks')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Tasks Pipeline</button>
+          <div class="cv-task"><h2 id="cv-taskname">New Article Task</h2><div class="pg" id="cv-pagetitle"></div></div>
+          <div class="cv-meta">
+            <span class="meta-pill"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Creatives status: <b id="cv-status" style="color:var(--primary)">Not started</b></span>
+            <span class="meta-pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>PID <b id="cv-pid">97806</b> · <span id="cv-cat">Home &amp; Garden</span></span>
+          </div>
+        </div>
+        <div class="stepbar"><div class="stepper" id="stepper"></div></div>
+
+        <!-- STEP 1: SETUP -->
+        <div class="panel-step active" id="step-1">
+          <div class="card">
+            <h3>Creative creation setup</h3>
+            <p class="csub">Choose the creative type and the article path for this task.</p>
+            <div class="setup-label"><span class="n">1</span>What type of creative?</div>
+            <div class="choices">
+              <div class="choice sel" id="ct-image" onclick="pick('ct','image')"><div class="radio"></div><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div><h4>Image Creative</h4><p>Generate static image ad creatives from the article and product data.</p></div>
+              <div class="choice" id="ct-video" onclick="pick('ct','video')"><span class="badge-soon">Beta</span><div class="ic"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M22 8l-6 4 6 4z"/></svg></div><h4>Video Creative</h4><p>Generate short-form video ad creatives. Uses the same setup flow.</p></div>
+            </div>
+            <div class="setup-label"><span class="n">2</span>Which article path?</div>
+            <div class="choices choices-path">
+              <div class="choice sel" id="ap-new" onclick="pick('ap','new')"><div class="radio"></div><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div><h4>New Article</h4><p>Run the standard creative generation flow from the article content and PID category.</p></div>
+              <div class="choice" id="ap-dup" onclick="pick('ap','dup')"><div class="radio"></div><div class="ic"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></div><h4>Duplicate Winner Article</h4><p>Based on a proven winner — upload the winning creative image to seed generation.</p></div>
+              <div class="choice" id="ap-influencer" onclick="pick('ap','influencer')"><div class="radio"></div><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>Influencer</h4><p>Generate creator-style UGC creatives featuring an influencer with the product.</p></div>
+            </div>
+            <div id="dup-upload" style="display:none;margin-top:18px">
+              <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px">WINNER CREATIVE IMAGE</label>
+              <div class="dropzone" id="dropzone" onclick="fakeUpload()"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></svg></div><div><b>Click to upload</b> or drag and drop</div><div style="font-size:12px;color:var(--muted);margin-top:4px">PNG, JPG up to 10MB — recommended 1080×1080</div></div>
+              <div class="uploaded" id="uploaded"><div class="thumb"></div><div style="flex:1"><div class="fn">winner-creative-aug.png</div><div class="meta">1.2 MB · 1080×1080 <span class="valid"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Valid</span></div></div><button class="btn btn-ghost" onclick="event.stopPropagation();replaceUpload()">Replace</button></div>
+            </div>
+          </div>
+          <div class="cv-foot"><span class="spacer"></span><button class="btn btn-ghost" onclick="showScreen('tasks')">Cancel</button><button class="btn btn-primary btn-lg" onclick="gotoStep(2)">Continue<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+        </div>
+
+        <!-- STEP 2: TEMPLATES -->
+        <div class="panel-step" id="step-2">
+          <div class="card">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px"><h3 style="margin:0">Template selection</h3><span class="spacer"></span><span id="tpl-count-wrap" style="font-size:12.5px;color:var(--muted)"><b id="tpl-count" style="color:var(--primary)">20</b> of <span id="tpl-total">108</span> selected</span><button class="btn btn-ghost" onclick="openSettings()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8M4.6 9a1.6 1.6 0 0 0 1.5 1"/></svg>Settings</button></div>
+            <p class="csub">Templates matched to your PID category. Uncheck any you don't want, or preview before generating.</p>
+            <div class="tpl-store">
+              <svg class="sf-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg>
+              <span class="tpl-store-title" title="The Headphones Every Remote Worker Seems to Have These Days">The Headphones Every Remote Worker Seems to Have These Days</span>
+              <span class="sep">·</span><span>31 products</span>
+              <a class="sf-link" href="https://www.amazon.com/shop/dealrushrevolution/list/S2XGIY6IWHJ8?ccs_id=67c17491-08ef-4d82-ae41-92e2c066b30f" target="_blank" rel="noopener">View storefront on Amazon<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+            </div>
+            <div class="reco"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg></div><div class="t">We picked <b>20 templates</b> related to your PID category<span>Category: Home &amp; Garden · optimized for Facebook feed &amp; stories</span></div></div>
+            <div class="tpl-grid" id="tpl-grid"></div>
+            <div class="tpl-more"><button class="btn btn-soft" id="tpl-more-btn" onclick="toggleMoreTpl()"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>View &amp; pick more templates</button></div>
+          </div>
+          <div class="cv-foot"><button class="btn btn-ghost" onclick="gotoStep(1)"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button><span class="spacer"></span><button class="btn btn-primary btn-lg" id="gen-cta" onclick="startGeneration()"><svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg>Generate Creatives</button></div>
+        </div>
+
+        <!-- STEP 3: GENERATE -->
+        <div class="panel-step" id="step-3">
+          <div class="card"><div class="gen">
+            <div class="spinner"></div>
+            <h3 id="gen-title">Generating creatives</h3>
+            <div class="est">This may take a few minutes — you can keep working in another tab.</div>
+            <div class="gen-steps" id="gen-steps">
+              <div class="gs"><span class="gi"></span>Preparing article data</div>
+              <div class="gs"><span class="gi"></span>Matching PID category</div>
+              <div class="gs"><span class="gi"></span>Applying selected templates</div>
+              <div class="gs"><span class="gi"></span>Generating creative variations</div>
+            </div>
+            <div class="prog"><span id="gen-bar"></span></div>
+          </div></div>
+          <div class="cv-foot"><span class="spacer"></span><button class="btn btn-ghost" onclick="gotoStep(2)">Cancel &amp; return</button></div>
+        </div>
+
+        <!-- STEP 4: REVIEW & SELECT -->
+        <div class="panel-step" id="step-4">
+          <div class="card">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px"><h3 style="margin:0">Review &amp; Select</h3><span class="chip" style="background:var(--primary-10);color:var(--primary)" id="gen-round">First generation</span></div>
+            <p class="csub">Review the generated creatives, fix any issues, and pick your final set — all in one place.</p>
+            <div class="sel-bar"><span class="count" id="sel-count">0 selected</span><span class="hint">Pick at least 6 to continue</span><span class="spacer"></span><div class="autopick"><span class="ap-label">Auto-pick</span><select id="autopick-n" onchange="onAutoPickChange()"></select><button class="btn btn-soft" onclick="autoPickBest()"><svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg>Auto-pick best</button></div></div>
+            <div class="review-wrap">
+              <div class="cr-grid" id="cr-grid"></div>
+              <div class="checklist">
+                <h4>Review checklist</h4>
+                <div class="cs">Confirm you've reviewed these before continuing.</div>
+                <div class="ck-item" onclick="toggleCk(this)"><span class="ck-box"></span>I checked for product images with visible logos</div>
+                <div class="ck-item" onclick="toggleCk(this)"><span class="ck-box"></span>I checked for hidden text or incorrect text</div>
+                <div class="ck-note">Tip: use each card's <b>Switch ASIN</b> for logo issues, or <b>Regenerate</b> with tweak instructions for anything else.</div>
+              </div>
+            </div>
+          </div>
+          <div class="cv-foot"><button class="btn btn-ghost" onclick="gotoStep(2)"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back to templates</button><span class="spacer"></span><button class="btn btn-primary btn-lg" id="to-dl" onclick="gotoStep(5)" disabled>Continue to download<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+        </div>
+
+        <!-- STEP 5: DOWNLOAD -->
+        <div class="panel-step" id="step-5">
+          <div class="card" id="dl-card">
+            <h3>Download your creatives</h3>
+            <p class="csub"><span id="dl-n">9</span> creatives selected for <b id="dl-task">this task</b>.</p>
+            <div class="dl-summary" id="dl-summary"></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <button class="btn btn-primary btn-lg" onclick="doDownload('zip')"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>Download all as ZIP</button>
+              <button class="btn btn-ghost btn-lg" onclick="doDownload('sel')"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>Download selected</button>
+              <button class="btn btn-green btn-lg" onclick="uploadKueez()"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg>Upload to Kueez CMS</button>
+              <span class="muted" style="font-size:12.5px">copycat-creatives-97806.zip</span>
+            </div>
+          </div>
+          <div class="card" id="done-card" style="display:none;text-align:center">
+            <div class="success-ic"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <h3 style="font-size:19px" id="done-title">Creative creation completed</h3>
+            <p class="csub" id="done-sub" style="margin-bottom:0">All deliverables for this task are ready.</p>
+            <div class="done-list">
+              <div class="dl"><span class="ck"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Task completed<span class="ts" id="ts1"></span></div>
+              <div class="dl"><span class="ck"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Article created<span class="ts">Jun 10</span></div>
+              <div class="dl"><span class="ck"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Creatives created<span class="ts" id="ts3"></span></div>
+              <div class="dl"><span class="ck"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Final creatives downloaded<span class="ts" id="ts4"></span></div>
+            </div>
+            <div style="margin-top:22px"><button class="btn btn-primary btn-lg" onclick="finishTask()"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Return to Tasks Pipeline</button></div>
+          </div>
+          <div class="cv-foot" id="dl-foot"><button class="btn btn-ghost" onclick="gotoStep(4)"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PREFERENCES ============ -->
+    <section class="screen" id="screen-preferences">
+      <header class="topbar">
+        <h1>Preferences</h1><div class="crumb">Settings · Platform Configuration</div>
+      </header>
+      <div class="content pref-outer">
+        <div class="pref-layout">
+
+          <!-- left nav -->
+          <div class="pref-nav">
+            <div class="pref-nav-title">Settings</div>
+            <button class="pref-nav-item active" id="pnav-templates" onclick="showPref('templates')">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              Templates
+            </button>
+            <button class="pref-nav-item" id="pnav-dashboards" onclick="showPref('dashboards')">
+              <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg>
+              Dashboard Columns
+            </button>
+            <button class="pref-nav-item" id="pnav-ai" onclick="showPref('ai')">
+              <svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/><path d="M5 17.5l.9 2.5.9-2.5 2.5-.9-2.5-.9-.9-2.5-.9 2.5-2.5.9z"/></svg>
+              AI Models
+            </button>
+          </div>
+
+          <!-- right content -->
+          <div class="pref-content">
+
+            <!-- ── TEMPLATES panel ── -->
+            <div class="pref-panel active" id="pref-templates">
+              <div class="pref-section-head">
+                <h2>Template Settings</h2>
+                <p>Manage tags and storefront connection defaults for each template type. Changes apply when that template is selected in the Creative Creation flow.</p>
+              </div>
+              <div class="pref-card">
+                <div class="pref-card-head">
+                  <h3>Template Library</h3>
+                  <p>12 templates · click a tag to remove it, or use + to add</p>
+                </div>
+                <table class="pref-tbl">
+                  <thead>
+                    <tr>
+                      <th style="width:220px">Template</th>
+                      <th>Category</th>
+                      <th>Tags</th>
+                      <th style="width:110px;text-align:center">Storefront</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pref-tpl-body"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ── DASHBOARDS panel ── -->
+            <div class="pref-panel" id="pref-dashboards">
+              <div class="pref-section-head">
+                <h2>Dashboard Column Settings</h2>
+                <p>Choose which columns appear in each data table. Toggle columns on or off — changes take effect when the dashboard loads.</p>
+              </div>
+              <div class="pref-subtabs" id="pref-dash-tabs">
+                <button class="active" onclick="switchDashTab('bi',this)">BI Dashboard</button>
+                <button onclick="switchDashTab('articles',this)">Articles List</button>
+                <button onclick="switchDashTab('winner',this)">Winner Discovery</button>
+                <button onclick="switchDashTab('tasks',this)">Tasks Status</button>
+              </div>
+              <div class="pref-card">
+                <div class="pref-card-head">
+                  <h3 id="pref-col-title">BI Dashboard columns</h3>
+                  <p id="pref-col-desc">Columns shown in the BI performance table</p>
+                </div>
+                <div class="col-list" id="pref-col-list"></div>
+              </div>
+            </div>
+
+            <!-- ── AI MODELS panel ── -->
+            <div class="pref-panel" id="pref-ai">
+              <div class="pref-section-head">
+                <h2>AI Model Settings</h2>
+                <p>Select which AI model powers each feature. Changes apply to new requests immediately — in-progress generation uses the model it started with.</p>
+              </div>
+              <div class="pref-card" style="margin-bottom:14px">
+                <div class="pref-card-head">
+                  <h3>Feature → Model mapping</h3>
+                  <p>8 AI-powered features across the platform</p>
+                </div>
+                <div id="pref-ai-list"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--bg);border-radius:12px;border:1px solid var(--border)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+                <span style="font-size:12.5px;color:var(--muted)">Faster models (Flash / Haiku / mini) cost fewer tokens and respond quicker. Larger models (Opus / Pro / GPT-4o) produce higher-quality output for complex tasks.</span>
+              </div>
+            </div>
+
+          </div><!-- /pref-content -->
+        </div><!-- /pref-layout -->
+      </div>
+    </section>
+
+    <!-- ============ BI DASHBOARD (stub) ============ -->
+    <section class="screen" id="screen-bi-dashboard">
+      <header class="topbar">
+        <h1>BI Dashboard</h1><div class="crumb">Dashboards · Business Intelligence</div>
+      </header>
+      <div class="content">
+        <div class="stub-center">
+          <div class="stub-ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg></div>
+          <h2>BI Dashboard</h2>
+          <p>The Business Intelligence dashboard will display revenue, clickouts, commission rates, and performance breakdowns across storefronts, apps, and regions.</p>
+          <span class="stub-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            Coming soon
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ARTICLES LIST (stub) ============ -->
+    <section class="screen" id="screen-articles-list">
+      <header class="topbar">
+        <h1>Articles List</h1><div class="crumb">Dashboards · Content Overview</div>
+      </header>
+      <div class="content">
+        <div class="stub-center">
+          <div class="stub-ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
+          <h2>Articles List</h2>
+          <p>A dedicated table for all articles — with columns for title, status, PID, word count, author, storefront, and more. Filter, sort, and track content at scale.</p>
+          <span class="stub-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            Coming soon
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WINNER DISCOVERY (stub) ============ -->
+    <section class="screen" id="screen-winner-discovery">
+      <header class="topbar">
+        <h1>Winner Discovery</h1><div class="crumb">Dashboards · Creative Performance</div>
+      </header>
+      <div class="content">
+        <div class="stub-center">
+          <div class="stub-ic"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <h2>Winner Discovery</h2>
+          <p>Identify top-performing creatives by ROAS, spend, CTR, and more. See which templates, PIDs, and article paths produce winners — and duplicate them fast.</p>
+          <span class="stub-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            Coming soon
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TASKS STATUS (stub) ============ -->
+    <section class="screen" id="screen-tasks-status">
+      <header class="topbar">
+        <h1>Tasks Status</h1><div class="crumb">Dashboards · Pipeline Overview</div>
+      </header>
+      <div class="content">
+        <div class="stub-center">
+          <div class="stub-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h2>Tasks Status</h2>
+          <p>A high-level view of the entire tasks pipeline — article status, creative status, PPC owner, priorities, and readiness across all assignees and categories.</p>
+          <span class="stub-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            Coming soon
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STUB SCREENS (articles, storefronts, dashboard) ============ -->
+    <section class="screen" id="screen-articles">
+      <header class="topbar"><h1>Articles</h1><div class="crumb">CRM · Content</div></header>
+      <div class="content"><div class="stub-center">
+        <div class="stub-ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
+        <h2>Articles</h2>
+        <p>Manage all generated articles, review their content, and track their status in the pipeline.</p>
+        <span class="stub-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Coming soon</span>
+      </div></div>
+    </section>
+    <section class="screen" id="screen-storefronts">
+      <header class="topbar"><h1>Storefronts</h1><div class="crumb">CRM · Amazon Storefronts</div></header>
+      <div class="content"><div class="stub-center">
+        <div class="stub-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg></div>
+        <h2>Storefronts</h2>
+        <p>Browse, connect, and manage Amazon storefronts linked to your tasks and creative pipelines.</p>
+        <span class="stub-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Coming soon</span>
+      </div></div>
+    </section>
+    <section class="screen" id="screen-dashboard">
+      <header class="topbar"><h1>Dashboard</h1><div class="crumb">CRM · Overview</div></header>
+      <div class="content"><div class="stub-center">
+        <div class="stub-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <h2>Dashboard</h2>
+        <p>A high-level overview of your pipeline — tasks completed, articles published, creatives ready, and key metrics at a glance.</p>
+        <span class="stub-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Coming soon</span>
+      </div></div>
+    </section>
+
+  </div>
+</div>
+
+<!-- generation success banner (top of screen) -->
+<div class="gen-top-banner" id="gen-top-banner">
+  <div class="gtb-ic"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+  <div>
+    <div class="gtb-txt">Generation complete!</div>
+    <div class="gtb-sub">20 creatives are ready for review</div>
+  </div>
+</div>
+
+<!-- floating template-count bar -->
+<div class="floatbar" id="tpl-floatbar">
+  <span class="fb-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+  <span class="fb-n"><b id="fb-tpl-count">20</b> of 108 templates selected</span>
+  <button class="btn btn-primary" id="fb-gen" onclick="startGeneration()"><svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg>Generate Creatives</button>
+</div>
+
+<!-- floating bulk banner -->
+<div class="bulkbar" id="bulkbar">
+  <span class="n"><b id="bb-n">0</b> selected</span><span class="div"></span>
+  <button class="bb" onclick="toast('Bulk actions menu')"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>Bulk Actions</button>
+  <button class="bb" onclick="bulkSwitch()"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Switch ASIN</button>
+  <button class="bb bb-amber" onclick="bulkRegen()"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8"/></svg>Regenerate</button>
+  <button class="bb bb-green" onclick="bulkDownload()"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/></svg>Download</button>
+  <span class="div"></span>
+  <button class="bb" onclick="toast('Tag added to selection')"><svg viewBox="0 0 24 24"><path d="M20.6 13.4 12 22l-9-9V3h10z"/><circle cx="7.5" cy="7.5" r="1"/></svg>+ Add Tag</button>
+  <button class="bb" onclick="toast('Tag removed from selection')"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>Remove Tag</button>
+  <button class="bb bb-x" onclick="clearSel()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+</div>
+
+<!-- settings side panel -->
+<div class="side-overlay" id="settings-overlay" onclick="closeSettings()"></div>
+<div class="side" id="settings-side">
+  <div class="side-head"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8"/></svg><h3>Generation settings</h3><span class="spacer"></span><button class="m-close" onclick="closeSettings()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div class="side-body">
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:16px">Fine-tune how creatives are generated. (Detailed options coming soon — placeholders for now.)</div>
+    <div class="field"><label>Creative style</label><select class="input"><option>Lifestyle</option><option>Studio / clean</option><option>Bold / high-contrast</option><option>Editorial</option></select></div>
+    <div class="field"><label>Layout preference</label><select class="input"><option>Auto (recommended)</option><option>Text-heavy</option><option>Product-forward</option><option>Minimal</option></select></div>
+    <div class="field"><label>Image ratio</label><select class="input"><option>1:1 (Square)</option><option>4:5 (Portrait)</option><option>9:16 (Story)</option><option>16:9 (Landscape)</option></select></div>
+    <div class="field"><label>Brand safety level</label><select class="input"><option>Standard</option><option>Strict</option><option>Relaxed</option></select></div>
+    <div class="field"><label>Additional notes</label><textarea class="input" rows="3" placeholder="Anything else the generator should know…"></textarea></div>
+  </div>
+  <div class="side-foot"><button class="btn btn-ghost" onclick="closeSettings()">Cancel</button><span class="spacer"></span><button class="btn btn-primary" onclick="closeSettings();toast('Settings saved')">Save settings</button></div>
+</div>
+
+<!-- template preview modal -->
+<div class="overlay" id="tplOverlay" onclick="if(event.target===this)closeTpl()">
+  <div class="modal sm">
+    <div class="m-head"><b style="font-size:15px" id="tpl-title">Template preview</b><span class="spacer"></span><button class="m-close" onclick="closeTpl()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="m-body"><div class="tpl-preview" id="tpl-preview-img"></div><p class="muted" style="margin-top:14px;font-size:13px">Category: Home &amp; Garden · optimized for Facebook feed. Selecting this template adds it to your generation set.</p></div>
+    <div class="m-foot"><span class="spacer"></span><button class="btn btn-ghost" onclick="closeTpl()">Close</button></div>
+  </div>
+</div>
+
+<!-- article modal -->
+<div class="overlay" id="articleOverlay" onclick="if(event.target===this)closeArticle()">
+  <div class="modal">
+    <div class="m-head"><span class="ai-badge"><svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg>Article Generator</span><b style="font-size:15px">Create Article</b><span class="spacer"></span><button class="m-close" onclick="closeArticle()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="m-body">
+      <div class="m-intro"><svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg>AI drafted this article from the task's page title. Review each field, regenerate anything you don't like, then create.</div>
+      <div class="fld"><div class="fld-top"><label>Page Title</label><span class="from">auto-filled from task</span></div><select class="input" id="pageTitle"></select></div>
+      <div class="grid2">
+        <div class="fld" style="margin-bottom:0"><div class="fld-top"><label>Banner Image</label><span class="from">AI generated</span></div><div class="banner" id="banner"><span class="cap" id="bannerCap"></span><div class="tools"><button class="tbtn" onclick="regenBanner()"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button><button class="tbtn"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg>Upload</button></div></div></div>
+        <div class="fld" style="margin-bottom:0"><div class="fld-top"><label>Banner Prompt</label><button class="regen"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button></div><div class="prompt-wrap"><textarea class="input" rows="5" style="resize:vertical">Cozy retro-styled living room in a rental apartment, warm vintage palette, mid-century furniture, soft natural light, lifestyle product photography.</textarea><button class="go" onclick="regenBanner()"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>
+      </div>
+      <div style="height:20px"></div>
+      <div class="fld"><div class="fld-top"><label>Description 1</label><span class="from">AI generated</span><button class="regen"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button></div><textarea class="input" rows="5" style="resize:vertical">Shoppers need these finds to upgrade the space without the hassle. We picked easy, high-impact pieces that deliver instant character. Visit our [al]Amazon store[/al] to see the full [al]top 15 picks[/al]! [al]✨ Shop the Edit ✨[/al]</textarea></div>
+      <div class="fld"><div class="fld-top"><label>Description 2</label><span class="from">AI generated</span><button class="regen"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button></div><textarea class="input" rows="6" style="resize:vertical">[al]Pick 1[/al] - Why it works and what makes it a standout.
+[al]Pick 2[/al] - The detail reviewers keep mentioning.
+[al]Pick 3[/al] - Best value for the money this season.
+[al]Pick 4[/al] - The upgrade you didn't know you needed.</textarea></div>
+      <div class="fld" style="margin-bottom:0"><div class="fld-top"><label>Sharing Description</label><span class="from">AI generated · 3 options</span><button class="regen"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Regenerate</button></div><textarea class="input" id="share" rows="3" style="resize:vertical">Upgrade alert: these finds add instant personality without the hassle. Zero guesswork, all character. Grab the edit now ✨</textarea><div class="opts"><button class="active" onclick="pickOpt(this,0)">Option 1</button><button onclick="pickOpt(this,1)">Option 2</button><button onclick="pickOpt(this,2)">Option 3</button></div></div>
+    </div>
+    <div class="m-foot"><span class="note"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Saved as Draft automatically</span><span class="spacer"></span><button class="btn btn-ghost" onclick="closeArticle()">Cancel</button><button class="btn btn-primary" onclick="saveArticle()"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Create Article</button></div>
+  </div>
+</div>
+
+<!-- gallery lightbox (Review & Select) -->
+<div class="overlay gallery-overlay" id="galleryOverlay" onclick="if(event.target===this)closeGallery()">
+  <div class="g-stage">
+    <button class="g-nav g-prev" onclick="galleryNav(-1)" aria-label="Previous">‹</button>
+    <div class="g-imgwrap"><div class="g-image" id="g-image"></div></div>
+    <button class="g-nav g-next" onclick="galleryNav(1)" aria-label="Next">›</button>
+    <div class="g-counter" id="g-counter">1 / 12</div>
+  </div>
+  <aside class="g-panel">
+    <div class="g-panel-head"><span class="qa" id="g-qa">Good</span><button class="g-close" onclick="closeGallery()">Close <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="g-field"><label>Filename</label><div class="val" id="g-filename"></div></div>
+    <div class="g-field"><label>Tags</label><div class="g-tags" id="g-tags"></div></div>
+    <div class="g-field"><label>PID</label><div class="val code" id="g-pid"></div></div>
+    <div class="g-field"><label>Title</label><div class="val" id="g-title"></div></div>
+    <div class="g-actions" id="g-actions">
+      <button class="g-switch" onclick="gallerySwitchAsin()"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Switch ASIN</button>
+      <button class="g-regen" onclick="galleryRegen()"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8"/></svg>Regenerate</button>
+    </div>
+    <div class="g-regen-panel" id="g-regen-panel" style="display:none">
+      <div class="g-field"><label>Provider</label><select class="input" id="g-regen-provider"><option>Gemini Pro</option><option>Gemini Flash</option><option>NanoBanana 2</option></select></div>
+      <div class="g-field"><label>Tweak instructions</label><textarea class="input" id="g-regen-tweak" rows="3" style="resize:vertical" placeholder='Write tweak instructions, e.g. "make the background warmer"'></textarea></div>
+      <div class="rr"><button class="g-cancel" onclick="cancelGalleryRegen()">Cancel</button><button class="g-go" onclick="confirmGalleryRegen()"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8"/></svg>Regenerate</button></div>
+    </div>
+  </aside>
+</div>
+
+<!-- switch ASIN modal -->
+<div class="overlay asin-overlay" id="asinOverlay" onclick="if(event.target===this)closeAsin()">
+  <div class="modal sm">
+    <div class="m-head"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg><b style="font-size:15px">Switch ASIN</b><span class="spacer"></span><button class="m-close" onclick="closeAsin()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="m-body">
+      <input class="input" id="asin-search" placeholder="Search ASIN or title…" oninput="renderAsinList()">
+      <div class="asin-list" id="asin-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span id="toast-msg"></span></div>
+
+<script>
+const COLS=['Name','Page Title','Storefront Link','PID','Creatives Ready?','Old Article PID','Creative ID','Assignee','Task Description','PPC Owner','Priority','Created on','Article Status','Creative Prompt','Task Completion','Category','Publish Date','Task Status','DWS Store','General Tags','Actions'];
+const CH={green:['#E2F9F1','#0E9F76'],gray:['#F4F5FA','#8A8FA3'],amber:['#FEF3E2','#B9770F'],blue:['#ECEDFE','#4A55E0'],red:['#FFECEC','#E03E3E'],purple:['#EEEEFA','#5B5BC7'],cyan:['#E2F7FA','#0E8C9B']};
+// article: notstarted|inprogress|completed ; creative: locked|ready|prep|completed
+const tasks=[
+ {page:'Heavy-Duty Truck Bed Drawer Systems',pid:'97761',cid:'CR-7761',artStat:['Live','green'],cat:['Automotive','blue'],tags:'',article:'completed',creative:'ready',section:'backlog'},
+ {page:'Micro-Upgrades to Turn Your Small Workspace into a Productivity Haven',pid:'97762',cid:'CR-7762',artStat:['Live','green'],cat:['Office','cyan'],tags:'Prime Day',article:'completed',creative:'completed',section:'backlog'},
+ {page:'Keep Your Car 30% Cooler With This Window Shade',pid:'',cid:'',artStat:['In Production','red'],cat:['Automotive','blue'],tags:'',article:'inprogress',creative:'locked',section:'backlog'},
+ {page:'Clever Accessories for the Ultimate Mahjong Night',pid:'',cid:'',artStat:['In Production','red'],cat:['Toys & Games','amber'],tags:'',article:'notstarted',creative:'locked',section:'backlog'},
+ {page:'Nostalgic Gifts for Dads Ready to Channel Their Inner Kid',pid:'97770',cid:'CR-7770',artStat:['In Production','red'],cat:['Gifts','purple'],tags:'',article:'completed',creative:'prep',section:'backlog'},
+ {page:'Parent-Approved Backyard Games for the Ultimate Summer Cookout',pid:'',cid:'',artStat:['In Production','red'],cat:['Sports & Outdoors','green'],tags:'',article:'notstarted',creative:'locked',section:'backlog'},
+ {page:'The Best Swim Bags for Pool Season and Lessons',pid:'97781',cid:'CR-7781',artStat:['In Production','red'],cat:['Sports & Outdoors','green'],tags:'Prime Day',article:'completed',creative:'ready',section:'backlog'},
+ {page:'Aesthetic WFH Upgrades for Your Desk Setup',pid:'97806',cid:'CR-7806',artStat:['Live','green'],cat:['Office','cyan'],tags:'',article:'completed',creative:'completed',section:'backlog'},
+ {page:'Must-Have Drone Add-Ons Every Hobby Pilot Needs',pid:'',cid:'',artStat:['In Production','red'],cat:['Electronics','amber'],tags:'',article:'notstarted',creative:'locked',section:'backlog'},
+ {page:'The Ultra-Quiet Cooling Fan Hot Sleepers Obsess Over',pid:'97812',cid:'CR-7812',artStat:['In Production','red'],cat:['Home','cyan'],tags:'',article:'completed',creative:'ready',section:'backlog'}
+];
+tasks.forEach(t=>{t.assignee=['MN','#0E8C9B','Marichon M.'];t.ppc=['GK','#5B5BC7'];t.created='Today';t.desc='';});
+let activeTask=tasks.find(t=>t.creative==='ready')||tasks[0];
+
+function chip(label,key){const[bg,fg]=CH[key]||CH.gray;return `<span class="chip" style="background:${bg};color:${fg}">${label}</span>`;}
+function av(o){return `<span class="av" style="background:${o[1]}">${o[0]}</span>`;}
+function creativesReadyChip(t){
+  if(t.creative==='completed')return chip('Ready','green');
+  if(t.creative==='prep')return chip('In preparation','red');
+  if(t.creative==='ready')return chip('Pending','amber');
+  return '<span class="muted">—</span>';
+}
+function creativeStatusLabel(t){
+  return {locked:'Locked',ready:'Ready to start',prep:'In preparation',completed:'Completed'}[t.creative]||'—';
+}
+/* two-step workflow control — simplified */
+function workflow(t,i){
+  const artDone = t.article==='completed';
+  const crDone  = t.creative==='completed';
+  const inPPC   = t.section==='ppc';
+
+  // Article button: 2 states — todo / done
+  const artBtn = artDone
+    ? `<button class="wf-btn wf-ck" onclick="openArticle(${i})" title="Article created — click to view">
+        <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Article
+       </button>`
+    : `<button class="wf-btn wf-todo" onclick="openArticle(${i})" title="Create article">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Article
+       </button>`;
+
+  // Creatives button: 3 states — disabled / todo / done
+  const crBtn = !artDone
+    ? `<button class="wf-btn wf-dis" disabled title="Create an article first to unlock creatives">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Creatives
+       </button>`
+    : crDone
+      ? `<button class="wf-btn wf-ck" onclick="openCreativeFor(${i})" title="Creatives created — click to review">
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Creatives
+         </button>`
+      : `<button class="wf-btn wf-todo" onclick="openCreativeFor(${i})" title="Create creatives">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Creatives
+         </button>`;
+
+  return `<div class="wf">${artBtn}<div class="wf-pip"></div>${crBtn}</div>`;
+}
+function isDone(t){return t.article==='completed'&&t.creative==='completed';}
+
+function rowHTML(t,i){
+  const done=isDone(t);
+  const taskStat = done?chip('Completed','green'):(t.section==='ppc'?chip('Ready for PPC','blue'):'<span class="muted">—</span>');
+  const canPPC=done||t.section==='ppc';
+  const cbTip=canPPC?'Check to move this task to Ready for PPC':'Finish the article and creatives before this task can move to PPC';
+  return `<tr class="${done?'row-done':''}">
+    <td class="s1 c-name"><div class="task-name"><input type="checkbox" class="rcheck${canPPC?'':' rcheck-locked'}" ${t.checked?'checked':''} ${canPPC?'':'disabled'} title="${cbTip}" onchange="onCheck(${i})"><span class="t">New Article Task<small>PID ${t.pid||'—'}</small></span></div></td>
+    <td class="s2 c-page" style="font-weight:600"><span class="c-page-cell" title="${t.page}">${t.page}</span></td>
+    <td><a class="link" href="#">https://www.amazon.c…</a></td>
+    <td class="code ${t.pid?'':'muted'}">${t.pid||'—'}</td>
+    <td>${creativesReadyChip(t)}</td>
+    <td class="muted">—</td>
+    <td class="code ${t.cid?'':'muted'}">${t.cid||'—'}</td>
+    <td><div class="owner">${av(t.assignee)}${t.assignee[2]}</div></td>
+    <td class="muted">${t.desc||'—'}</td>
+    <td>${av(t.ppc)}</td>
+    <td class="muted">—</td>
+    <td class="muted">${t.created}</td>
+    <td>${chip(t.artStat[0],t.artStat[1])}</td>
+    <td class="muted">—</td>
+    <td class="muted">${t.creative==='completed'?'100%':'—'}</td>
+    <td>${chip(t.cat[0],t.cat[1])}</td>
+    <td class="muted">—</td>
+    <td>${taskStat}</td>
+    <td class="muted">—</td>
+    <td>${t.tags?chip(t.tags,'blue'):'<span class="muted">—</span>'}</td>
+    <td class="sr">${workflow(t,i)}</td>
+  </tr>`;
+}
+function groupHeader(label,color,count){return `<tr class="grouprow"><td class="s1" style="position:sticky;left:0;z-index:6;background:var(--bg)"><span class="gtag"><span class="bar" style="background:${color}"></span>${label}<span class="cnt">· ${count}</span></span></td><td colspan="20" style="background:var(--bg)"></td></tr>`;}
+let filterTerm='';
+function matchesFilter(t){
+  if(!filterTerm)return true;
+  const q=filterTerm.toLowerCase();
+  return [t.page,t.pid,t.cid,t.cat[0],t.tags,t.assignee[2]].some(v=>(v||'').toLowerCase().includes(q));
+}
+function emptyRow(msg){return `<tr><td class="s1" style="position:sticky;left:0;background:#fff"></td><td colspan="20" class="muted" style="font-size:12.5px">${msg}</td></tr>`;}
+function renderTable(){
+  document.getElementById('thead-row').innerHTML=COLS.map((c,idx)=>{
+    let cls=idx===0?'class="s1 c-name"':idx===1?'class="s2 c-page"':idx===20?'class="sr" style="text-align:center"':'';
+    return `<th ${cls}>${c.toUpperCase()}</th>`;
+  }).join('');
+  const backlog=tasks.map((t,i)=>({t,i})).filter(x=>x.t.section==='backlog'&&matchesFilter(x.t))
+    .sort((a,b)=>isDone(b.t)-isDone(a.t)); // done rows float to top
+  const ppc=tasks.map((t,i)=>({t,i})).filter(x=>x.t.section==='ppc'&&matchesFilter(x.t));
+  let html=groupHeader('Incoming / Backlog','#5C67F2',backlog.length);
+  if(backlog.length===0)html+=emptyRow(filterTerm?'No backlog tasks match your search.':'No tasks in backlog.');
+  backlog.forEach(x=>html+=rowHTML(x.t,x.i));
+  html+=groupHeader('Ready for PPC','#2FD39A',ppc.length);
+  if(ppc.length===0)html+=emptyRow(filterTerm?'No Ready-for-PPC tasks match your search.':'Completed tasks you check off will move here.');
+  ppc.forEach(x=>html+=rowHTML(x.t,x.i));
+  document.getElementById('tbody').innerHTML=html;
+  const shown=backlog.length+ppc.length;
+  document.getElementById('rowcount').textContent=filterTerm?`${shown} of ${tasks.length}`:tasks.length;
+  syncFrozenShadow();
+}
+function filterTasks(v){filterTerm=v.trim();renderTable();}
+function syncFrozenShadow(){const el=document.querySelector('.tbl-scroll');if(el)el.classList.toggle('scrolled',el.scrollLeft>0);}
+(function(){const el=document.querySelector('.tbl-scroll');if(el)el.addEventListener('scroll',syncFrozenShadow,{passive:true});})();
+renderTable();
+
+function onCheck(i){const t=tasks[i];
+  if(t.section==='ppc'){t.section='backlog';t.checked=false;renderTable();toast('Moved “'+truncate(t.page)+'” back to Backlog');return;}
+  if(isDone(t)){t.section='ppc';t.checked=true;renderTable();toast('Moved “'+truncate(t.page)+'” to Ready for PPC');}
+}
+function truncate(s){return s.length>34?s.slice(0,34)+'…':s;}
+
+/* download CSV */
+function downloadCSV(){
+  const header=COLS.slice(0,20);
+  const rows=tasks.map(t=>[ 'New Article Task',t.page,'https://www.amazon.com/dp/'+(t.pid||''),t.pid||'',creativeStatusText(t),'',t.cid||'',t.assignee[2],t.desc||'',t.ppc[0],'',t.created,t.artStat[0],'',t.creative==='completed'?'100%':'',t.cat[0],'',isDone(t)?'Completed':(t.section==='ppc'?'Ready for PPC':''),'',t.tags||'']);
+  const esc=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const csv=[header.map(esc).join(',')].concat(rows.map(r=>r.map(esc).join(','))).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='facebook-creative-pipeline.csv';a.click();
+  toast('CSV exported');
+}
+function creativeStatusText(t){return {locked:'',ready:'Pending',prep:'In preparation',completed:'Ready'}[t.creative]||'';}
+
+/* screens */
+const NAV_MAP={tasks:'nav-tasks',creative:'nav-creative',preferences:'nav-preferences','bi-dashboard':'nav-bi','articles-list':'nav-articles-list','winner-discovery':'nav-winner','tasks-status':'nav-tasks-status',articles:'nav-articles',storefronts:'nav-storefronts',dashboard:'nav-dashboard'};
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const scr=document.getElementById('screen-'+name);
+  if(scr)scr.classList.add('active');
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
+  const navEl=NAV_MAP[name]?document.getElementById(NAV_MAP[name]):null;
+  if(navEl)navEl.classList.add('active');
+  window.scrollTo(0,0);
+  if(name==='preferences')initPreferences();
+}
+
+/* ===== PREFERENCES ===== */
+const PREF_TEMPLATES=[
+  {id:1,name:'Product Spotlight',cat:'Lifestyle',tags:['lifestyle','product'],sfConn:true,grad:'#5C67F2,#3CCBDA'},
+  {id:2,name:'Before / After Reveal',cat:'Health & Wellness',tags:['before-after','health'],sfConn:true,grad:'#2FD39A,#0E9F76'},
+  {id:3,name:'Top 5 List',cat:'Tech',tags:['top-list','tech'],sfConn:false,grad:'#F5A623,#E03E3E'},
+  {id:4,name:'User Review',cat:'Home & Garden',tags:['review','home'],sfConn:true,grad:'#8B8BD8,#5C67F2'},
+  {id:5,name:'Deal Alert',cat:'Shopping',tags:['deals','urgency'],sfConn:true,grad:'#FF6B6B,#F5A623'},
+  {id:6,name:'How-To Guide',cat:'Education',tags:['tutorial','howto'],sfConn:false,grad:'#3CCBDA,#2FD39A'},
+  {id:7,name:'Influencer Style',cat:'Fashion',tags:['fashion','influencer','ugc'],sfConn:true,grad:'#F5A623,#8B8BD8'},
+  {id:8,name:'Side-by-Side Compare',cat:'Tech',tags:['compare','tech'],sfConn:true,grad:'#5C67F2,#FF6B6B'},
+  {id:9,name:'Testimonial Quote',cat:'Health & Wellness',tags:['social-proof','quote'],sfConn:false,grad:'#2FD39A,#3CCBDA'},
+  {id:10,name:'Countdown Timer',cat:'Shopping',tags:['urgency','deals','scarcity'],sfConn:true,grad:'#E03E3E,#F5A623'},
+  {id:11,name:'Feature Callout',cat:'Tech',tags:['features','tech'],sfConn:true,grad:'#8B8BD8,#3CCBDA'},
+  {id:12,name:'Lifestyle Story',cat:'Lifestyle',tags:['lifestyle','story'],sfConn:false,grad:'#3CCBDA,#5C67F2'},
+];
+
+const PREF_COLUMNS={
+  bi:{title:'BI Dashboard columns',desc:'Columns shown in the BI performance table',cols:[
+    {name:'Date',desc:'Date of the data point',on:true},
+    {name:'Revenue',desc:'Total revenue generated ($)',on:true},
+    {name:'Clickouts',desc:'Number of outbound product clicks',on:true},
+    {name:'Commission',desc:'Commission earned ($)',on:true},
+    {name:'Commission %',desc:'Commission rate per clickout',on:true},
+    {name:'Storefront',desc:'Source storefront name',on:true},
+    {name:'Conversion Rate',desc:'Clickout-to-purchase rate',on:true},
+    {name:'App',desc:'Application identifier (Kueez, FB-Clickout…)',on:false},
+    {name:'Country',desc:'Geographic region breakdown',on:false},
+    {name:'Device',desc:'Device type breakdown (mobile/desktop)',on:false},
+  ]},
+  articles:{title:'Articles List columns',desc:'Columns shown in the Articles data table',cols:[
+    {name:'Title',desc:'Article page title',on:true},
+    {name:'Status',desc:'Current article status',on:true},
+    {name:'PID',desc:'Connected Product ID',on:true},
+    {name:'Category',desc:'Article content category',on:true},
+    {name:'Author',desc:'Article creator / assignee',on:true},
+    {name:'Created',desc:'Date article was created',on:true},
+    {name:'Storefront',desc:'Connected Amazon storefront',on:true},
+    {name:'Word Count',desc:'Total article word count',on:false},
+    {name:'Updated',desc:'Last content update date',on:false},
+    {name:'Tags',desc:'Article classification tags',on:false},
+  ]},
+  winner:{title:'Winner Discovery columns',desc:'Columns shown in the Winner Discovery table',cols:[
+    {name:'Creative',desc:'Creative thumbnail preview',on:true},
+    {name:'PID',desc:'Product ID',on:true},
+    {name:'ROAS',desc:'Return on ad spend',on:true},
+    {name:'Spend',desc:'Total ad spend ($)',on:true},
+    {name:'Clicks',desc:'Total click count',on:true},
+    {name:'CTR',desc:'Click-through rate (%)',on:true},
+    {name:'Status',desc:'Winner / Watch / Pause status',on:true},
+    {name:'Template',desc:'Template used to generate this creative',on:true},
+    {name:'CPM',desc:'Cost per 1,000 impressions',on:false},
+    {name:'Date Found',desc:'Date the winner was identified',on:false},
+  ]},
+  tasks:{title:'Tasks Status columns',desc:'Columns shown in the Tasks Status dashboard',cols:[
+    {name:'Task Name',desc:'Task / article title',on:true},
+    {name:'Assignee',desc:'Team member assigned to the task',on:true},
+    {name:'Article Status',desc:'Current article creation state',on:true},
+    {name:'Creative Status',desc:'Current creative generation state',on:true},
+    {name:'PPC Owner',desc:'PPC team owner',on:true},
+    {name:'Category',desc:'Task content category',on:true},
+    {name:'DWS',desc:'Daily website sales metric',on:true},
+    {name:'Priority',desc:'Task priority level',on:false},
+    {name:'Created',desc:'Task creation date',on:false},
+    {name:'General Tags',desc:'Classification tags',on:false},
+  ]},
+};
+
+const AI_MODELS_LIST=[
+  {value:'claude-opus-4',label:'Claude Opus 4',vendor:'anthropic'},
+  {value:'claude-sonnet-4',label:'Claude Sonnet 4',vendor:'anthropic'},
+  {value:'claude-haiku-4',label:'Claude Haiku 4',vendor:'anthropic'},
+  {value:'gpt-4o',label:'GPT-4o',vendor:'openai'},
+  {value:'gpt-4o-mini',label:'GPT-4o mini',vendor:'openai'},
+  {value:'gemini-2-5-pro',label:'Gemini 2.5 Pro',vendor:'google'},
+  {value:'gemini-2-5-flash',label:'Gemini 2.5 Flash',vendor:'google'},
+];
+
+const AI_FEATURES=[
+  {id:'article-gen',name:'Article Generation',desc:'Writes the full article body, headings, and product picks',model:'claude-sonnet-4',
+    icon:'<path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/>'},
+  {id:'title-suggest',name:'Page Title Suggestion',desc:'Auto-fills and suggests click-worthy page titles',model:'claude-haiku-4',
+    icon:'<path d="M4 6h16M9 12h11M4 18h7"/>'},
+  {id:'sharing-desc',name:'Sharing Description',desc:'Generates 3 social sharing description variants per article',model:'claude-haiku-4',
+    icon:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>'},
+  {id:'creative-brief',name:'Creative Brief Generation',desc:'Creates the generation brief from article and PID data',model:'gpt-4o',
+    icon:'<path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/>'},
+  {id:'template-rec',name:'Template Recommendation',desc:'Picks the best-fit templates for your PID category',model:'gemini-2-5-flash',
+    icon:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'},
+  {id:'asin-match',name:'ASIN Matching',desc:'Matches and ranks products to creative image slots',model:'gemini-2-5-flash',
+    icon:'<path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/>'},
+  {id:'winner-analysis',name:'Winner Analysis',desc:'Scores and ranks creatives by predicted performance',model:'gpt-4o',
+    icon:'<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>'},
+  {id:'perf-insights',name:'Performance Insights',desc:'Generates plain-English performance summaries and tips',model:'claude-sonnet-4',
+    icon:'<path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/>'},
+];
+
+let prefInited=false;
+let curDashTab='bi';
+
+function initPreferences(){
+  if(!prefInited){renderPrefTemplates();renderPrefColumns('bi');renderPrefAI();prefInited=true;}
+}
+
+function showPref(panel){
+  document.querySelectorAll('.pref-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.pref-nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pref-'+panel).classList.add('active');
+  document.getElementById('pnav-'+panel).classList.add('active');
+}
+
+/* -- Templates table -- */
+function renderPrefTemplates(){
+  const tbody=document.getElementById('pref-tpl-body');
+  tbody.innerHTML=PREF_TEMPLATES.map((t,i)=>`
+    <tr>
+      <td>
+        <div class="tpl-row-name">
+          <div class="tpl-thumb-sm" style="background:linear-gradient(135deg,${t.grad})">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+          </div>
+          <span style="font-weight:600;font-size:13px">${t.name}</span>
+        </div>
+      </td>
+      <td><span class="chip" style="background:var(--primary-10);color:var(--primary);font-size:11.5px">${t.cat}</span></td>
+      <td>
+        <div class="tags-wrap" id="tags-wrap-${i}">
+          ${t.tags.map((tag,j)=>`<span class="tag-pill">${tag}<button onclick="removeTag(${i},${j})" title="Remove tag">×</button></span>`).join('')}
+          <button class="tag-add-btn" onclick="showTagInput(${i})" id="tag-add-${i}">+ Tag</button>
+          <input class="tag-input-inline" id="tag-input-${i}" placeholder="tag name" onkeydown="tagKeydown(event,${i})" onblur="hideTagInput(${i})">
+        </div>
+      </td>
+      <td style="text-align:center">
+        <button class="tgl ${t.sfConn?'on':''}" id="sf-tgl-${i}" onclick="toggleSfConn(${i})" title="${t.sfConn?'On: storefront connected':'Off: not connected'}"></button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function removeTag(tplIdx,tagIdx){
+  PREF_TEMPLATES[tplIdx].tags.splice(tagIdx,1);
+  renderPrefTemplates();
+  toast('Tag removed');
+}
+
+function showTagInput(tplIdx){
+  const inp=document.getElementById('tag-input-'+tplIdx);
+  const btn=document.getElementById('tag-add-'+tplIdx);
+  inp.classList.add('show');
+  btn.style.display='none';
+  inp.value='';
+  inp.focus();
+}
+
+function hideTagInput(tplIdx){
+  setTimeout(()=>{
+    const inp=document.getElementById('tag-input-'+tplIdx);
+    const btn=document.getElementById('tag-add-'+tplIdx);
+    if(inp){inp.classList.remove('show');}
+    if(btn){btn.style.display='';}
+  },200);
+}
+
+function tagKeydown(e,tplIdx){
+  if(e.key==='Enter'||e.key===','){
+    e.preventDefault();
+    const inp=document.getElementById('tag-input-'+tplIdx);
+    const val=(inp.value||'').trim().replace(/,/g,'');
+    if(val&&!PREF_TEMPLATES[tplIdx].tags.includes(val)){
+      PREF_TEMPLATES[tplIdx].tags.push(val);
+      renderPrefTemplates();
+      toast('Tag "'+val+'" added');
+    }
+  }
+  if(e.key==='Escape')hideTagInput(tplIdx);
+}
+
+function toggleSfConn(tplIdx){
+  PREF_TEMPLATES[tplIdx].sfConn=!PREF_TEMPLATES[tplIdx].sfConn;
+  const btn=document.getElementById('sf-tgl-'+tplIdx);
+  if(btn){btn.classList.toggle('on',PREF_TEMPLATES[tplIdx].sfConn);btn.title=PREF_TEMPLATES[tplIdx].sfConn?'On: storefront connected':'Off: not connected';}
+  toast('Storefront connection '+(PREF_TEMPLATES[tplIdx].sfConn?'enabled':'disabled')+' for '+PREF_TEMPLATES[tplIdx].name);
+}
+
+/* -- Dashboard columns -- */
+function switchDashTab(tab,btn){
+  curDashTab=tab;
+  document.querySelectorAll('#pref-dash-tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPrefColumns(tab);
+}
+
+function renderPrefColumns(tab){
+  const d=PREF_COLUMNS[tab];
+  document.getElementById('pref-col-title').textContent=d.title;
+  document.getElementById('pref-col-desc').textContent=d.desc;
+  document.getElementById('pref-col-list').innerHTML=d.cols.map((c,i)=>`
+    <div class="col-item">
+      <span class="col-drag"><svg viewBox="0 0 24 24"><path d="M9 5h2M9 12h2M9 19h2M13 5h2M13 12h2M13 19h2"/></svg></span>
+      <div class="col-text">
+        <div class="col-name">${c.name}</div>
+        <div class="col-desc">${c.desc}</div>
+      </div>
+      <button class="tgl ${c.on?'on':''}" id="col-tgl-${tab}-${i}" onclick="toggleCol('${tab}',${i})" title="${c.on?'Visible':'Hidden'}"></button>
+    </div>
+  `).join('');
+}
+
+function toggleCol(tab,i){
+  PREF_COLUMNS[tab].cols[i].on=!PREF_COLUMNS[tab].cols[i].on;
+  const btn=document.getElementById('col-tgl-'+tab+'-'+i);
+  if(btn){btn.classList.toggle('on',PREF_COLUMNS[tab].cols[i].on);btn.title=PREF_COLUMNS[tab].cols[i].on?'Visible':'Hidden';}
+  toast(PREF_COLUMNS[tab].cols[i].name+' column '+(PREF_COLUMNS[tab].cols[i].on?'shown':'hidden'));
+}
+
+/* -- AI Models -- */
+function renderPrefAI(){
+  const vendorLabel={anthropic:'Anthropic',openai:'OpenAI',google:'Google'};
+  document.getElementById('pref-ai-list').innerHTML=AI_FEATURES.map(f=>{
+    const opts=AI_MODELS_LIST.map(m=>`<option value="${m.value}" ${m.value===f.model?'selected':''}>${m.label}</option>`).join('');
+    const curVendor=AI_MODELS_LIST.find(m=>m.value===f.model)?.vendor||'anthropic';
+    return `
+    <div class="ai-item">
+      <div class="ai-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${f.icon}</svg></div>
+      <div class="ai-label">
+        <div class="ai-name">${f.name}</div>
+        <div class="ai-desc">${f.desc}</div>
+      </div>
+      <span class="ai-vendor ${curVendor}" id="ai-vendor-${f.id}">${vendorLabel[curVendor]}</span>
+      <select class="ai-select" id="ai-sel-${f.id}" onchange="changeAIModel('${f.id}',this.value)">${opts}</select>
+    </div>`;
+  }).join('');
+}
+
+function changeAIModel(featureId,modelVal){
+  const f=AI_FEATURES.find(x=>x.id===featureId);
+  if(!f)return;
+  f.model=modelVal;
+  const m=AI_MODELS_LIST.find(x=>x.value===modelVal);
+  if(m){
+    const vendorEl=document.getElementById('ai-vendor-'+featureId);
+    const vendorLabel={anthropic:'Anthropic',openai:'OpenAI',google:'Google'};
+    if(vendorEl){vendorEl.className='ai-vendor '+m.vendor;vendorEl.textContent=vendorLabel[m.vendor];}
+  }
+  toast(f.name+' → '+m?.label);
+}
+
+/* article modal */
+let currentIdx=null;
+function openArticle(i){currentIdx=i;const t=tasks[i];document.getElementById('pageTitle').innerHTML='<option>'+t.page+'</option>';document.getElementById('bannerCap').textContent=truncate(t.page);document.getElementById('articleOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeArticle(){document.getElementById('articleOverlay').classList.remove('open');document.body.style.overflow='';}
+function saveArticle(){if(currentIdx!=null){tasks[currentIdx].article='completed';if(tasks[currentIdx].creative==='locked')tasks[currentIdx].creative='ready';renderTable();}closeArticle();toast('Article created — you can now create creatives');}
+const grads=['linear-gradient(135deg,#6C76F4,#3CCBDA)','linear-gradient(135deg,#8B8BD8,#FF6B6B)','linear-gradient(135deg,#5C67F2,#2FD39A)','linear-gradient(135deg,#F5A623,#FF6B6B)'];let gi=0;
+function regenBanner(){gi=(gi+1)%grads.length;document.getElementById('banner').style.background=grads[gi];}
+const shareOpts=["Upgrade alert: these finds add instant personality without the hassle. Zero guesswork, all character. Grab the edit now ✨","Don't settle for boring. These picks bring real character fast — no hassle, no regret. See the full list 👀","Reviewers can't stop raving. Tap to shop our top 15 picks before they sell out 🔥"];
+function pickOpt(b,i){document.querySelectorAll('.opts button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('share').value=shareOpts[i];}
+
+/* ===== creative flow ===== */
+const STEPS=['Setup','Templates','Generate','Review & Select','Download'];
+const STATUS_BY_STEP={1:'Setup in progress',2:'In preparation',3:'Generating',4:'Ready for review',5:'Ready to download'};
+let curStep=1, maxStep=1;
+function openCreativeFor(i){activeTask=tasks[i];if(activeTask.article!=='completed'){toast('Create an article first');return;}startCreative();}
+function openCreative(){const t=tasks.find(x=>x.article==='completed'&&x.creative!=='completed')||tasks.find(x=>x.article==='completed');if(t)activeTask=t;startCreative();}
+function startCreative(){document.getElementById('cv-taskname').textContent='New Article Task';document.getElementById('cv-pagetitle').textContent=activeTask.page;document.getElementById('cv-pid').textContent=activeTask.pid||'—';document.getElementById('cv-cat').textContent=activeTask.cat[0];maxStep= activeTask.creative==='completed'?5:1;window._crRendered=false;showScreen('creative');gotoStep(1);}
+function renderStepper(){
+  document.getElementById('stepper').innerHTML=STEPS.map((s,idx)=>{
+    const n=idx+1;let cls='step';if(n<curStep)cls+=' done';if(n===curStep)cls+=' active';if(n>maxStep)cls+=' locked';
+    const inner=(n<curStep)?'<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>':n;
+    return `<div class="${cls}" onclick="stepNav(${n})"><div class="dot">${inner}</div><div class="lbl">${s}</div></div>`+(idx<STEPS.length-1?'<div class="step" style="cursor:default"><div class="line"></div></div>':'');
+  }).join('');
+}
+function stepNav(n){if(n>maxStep){toast('Finish the current step to continue');return;}gotoStep(n);}
+function setCvStatus(txt){document.getElementById('cv-status').textContent=txt;activeTask.cvStatus=txt;}
+function gotoStep(n){
+  curStep=n;if(n>maxStep)maxStep=n;
+  document.querySelectorAll('.panel-step').forEach(p=>p.classList.remove('active'));
+  document.getElementById('step-'+n).classList.add('active');renderStepper();window.scrollTo(0,0);
+  document.querySelector('.cv-header').classList.toggle('mini',n>=2);
+  setCvStatus(STATUS_BY_STEP[n]||'In progress');
+  if(n===1)setCvStatus('Not started');
+  if(n===2)renderTemplates();
+  closeGallery();
+  if(n===4){if(!window._crRendered){renderCreatives();window._crRendered=true;}renderAutoPickOptions();updateBulk();updateSelCount();}
+  if(n!==4)document.getElementById('bulkbar').classList.remove('show');
+  if(n===5)renderDownload();
+  syncTplFloat();
+}
+/* setup */
+let ct='image',ap='new';
+function pick(group,val){if(group==='ct'){ct=val;document.getElementById('ct-image').classList.toggle('sel',val==='image');document.getElementById('ct-video').classList.toggle('sel',val==='video');}else{ap=val;document.getElementById('ap-new').classList.toggle('sel',val==='new');document.getElementById('ap-dup').classList.toggle('sel',val==='dup');document.getElementById('ap-influencer').classList.toggle('sel',val==='influencer');document.getElementById('dup-upload').style.display=val==='dup'?'block':'none';}}
+function fakeUpload(){document.getElementById('dropzone').style.display='none';document.getElementById('uploaded').style.display='flex';}
+function replaceUpload(){document.getElementById('uploaded').style.display='none';document.getElementById('dropzone').style.display='block';}
+let store='on';function toggleStore(){store=store==='on'?'off':'on';document.getElementById('sf-toggle').classList.toggle('on',store==='on');}
+/* storefront settings popover */
+let sfSettingsOpen=false;
+let sfMapping='1to1';
+let sfAsinVal=5;
+let sfDefaultMapping='1to1';
+let sfDefaultAsin=5;
+function toggleSfSettings(e){e.stopPropagation();sfSettingsOpen=!sfSettingsOpen;document.getElementById('sf-settings-pop').classList.toggle('open',sfSettingsOpen);document.getElementById('sf-gear-btn').classList.toggle('active',sfSettingsOpen);}
+function closeSfSettings(){sfSettingsOpen=false;document.getElementById('sf-settings-pop').classList.remove('open');document.getElementById('sf-gear-btn').classList.remove('active');}
+function setMapping(m){sfMapping=m;document.getElementById('map-1to1').classList.toggle('active',m==='1to1');document.getElementById('map-many').classList.toggle('active',m==='many');}
+function stepAsin(d){sfAsinVal=Math.max(1,sfAsinVal+d);document.getElementById('asin-val').textContent=sfAsinVal;}
+function setSfDefault(){sfDefaultMapping=sfMapping;sfDefaultAsin=sfAsinVal;const b=document.getElementById('sf-default-badge');b.style.display='flex';setTimeout(()=>{b.style.display='none';},2500);toast('Settings saved as default');}
+function applySfSettings(){closeSfSettings();toast('Connection settings applied');}
+document.addEventListener('click',function(e){if(sfSettingsOpen&&!document.getElementById('sf-settings-pop').contains(e.target)&&!document.getElementById('sf-gear-btn').contains(e.target)){closeSfSettings();}});
+/* settings */
+function openSettings(){document.getElementById('settings-overlay').classList.add('open');document.getElementById('settings-side').classList.add('open');}
+function closeSettings(){document.getElementById('settings-overlay').classList.remove('open');document.getElementById('settings-side').classList.remove('open');}
+/* templates */
+const tplCats=['Bold Headline','Lifestyle','Product Grid','Before/After','Testimonial','Carousel','Price Drop','Minimal','Editorial','Split Screen'];
+const tplGrads=['#6C76F4','#3CCBDA','#8B8BD8','#FF6B6B','#F5A623','#2FD39A','#5C67F2','#0E8C9B','#B97FE0','#FF8FA3'];
+let tplSel=[];let tplSfConn=[];let tplExpanded=false;const TPL_TOTAL=108;const TPL_PREVIEW=20;
+function renderTemplates(){
+  if(tplSel.length===0)tplSel=Array(TPL_TOTAL).fill(false).map((_,i)=>i<TPL_PREVIEW);
+  if(tplSfConn.length===0)tplSfConn=Array(TPL_TOTAL).fill(null).map((_,i)=>PREF_TEMPLATES[i%PREF_TEMPLATES.length].sfConn);
+  const show=tplExpanded?TPL_TOTAL:TPL_PREVIEW;let h='';
+  for(let i=0;i<show;i++){
+    const c=tplCats[i%tplCats.length];const g=tplGrads[i%tplGrads.length];const sf=tplSfConn[i];
+    h+=`<div class="tpl ${tplSel[i]?'sel':''}" onclick="toggleTpl(${i})">
+      <div class="cb"></div>
+      <div class="eye" onclick="event.stopPropagation();previewTpl(${i})"><svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <div class="pic" style="background:linear-gradient(135deg,${g},${g}CC)">${c}</div>
+      <div class="meta"><small>Home &amp; Garden</small><span class="chip" style="background:var(--primary-10);color:var(--primary);padding:2px 8px">#${i+1}</span></div>
+      <div class="tpl-sf-row" onclick="event.stopPropagation();toggleTplSf(${i})">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21V12h6v9"/></svg>
+        <span class="sf-lbl">Storefront</span>
+        <button class="tgl-sm ${sf?'on':''}" id="tgl-sf-${i}" onclick="event.stopPropagation();toggleTplSf(${i})" title="${sf?'Storefront connected':'Storefront off'}"></button>
+      </div>
+    </div>`;}
+  document.getElementById('tpl-grid').innerHTML=h;
+  const btn=document.getElementById('tpl-more-btn');
+  if(btn)btn.innerHTML=tplExpanded?'<svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>Show fewer templates':`<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>View &amp; pick more templates (${TPL_TOTAL-TPL_PREVIEW} more)`;
+  updateTplCount();}
+function toggleTpl(i){tplSel[i]=!tplSel[i];renderTemplates();}
+function toggleMoreTpl(){tplExpanded=!tplExpanded;renderTemplates();}
+function toggleTplSf(i){
+  tplSfConn[i]=!tplSfConn[i];
+  const btn=document.getElementById('tgl-sf-'+i);
+  if(btn){btn.classList.toggle('on',tplSfConn[i]);btn.title=tplSfConn[i]?'Storefront connected':'Storefront off';}
+}
+function updateTplCount(){const n=tplSel.filter(Boolean).length;document.getElementById('tpl-count').textContent=n;document.getElementById('gen-cta').disabled=n===0;
+  const fb=document.getElementById('fb-tpl-count');if(fb)fb.textContent=n;
+  const fbg=document.getElementById('fb-gen');if(fbg)fbg.disabled=n===0;}
+function previewTpl(i){const g=tplGrads[i%tplGrads.length];document.getElementById('tpl-title').textContent='Template #'+(i+1)+' · '+tplCats[i%tplCats.length];document.getElementById('tpl-preview-img').style.background='linear-gradient(135deg,'+g+','+g+'CC)';document.getElementById('tpl-preview-img').textContent=tplCats[i%tplCats.length];document.getElementById('tplOverlay').classList.add('open');}
+function closeTpl(){document.getElementById('tplOverlay').classList.remove('open');}
+/* generation */
+function startGeneration(){gotoStep(3);const steps=document.querySelectorAll('#gen-steps .gs');steps.forEach(s=>s.classList.remove('done','cur'));let i=0;const bar=document.getElementById('gen-bar');
+  (function tick(){if(i>0)steps[i-1].classList.add('done');if(i<steps.length){steps[i].classList.add('cur');bar.style.width=((i+1)/steps.length*100)+'%';i++;setTimeout(tick,1050);}else{
+    // show top success banner instead of overlapping center message
+    const banner=document.getElementById('gen-top-banner');
+    banner.classList.add('show');
+    setTimeout(()=>{window._crRendered=false;gotoStep(4);},700);
+    setTimeout(()=>{banner.classList.remove('show');},3800);
+  }})();
+}
+/* review & select */
+const STAT={good:['Good','qa-good'],review:['Needs review','qa-review'],hidden:['Hidden text','qa-hidden'],logo:['Logo issue','qa-logo'],product:['Product image issue','qa-product']};
+let creatives=[];
+const ASINS=['B09TK1MTCV','B0B24ZYK97','B08PQRX12','B07ZZK9LM','B09MN4TT2','B0CYZ1QW8','B08LLP3KK','B0C2VVN77','B09GG5RRT','B0BQ12MKL','B07HHQ2ZZ','B0DKK9PPL'];
+const PRODUCTS=[
+ {asin:'B07SGBR7T8',title:'Amooca 4-Pack Car Headrest Hooks Vehicle Storage Organizer'},
+ {asin:'B0CWQ8QMKT',title:'SINGARO Car Cup Holder Coaster, Silicone Cup Holder Insert'},
+ {asin:'B0CM6KVCSX',title:'HOTOR Trunk Organizer — Car Organizer, Foldable Trunk Storage'},
+ {asin:'B0D9NJVC1H',title:'HOTOR Trunk Organizer for Car — Foldable Storage Box'},
+ {asin:'B07VGRVKSN',title:'HOTOR Car Trash Can with Lid and Storage Pockets'},
+ {asin:'B0CLLSC4BF',title:'LISEN iPad Holder Car Tablet Mount — Road Trip Essentials'},
+ {asin:'B00BYH6C1E',title:'Drop Stop — The Original Patented Car Seat Gap Filler'},
+ {asin:'B09YVPSYWF',title:'TOURSUIT Car Registration and Insurance Card Holder'},
+ {asin:'B0BQ12MKL7',title:'EcoNour Car Windshield Sun Shade — Foldable Reflector'},
+ {asin:'B08LLP3KK2',title:'Lusso Gear Kids Car Seat Organizer with Tablet Holder'},
+ {asin:'B07HHQ2ZZ9',title:'FORTEM Car Trunk Organizer with Adjustable Compartments'},
+ {asin:'B0DKK9PPL3',title:'Knodel Backseat Car Organizer — Storage Pockets'}
+];
+const SPECIAL_TAGS=['hidden text','logo','product'];
+function defaultTags(s){const t=['JsonNanoBanana2',(activeTask.cat[0]||'Category').replace(/\s|&/g,'')+'Category'];if(s==='hidden')t.push('hidden text');if(s==='logo')t.push('logo');if(s==='product')t.push('product');return t;}
+function buildCreatives(){const statuses=['good','good','good','good','good','review','hidden','logo','product','good','review','good'];creatives=statuses.map((s,i)=>({id:i,status:s,sel:false,grad:tplGrads[i%tplGrads.length],headline:['Cozy & Warm','Style Steal','Top Rated','Fresh Drop','Must Have','Deal Alert','Big Sound','Crispy Wins','Summer Splash','Cooler Tees','Prime Picks','Glow Up'][i],asin:PRODUCTS[i%PRODUCTS.length].asin,regen:false,tags:defaultTags(s),filename:`copycat-${activeTask.pid||'pid'}-${String(i+1).padStart(2,'0')}.png`,title:activeTask.page,pid:activeTask.pid||'—'}));}
+function tagStyle(t){if(t==='hidden text')return ' style="background:var(--red-bg);color:var(--red-d)"';if(t==='logo')return ' style="background:var(--purple-bg);color:var(--purple-d)"';if(t==='product')return ' style="background:var(--cyan-bg);color:var(--cyan-d)"';return '';}
+function crCard(c){
+  const[lbl,cls]=STAT[c.status];
+  const tags=c.tags.map(t=>`<span class="cr-tag"${tagStyle(t)}>${t}</span>`).join('');
+  return `<div class="cr ${c.sel?'sel':''}">
+    <div class="pic" style="background:linear-gradient(135deg,${c.grad},${c.grad}CC)" onclick="openGallery(${c.id})"><div class="cb ${c.sel?'on':''}" onclick="event.stopPropagation();toggleCr(${c.id})"></div><div class="badge-wrap"><span class="qa ${cls}">${lbl}</span></div><div class="ad">${c.headline}</div></div>
+    <div class="cr-body">
+      <div class="cr-id"><span class="asin">#${c.id+1}</span> ${c.asin}</div>
+      <div class="cr-tags">${tags}</div>
+      <div class="cr-acts"><button onclick="openAsinModal(${c.id})"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Switch ASIN</button><button onclick="toggleRegen(${c.id})"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8"/></svg>Regenerate</button></div>
+      <div class="cr-regen ${c.regen?'open':''}" id="regen-${c.id}">
+        <label>Provider</label><select><option>Gemini Pro</option><option>Gemini Flash</option><option>NanoBanana 2</option></select>
+        <label>Tweak instructions</label><textarea rows="2" placeholder='Write tweak instructions, e.g. "make the background warmer"'></textarea>
+        <div class="rr"><button class="cancel" onclick="toggleRegen(${c.id})">Cancel</button><button class="go" onclick="confirmRegen(${c.id})">Regenerate</button></div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderCreatives(){buildCreatives();document.getElementById('cr-grid').innerHTML=creatives.map(crCard).join('');}
+function refreshGrid(){document.getElementById('cr-grid').innerHTML=creatives.map(crCard).join('');}
+function toggleCr(id){creatives[id].sel=!creatives[id].sel;refreshGrid();updateSelCount();updateBulk();}
+function updateSelCount(){const n=creatives.filter(c=>c.sel).length;document.getElementById('sel-count').textContent=n+' selected';
+  const hint=document.querySelector('.sel-bar .hint');
+  if(hint){hint.textContent = n<6 ? `Pick ${6-n} more to continue (6 minimum)` : 'Selection looks good — finish the checklist to continue';}
+  checkContinue();}
+/* auto-pick number — persists across flow entries; default = last picked */
+let autoPickNums=[6,7,8,9];let autoPickN=9;
+function renderAutoPickOptions(){const sel=document.getElementById('autopick-n');if(!sel)return;
+  if(!autoPickNums.includes(autoPickN))autoPickNums.push(autoPickN);
+  autoPickNums=[...new Set(autoPickNums)].sort((a,b)=>a-b);
+  sel.innerHTML=autoPickNums.map(n=>`<option value="${n}" ${n===autoPickN?'selected':''}>${n}</option>`).join('')+'<option value="__add__">+ Add number…</option>';}
+function onAutoPickChange(){const sel=document.getElementById('autopick-n');
+  if(sel.value==='__add__'){const v=parseInt(prompt('Enter a number to auto-pick:',autoPickN),10);
+    if(v&&v>0){autoPickN=v;}renderAutoPickOptions();return;}
+  autoPickN=parseInt(sel.value,10);}
+function rankStatus(s){return s==='good'?0:(s==='review'?1:2);}
+function autoPickBest(){const n=Math.min(autoPickN,creatives.length);
+  const order=[...creatives].sort((a,b)=>rankStatus(a.status)-rankStatus(b.status)||a.id-b.id);
+  creatives.forEach(c=>c.sel=false);order.slice(0,n).forEach(c=>creatives[c.id].sel=true);
+  refreshGrid();updateSelCount();updateBulk();toast('Auto-picked '+n+' creatives');}
+let ckCount=0;
+function toggleCk(el){el.classList.toggle('on');ckCount=document.querySelectorAll('.ck-item.on').length;checkContinue();}
+function checkContinue(){const n=creatives.filter(c=>c.sel).length;const ok=n>=6&&ckCount>=2;document.getElementById('to-dl').disabled=!ok;}
+function indivSwitch(id){creatives[id].asin=ASINS[(id+5)%ASINS.length];creatives[id].status='good';creatives[id].tags=creatives[id].tags.filter(t=>!SPECIAL_TAGS.includes(t));refreshGrid();updateSelCount();updateBulk();toast('ASIN switched — creative regenerated');}
+function toggleRegen(id){creatives[id].regen=!creatives[id].regen;refreshGrid();}
+function confirmRegen(id){creatives[id].regen=false;creatives[id].status='good';creatives[id].tags=creatives[id].tags.filter(t=>!SPECIAL_TAGS.includes(t));refreshGrid();updateSelCount();updateBulk();toast('Creative regenerated');}
+/* ===== gallery lightbox ===== */
+let galleryIdx=0;
+function openGallery(id){galleryIdx=id;document.getElementById('galleryOverlay').classList.add('open');document.body.style.overflow='hidden';renderGallery();}
+function closeGallery(){const o=document.getElementById('galleryOverlay');if(o)o.classList.remove('open');document.body.style.overflow='';}
+function galleryNav(dir){const n=creatives.length;galleryIdx=(galleryIdx+dir+n)%n;renderGallery();}
+function renderGallery(){const c=creatives[galleryIdx];if(!c)return;
+  const img=document.getElementById('g-image');img.style.background=`linear-gradient(135deg,${c.grad},${c.grad}CC)`;img.textContent=c.headline;
+  document.getElementById('g-counter').textContent=`${galleryIdx+1} / ${creatives.length}`;
+  const[lbl,cls]=STAT[c.status];const qa=document.getElementById('g-qa');qa.className='qa '+cls;qa.textContent=lbl;
+  document.getElementById('g-filename').textContent=c.filename;
+  document.getElementById('g-pid').textContent=c.pid;
+  document.getElementById('g-title').textContent=c.title;
+  document.getElementById('g-regen-panel').style.display='none';
+  document.getElementById('g-actions').style.display='flex';
+  const tw=document.getElementById('g-regen-tweak');if(tw)tw.value='';
+  renderGalleryTags();}
+function renderGalleryTags(){const c=creatives[galleryIdx];const wrap=document.getElementById('g-tags');
+  wrap.innerHTML=c.tags.map((t,i)=>`<span class="g-tag"${tagStyle(t)}>${t}<button onclick="galleryRemoveTag(${i})" aria-label="Remove tag">×</button></span>`).join('')+'<input class="g-tag-input" id="g-tag-input" placeholder="+ Tag" onkeydown="if(event.key===\'Enter\'){event.preventDefault();galleryAddTag();}">';}
+function galleryRemoveTag(i){creatives[galleryIdx].tags.splice(i,1);renderGalleryTags();refreshGrid();}
+function galleryAddTag(){const inp=document.getElementById('g-tag-input');const v=(inp.value||'').trim();if(!v)return;creatives[galleryIdx].tags.push(v);renderGalleryTags();refreshGrid();const ni=document.getElementById('g-tag-input');if(ni)ni.focus();}
+function gallerySwitchAsin(){openAsinModal(galleryIdx);}
+function galleryRegen(){document.getElementById('g-actions').style.display='none';document.getElementById('g-regen-panel').style.display='flex';}
+function cancelGalleryRegen(){document.getElementById('g-regen-panel').style.display='none';document.getElementById('g-actions').style.display='flex';}
+function confirmGalleryRegen(){confirmRegen(galleryIdx);cancelGalleryRegen();renderGallery();}
+/* ===== switch ASIN modal (grid + gallery) ===== */
+let asinTargetId=null;
+function openAsinModal(id){asinTargetId=id;const s=document.getElementById('asin-search');if(s)s.value='';renderAsinList();document.getElementById('asinOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeAsin(){document.getElementById('asinOverlay').classList.remove('open');if(!document.getElementById('galleryOverlay').classList.contains('open'))document.body.style.overflow='';}
+function renderAsinList(){const q=(document.getElementById('asin-search').value||'').toLowerCase();
+  const cur=asinTargetId!=null?creatives[asinTargetId].asin:null;
+  const items=PRODUCTS.map((p,i)=>({p,i})).filter(x=>!q||x.p.asin.toLowerCase().includes(q)||x.p.title.toLowerCase().includes(q));
+  const list=document.getElementById('asin-list');
+  if(items.length===0){list.innerHTML='<div class="asin-empty">No products match your search.</div>';return;}
+  list.innerHTML=items.map(({p,i})=>{const g=tplGrads[i%tplGrads.length];const isCur=p.asin===cur;
+    return `<div class="asin-item ${isCur?'current':''}" onclick="chooseAsin('${p.asin}')"><div class="asin-thumb" style="background:linear-gradient(135deg,${g},${g}CC)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="asin-info"><div class="asin-row"><span class="asin-num">#${i+1}</span><span class="asin-code">${p.asin}</span>${isCur?'<span class="asin-current">Current</span>':''}</div><div class="asin-title">${p.title}</div></div></div>`;}).join('');}
+function chooseAsin(asin){if(asinTargetId==null)return;const c=creatives[asinTargetId];c.asin=asin;c.status='good';c.tags=c.tags.filter(t=>!SPECIAL_TAGS.includes(t));refreshGrid();updateSelCount();updateBulk();if(document.getElementById('galleryOverlay').classList.contains('open'))renderGallery();closeAsin();toast('ASIN switched to '+asin);}
+/* bulk banner */
+function updateBulk(){const n=creatives.filter(c=>c.sel).length;document.getElementById('bb-n').textContent=n;document.getElementById('bulkbar').classList.toggle('show',n>0&&curStep===5);}
+function clearSel(){creatives.forEach(c=>c.sel=false);refreshGrid();updateSelCount();updateBulk();}
+function bulkSwitch(){creatives.forEach(c=>{if(c.sel)c.status='good';});refreshGrid();toast('Switched ASIN on selected');}
+function bulkRegen(){creatives.forEach(c=>{if(c.sel)c.status='good';});refreshGrid();toast('Regenerating selected creatives…');}
+function bulkDownload(){toast('Downloading selected creatives…');}
+/* download */
+function renderDownload(){const sel=creatives.filter(c=>c.sel);document.getElementById('dl-n').textContent=sel.length;document.getElementById('dl-task').textContent=activeTask.page;document.getElementById('dl-summary').innerHTML=sel.map(c=>`<div class="m" style="background:linear-gradient(135deg,${c.grad},${c.grad}CC)"></div>`).join('');document.getElementById('dl-card').style.display='block';document.getElementById('done-card').style.display='none';document.getElementById('dl-foot').style.display='flex';}
+function doDownload(kind){toast(kind==='zip'?'Preparing ZIP…':'Downloading selected…');setTimeout(showDone,1200);}
+function uploadKueez(){toast('Uploading to Kueez CMS…');setTimeout(()=>{document.getElementById('done-title').textContent='Uploaded to Kueez CMS';document.getElementById('done-sub').textContent='Final creatives uploaded and ready to publish.';showDone();},1400);}
+function showDone(){const now=new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});['ts1','ts3','ts4'].forEach(id=>document.getElementById(id).textContent=now);
+  const dt=document.getElementById('done-title');const base=dt.textContent.split(' · PID')[0];dt.textContent=base+(activeTask.pid?` · PID ${activeTask.pid}`:'');
+  document.getElementById('dl-card').style.display='none';document.getElementById('done-card').style.display='block';document.getElementById('dl-foot').style.display='none';setCvStatus('Completed');}
+function finishTask(){const i=tasks.indexOf(activeTask);if(i>=0){tasks[i].creative='completed';}renderTable();showScreen('tasks');toast('Creatives completed — check the row to send to Ready for PPC');}
+
+/* toast */
+let toastT;function toast(msg){
+  const el=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  // lift the toast above the bulkbar if it's visible
+  const bb=document.getElementById('bulkbar');
+  const bbVisible=bb&&bb.classList.contains('show');
+  el.style.bottom=bbVisible?(bb.offsetHeight+32)+'px':'24px';
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>el.classList.remove('show'),2600);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){if(document.getElementById('asinOverlay').classList.contains('open')){closeAsin();return;}closeArticle();closeSettings();closeTpl();closeGallery();}
+  if(document.getElementById('galleryOverlay').classList.contains('open')){if(e.key==='ArrowLeft')galleryNav(-1);if(e.key==='ArrowRight')galleryNav(1);}
+});
+const dz=document.getElementById('dropzone');['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag');}));['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag');if(ev==='drop')fakeUpload();}));
+/* floating template-count bar: show when header count scrolls out of view on step 3 */
+let tplCountVisible=true;
+function syncTplFloat(){const bar=document.getElementById('tpl-floatbar');if(bar)bar.classList.toggle('show',curStep===3&&!tplCountVisible);}
+(function(){const el=document.getElementById('tpl-count-wrap');if(el&&'IntersectionObserver'in window){new IntersectionObserver(es=>{tplCountVisible=es[0].isIntersecting;syncTplFloat();},{rootMargin:'-140px 0px 0px 0px',threshold:0}).observe(el);}})();
+renderStepper();
+/* embed bootstrap: auto-launch the creative flow when loaded as ?flow=creative (used by the case-study preview iframe) */
+(function(){try{var p=new URLSearchParams(location.search);if(p.get('flow')==='creative'){document.documentElement.classList.add('embed-creative');openCreative();}}catch(e){}})();
+</script>
+</body>
+</html>

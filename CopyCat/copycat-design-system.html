@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CopyCat — UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Primary (indigo) */
+  --primary:#5C67F2; --primary-hover:#4A55E0; --primary-dark:#1C1B2E; --primary-10:#ECEDFE; --primary-grey:#6B70A0;
+  /* Neutrals */
+  --bg:#F2F3F8; --surface:#FFFFFF; --outline:#E7E7EF; --outline-white:#F4F5FA;
+  --text:#1C1B2E; --text-muted:#8A8FA3; --text-soft:#B6B9C9;
+  /* Secondary */
+  --amber:#F5A623; --amber-bg:#FEF3E2;
+  --mint:#2FD39A; --mint-bg:#E2F9F1;
+  --red:#FF6B6B; --red-bg:#FFECEC;
+  --purple:#8B8BD8; --purple-bg:#EEEEFA;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;-webkit-font-smoothing:antialiased;padding:40px}
+.page-label{font-size:13px;color:var(--text-soft);font-weight:500;margin-bottom:14px}
+.sheet{background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(28,27,46,.06);padding:36px 40px;max-width:1180px;margin:0 auto 40px}
+.sheet h1{font-size:20px;font-weight:700;margin-bottom:30px}
+.grp-title{font-size:12px;font-weight:600;color:var(--text-muted);margin:30px 0 14px}
+.grp-title:first-of-type{margin-top:0}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.col2{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.col3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px}
+
+/* swatches */
+.swatch-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.sw{display:flex;flex-direction:column;gap:8px}
+.sw .chip{height:78px;border-radius:12px;border:1px solid var(--outline)}
+.sw .lab{font-size:11.5px;font-weight:600;color:var(--text)}
+.sw .hexv{font-size:11px;color:var(--text-muted)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;border:0;border-radius:10px;font:inherit;font-weight:600;font-size:13.5px;padding:10px 18px;cursor:pointer}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary.hover{background:var(--primary-hover)}
+.btn-primary.resting{background:var(--primary);opacity:.78}
+.btn-primary.disabled{background:#C9CCF6;color:#fff;cursor:not-allowed}
+.btn-outline{background:#fff;color:var(--primary);border:1.5px solid var(--primary)}
+.btn-outline.hover{background:var(--primary-10)}
+.btn-outline.resting{color:var(--text-soft);border-color:var(--outline)}
+.btn-amber{background:var(--amber);color:#fff}
+.btn-mint{background:var(--mint);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-o-amber{background:#fff;color:var(--amber);border:1.5px solid var(--amber)}
+.btn-o-mint{background:#fff;color:var(--mint);border:1.5px solid var(--mint)}
+.btn-o-red{background:#fff;color:var(--red);border:1.5px solid var(--red)}
+.btn-o-purple{background:#fff;color:var(--purple);border:1.5px solid var(--purple)}
+.icon-only{width:38px;height:38px;justify-content:center;padding:0;border-radius:10px;background:var(--primary-10);color:var(--primary)}
+
+/* tags (pill) */
+.tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;font-size:12px;font-weight:600;padding:5px 13px}
+.tag .x{font-size:13px;opacity:.6;cursor:pointer}
+.tag-solid{background:var(--primary);color:#fff}
+.tag-soft{background:var(--primary-10);color:var(--primary)}
+.tag-mint{background:var(--mint-bg);color:#0E9F76}
+.tag-amber{background:var(--amber-bg);color:#B9770F}
+.tag-red{background:var(--red-bg);color:#E03E3E}
+.tag-purple{background:var(--purple-bg);color:#5b5bc7}
+.tag-grey{background:var(--bg);color:var(--text-muted)}
+
+/* pagination */
+.pag{display:inline-flex;align-items:center;gap:6px}
+.pag a{min-width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid var(--outline);background:#fff;color:var(--text-muted);font-size:13px;font-weight:600;text-decoration:none;padding:0 8px}
+.pag a.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.pag a.nav{color:var(--text-muted)}
+.pag.round a{border-radius:50%}
+
+/* progress */
+.prog{height:6px;border-radius:6px;background:var(--outline);overflow:hidden;width:240px}
+.prog span{display:block;height:100%;border-radius:6px}
+
+/* tabs */
+.tabs{display:inline-flex;gap:4px;background:var(--bg);padding:4px;border-radius:10px}
+.tabs a{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-muted);text-decoration:none}
+.tabs a.active{background:#fff;color:var(--primary);box-shadow:0 1px 2px rgba(28,27,46,.08)}
+.tabs.solid a.active{background:var(--primary);color:#fff;box-shadow:none}
+
+/* status badge */
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;font-size:12px;font-weight:600;padding:5px 12px}
+.badge .dot{width:7px;height:7px;border-radius:50%}
+.badge-online{background:var(--mint-bg);color:#0E9F76}
+.badge-off{background:var(--bg);color:var(--text-muted)}
+.badge-busy{background:var(--red-bg);color:#E03E3E}
+
+/* forms */
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:7px}
+.input{width:100%;font:inherit;font-size:14px;color:var(--text);border:1.5px solid var(--outline);border-radius:10px;padding:11px 14px;background:#fff;outline:none}
+.input::placeholder{color:var(--text-soft)}
+.input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-10)}
+.input.error{border-color:var(--red)}
+.input.error:focus{box-shadow:0 0 0 3px var(--red-bg)}
+.input.disabled{background:var(--bg);color:var(--text-soft);cursor:not-allowed}
+.help{font-size:11.5px;margin-top:6px}
+.help.err{color:var(--red)}
+.with-icon{position:relative}
+.with-icon svg{position:absolute;right:13px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--text-muted);fill:none;stroke-width:2}
+.with-icon .input{padding-right:40px}
+
+/* dropdown list */
+.dd{border:1.5px solid var(--primary);border-radius:10px;overflow:hidden;margin-top:8px;box-shadow:0 8px 20px rgba(28,27,46,.1)}
+.dd a{display:block;padding:11px 14px;font-size:13.5px;color:var(--text);text-decoration:none;border-bottom:1px solid var(--outline-white)}
+.dd a:last-child{border-bottom:0}
+.dd a.sel{color:var(--primary);font-weight:600;background:var(--primary-10)}
+.dd a:hover{background:var(--bg)}
+
+/* checkbox / radio */
+.opt{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:13.5px;color:var(--text)}
+.cbx{width:18px;height:18px;border:1.6px solid var(--text-soft);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.cbx.on{background:var(--primary);border-color:var(--primary)}
+.cbx.on svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3}
+.cbx.err{border-color:var(--red)}
+.rdo{width:18px;height:18px;border:1.6px solid var(--text-soft);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.rdo.on{border-color:var(--primary)}
+.rdo.on::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--primary)}
+.rdo.err{border-color:var(--red)}
+.muted-opt{color:var(--text-soft)}
+.err-opt{color:var(--red)}
+
+/* toggle */
+.tg{width:38px;height:22px;border-radius:999px;background:var(--text-soft);position:relative;flex-shrink:0;transition:.15s}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s}
+.tg.on{background:var(--primary)}
+.tg.on::after{left:18px}
+.tg.dis{background:var(--outline)}
+.tg.on.dis{background:#C9CCF6}
+.tg.err{background:var(--red)}
+
+/* slider */
+.sld{width:230px}
+.sld .track{height:6px;border-radius:6px;background:var(--outline);position:relative}
+.sld .fill{position:absolute;height:6px;border-radius:6px;background:var(--primary);top:0}
+.sld .knob{position:absolute;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--primary)}
+.sld .scale{display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-soft);margin-top:8px}
+.sld .vals{display:flex;justify-content:space-between;margin-top:10px}
+.sld .vals span{font-size:11px;font-weight:600;color:var(--text);border:1px solid var(--outline);border-radius:6px;padding:3px 8px}
+.subhead{font-size:11px;font-weight:600;color:var(--text-soft);margin:0 0 6px}
+</style>
+</head>
+<body>
+
+<!-- ============ COLOR PALETTE ============ -->
+<div class="page-label">Ui / ColorPalette</div>
+<div class="sheet">
+  <h1>Fills</h1>
+  <div class="swatch-grid">
+    <div class="sw"><div class="chip" style="background:#5C67F2"></div><div class="lab">Primary</div><div class="hexv">#5C67F2</div></div>
+    <div class="sw"><div class="chip" style="background:#1C1B2E"></div><div class="lab">Primary dark</div><div class="hexv">#1C1B2E</div></div>
+    <div class="sw"><div class="chip" style="background:#EFEFF3"></div><div class="lab">Outline</div><div class="hexv">#EFEFF3</div></div>
+    <div class="sw"><div class="chip" style="background:#F2F3F8"></div><div class="lab">Background light</div><div class="hexv">#F2F3F8</div></div>
+    <div class="sw"><div class="chip" style="background:#fff"></div><div class="lab">Primary outline</div><div class="hexv">#FFFFFF</div></div>
+
+    <div class="sw"><div class="chip" style="background:#ECEDFE"></div><div class="lab">Primary 10%</div><div class="hexv">#ECEDFE</div></div>
+    <div class="sw"><div class="chip" style="background:#6B70A0"></div><div class="lab">Primary grey</div><div class="hexv">#6B70A0</div></div>
+    <div class="sw"><div class="chip" style="background:#E7E7EF"></div><div class="lab">Button hover</div><div class="hexv">#E7E7EF</div></div>
+    <div class="sw"><div class="chip" style="background:#F7F8FC"></div><div class="lab">Background</div><div class="hexv">#F7F8FC</div></div>
+    <div class="sw"><div class="chip" style="background:#fff;border-color:#5C67F2"></div><div class="lab">Outline white</div><div class="hexv">#FFFFFF</div></div>
+
+    <div class="sw"><div class="chip" style="background:#F5A623"></div><div class="lab">Secondary</div><div class="hexv">#F5A623</div></div>
+    <div class="sw"><div class="chip" style="background:#2FD39A"></div><div class="lab">Secondary</div><div class="hexv">#2FD39A</div></div>
+    <div class="sw"><div class="chip" style="background:#FF6B6B"></div><div class="lab">Secondary</div><div class="hexv">#FF6B6B</div></div>
+    <div class="sw"><div class="chip" style="background:#8B8BD8"></div><div class="lab">Secondary</div><div class="hexv">#8B8BD8</div></div>
+    <div class="sw"><div class="chip" style="background:#fff;border-color:#FF6B6B"></div><div class="lab">Resting outline</div><div class="hexv">#FFFFFF</div></div>
+
+    <div class="sw"><div class="chip" style="background:#ECEDFE"></div><div class="lab">Primary tint</div><div class="hexv">#ECEDFE</div></div>
+    <div class="sw"><div class="chip" style="background:#E2F9F1"></div><div class="lab">Secondary tint</div><div class="hexv">#E2F9F1</div></div>
+    <div class="sw"><div class="chip" style="background:#FEF3E2"></div><div class="lab">Secondary tint</div><div class="hexv">#FEF3E2</div></div>
+    <div class="sw"><div class="chip" style="background:#FFECEC"></div><div class="lab">Secondary tint</div><div class="hexv">#FFECEC</div></div>
+    <div class="sw"><div class="chip" style="background:#EEEEFA"></div><div class="lab">Secondary tint</div><div class="hexv">#EEEEFA</div></div>
+  </div>
+</div>
+
+<!-- ============ BUTTONS ============ -->
+<div class="page-label">Ui / Buttons</div>
+<div class="sheet">
+  <h1>Buttons / Tags / Pagination</h1>
+  <div class="col2">
+    <div>
+      <div class="grp-title">Primary buttons</div>
+      <div class="row"><button class="btn btn-primary">Active</button><button class="btn btn-primary hover">Hover</button><button class="btn btn-primary resting">Resting</button><button class="btn btn-primary disabled">Disabled</button></div>
+    </div>
+    <div>
+      <div class="grp-title">Outline buttons</div>
+      <div class="row"><button class="btn btn-outline">Active</button><button class="btn btn-outline hover">Hover</button><button class="btn btn-outline resting">Resting</button></div>
+    </div>
+  </div>
+  <div class="col2" style="margin-top:22px">
+    <div>
+      <div class="grp-title">Primary buttons with icon</div>
+      <div class="row">
+        <button class="btn btn-primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Active</button>
+        <button class="btn btn-primary hover"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Hover</button>
+        <button class="btn btn-primary resting"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Resting</button>
+        <button class="btn btn-primary icon-only"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+    </div>
+    <div>
+      <div class="grp-title">Outline buttons with icon</div>
+      <div class="row">
+        <button class="btn btn-outline"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Active</button>
+        <button class="btn btn-outline hover"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Hover</button>
+        <button class="btn btn-outline resting"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Resting</button>
+        <button class="btn icon-only" style="border:1.5px solid var(--outline);background:#fff;color:var(--text-muted)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="col2" style="margin-top:22px">
+    <div>
+      <div class="grp-title">Color options</div>
+      <div class="row"><button class="btn btn-mint">Label</button><button class="btn btn-red">Label</button><button class="btn btn-amber">Label</button><button class="btn btn-purple">Label</button></div>
+    </div>
+    <div>
+      <div class="grp-title">Color outline</div>
+      <div class="row"><button class="btn btn-o-mint">Label</button><button class="btn btn-o-red">Label</button><button class="btn btn-o-amber">Label</button><button class="btn btn-o-purple">Label</button></div>
+    </div>
+  </div>
+
+  <div class="grp-title">Tags</div>
+  <div class="row">
+    <span class="tag tag-solid">Tag</span>
+    <span class="tag tag-soft">Tag</span>
+    <span class="tag tag-mint">Tag</span>
+    <span class="tag tag-amber">Tag</span>
+    <span class="tag tag-red">Tag</span>
+    <span class="tag tag-purple">Tag</span>
+    <span class="tag tag-grey">Tag</span>
+    <span class="tag tag-soft">Tag <span class="x">×</span></span>
+  </div>
+
+  <div class="grp-title">Pagination</div>
+  <div class="row" style="gap:40px">
+    <div class="pag"><a class="nav" href="#">‹ Prev</a><a href="#">1</a><a class="active" href="#">2</a><a href="#">3</a><a href="#">4</a><a href="#">5</a><a class="nav" href="#">Next ›</a></div>
+    <div class="pag"><a class="nav" href="#">‹ Prev</a><a href="#">1</a><a class="active" href="#">2</a><a href="#">3</a><a href="#">4</a><a href="#">5</a><a class="nav" href="#">Next ›</a></div>
+  </div>
+  <div class="row" style="margin-top:14px"><div class="pag round"><a class="nav" href="#">‹</a><a href="#">1</a><a class="active" href="#">2</a><a href="#">3</a><a href="#">4</a><a href="#">5</a><a class="nav" href="#">›</a></div></div>
+
+  <div class="grp-title">Progress bars</div>
+  <div class="row" style="gap:40px">
+    <div class="prog"><span style="width:55%;background:var(--primary)"></span></div>
+    <div class="prog"><span style="width:70%;background:var(--red)"></span></div>
+    <div class="prog"><span style="width:90%;background:var(--mint)"></span></div>
+  </div>
+
+  <div class="col2" style="margin-top:30px">
+    <div>
+      <div class="grp-title">Tabs primary</div>
+      <div class="row" style="gap:20px">
+        <div class="tabs"><a href="#">Tab 1</a><a href="#">Tab 2</a><a class="active" href="#">Tab 3</a></div>
+        <div class="tabs solid"><a class="active" href="#">Tab 1</a><a href="#">Tab 2</a><a href="#">Tab 3</a></div>
+      </div>
+    </div>
+    <div>
+      <div class="grp-title">Badge &amp; status tag</div>
+      <div class="row"><span class="badge badge-online"><span class="dot" style="background:#0E9F76"></span>Online</span><span class="badge badge-off"><span class="dot" style="background:#B6B9C9"></span>Offline</span><span class="badge badge-busy"><span class="dot" style="background:#E03E3E"></span>Busy</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FORMS ============ -->
+<div class="page-label">Ui / Forms</div>
+<div class="sheet">
+  <h1>Forms</h1>
+  <div class="grp-title">Text fields</div>
+  <div class="col3">
+    <div class="field"><label>Field title</label><input class="input" value="Title"></div>
+    <div class="field"><label>Field title</label><input class="input" placeholder="Start typing…"></div>
+    <div class="with-icon field"><label>Field title</label><input class="input" placeholder="Start typing…"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></div>
+  </div>
+  <div class="col3">
+    <div class="with-icon field"><label>Field title</label><input class="input" value="Title"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>
+    <div class="field"><label>Field title</label><input class="input" value="Title"></div>
+    <div class="field"><label>Field with tags</label><div class="input" style="display:flex;gap:6px;align-items:center"><span class="tag tag-soft">Tag <span class="x">×</span></span><span class="tag tag-grey">Delete <span class="x">×</span></span></div></div>
+  </div>
+
+  <div class="grp-title">Text fields states</div>
+  <div class="col2">
+    <div class="field"><label>Field title</label><input class="input" style="border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-10)" value="Title"><div class="help" style="color:var(--text-muted)">Focused field</div></div>
+    <div class="field"><label>Field title</label><input class="input disabled" value="Title" disabled><div class="help" style="color:var(--text-soft)">Disabled field</div></div>
+  </div>
+  <div class="col2">
+    <div class="field"><label>Field title</label><input class="input error" value="Title"><div class="help err">This field has an error</div></div>
+    <div class="field"><label>Field title</label><input class="input" value="Title"></div>
+  </div>
+
+  <div class="grp-title">Select fields active</div>
+  <div class="col3">
+    <div>
+      <div class="field"><label>Field title</label><div class="with-icon"><input class="input" value="Title"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div></div>
+      <div class="dd"><a href="#">Select item 1</a><a class="sel" href="#">Select item 2</a><a href="#">Select item 3</a><a href="#">Select item 4</a></div>
+    </div>
+    <div>
+      <div class="field"><label>Field title</label><div class="with-icon"><input class="input" value="Title"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div></div>
+      <div class="dd"><a href="#">Select item 1</a><a class="sel" href="#">Select item 2</a><a href="#">Select item 3</a><a href="#">Select item 4</a></div>
+    </div>
+    <div>
+      <div class="field"><label>Field title</label><div class="with-icon"><input class="input" value="Title"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div></div>
+      <div class="dd"><a href="#">Select item 1</a><a href="#">Select item 2</a><a href="#">Select item 3</a><a href="#">Select item 4</a></div>
+    </div>
+  </div>
+
+  <div class="grp-title">Date picker</div>
+  <div class="col3">
+    <div class="field"><label>Field title</label><div class="with-icon"><input class="input" value="June 13, 2018"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div></div>
+    <div class="field"><label>Field title</label><div class="with-icon"><input class="input" value="June 13, 2018"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div></div>
+    <div class="field"><label>Field title</label><input class="input" value="2018 / August / 29"></div>
+  </div>
+  <div class="col3">
+    <div class="dd" style="border-color:var(--outline);box-shadow:none;padding:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:600">‹ <span>June 2018</span> ›</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:11px">
+        <b style="color:var(--text-soft)">Mo</b><b style="color:var(--text-soft)">Tu</b><b style="color:var(--text-soft)">We</b><b style="color:var(--text-soft)">Th</b><b style="color:var(--text-soft)">Fr</b><b style="color:var(--text-soft)">Sa</b><b style="color:var(--text-soft)">Su</b>
+        <span style="padding:6px 0;color:var(--text-soft)">28</span><span style="padding:6px 0">1</span><span style="padding:6px 0">2</span><span style="padding:6px 0">3</span><span style="padding:6px 0">4</span><span style="padding:6px 0">5</span><span style="padding:6px 0">6</span>
+        <span style="padding:6px 0">7</span><span style="padding:6px 0">8</span><span style="padding:6px 0">9</span><span style="padding:6px 0">10</span><span style="padding:6px 0">11</span><span style="padding:6px 0">12</span><span style="padding:6px 0;background:var(--primary);color:#fff;border-radius:8px">13</span>
+        <span style="padding:6px 0">14</span><span style="padding:6px 0">15</span><span style="padding:6px 0">16</span><span style="padding:6px 0">17</span><span style="padding:6px 0">18</span><span style="padding:6px 0">19</span><span style="padding:6px 0">20</span>
+      </div>
+    </div>
+    <div></div>
+    <div class="dd" style="border-color:var(--outline);box-shadow:none;padding:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="color:var(--text-muted);font-size:12px">Slide to set required time</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--outline);border-radius:8px;padding:8px 12px;margin-bottom:8px">‹ <span>2018</span> ›</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--outline);border-radius:8px;padding:8px 12px;margin-bottom:8px">‹ <span>August</span> ›</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--outline);border-radius:8px;padding:8px 12px;margin-bottom:12px">‹ <span>29</span> ›</div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center">Set date</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FORMS / ELEMENTS ============ -->
+<div class="page-label">Ui / Forms / Elements</div>
+<div class="sheet">
+  <h1>Forms / Elements</h1>
+  <div class="grp-title">Checkbox</div>
+  <div class="col3">
+    <div>
+      <div class="opt"><span class="cbx"></span>Unchecked</div>
+      <div class="opt"><span class="cbx on"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Checked</div>
+    </div>
+    <div>
+      <div class="opt muted-opt"><span class="cbx" style="border-color:var(--outline)"></span>Disabled unchecked</div>
+      <div class="opt muted-opt"><span class="cbx on" style="background:#C9CCF6;border-color:#C9CCF6"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Disabled checked</div>
+    </div>
+    <div>
+      <div class="opt err-opt"><span class="cbx err"></span>Unchecked error</div>
+      <div class="opt err-opt"><span class="cbx on" style="background:var(--red);border-color:var(--red)"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Checked error</div>
+    </div>
+  </div>
+
+  <div class="grp-title">Radio</div>
+  <div class="col3">
+    <div>
+      <div class="opt"><span class="rdo"></span>Unchecked</div>
+      <div class="opt"><span class="rdo on"></span>Checked</div>
+    </div>
+    <div>
+      <div class="opt muted-opt"><span class="rdo" style="border-color:var(--outline)"></span>Disabled unchecked</div>
+      <div class="opt muted-opt"><span class="rdo on" style="border-color:#C9CCF6"></span>Disabled checked</div>
+    </div>
+    <div>
+      <div class="opt err-opt"><span class="rdo err"></span>Unchecked error</div>
+      <div class="opt err-opt"><span class="rdo on" style="border-color:var(--red)"></span>Checked error</div>
+    </div>
+  </div>
+
+  <div class="grp-title">Toggles</div>
+  <div class="col3">
+    <div>
+      <div class="opt"><span class="tg dis"></span>Toggle off disabled</div>
+      <div class="opt"><span class="tg on dis"></span>Toggle on disabled</div>
+    </div>
+    <div>
+      <div class="opt"><span class="tg"></span>Toggle off</div>
+      <div class="opt"><span class="tg on"></span>Toggle on</div>
+    </div>
+    <div>
+      <div class="opt err-opt"><span class="tg err"></span>Toggle off error</div>
+      <div class="opt err-opt"><span class="tg on err"></span>Toggle on error</div>
+    </div>
+  </div>
+
+  <div class="grp-title">Slider</div>
+  <div class="col3">
+    <div class="sld">
+      <div class="track"><div class="fill" style="width:35%"></div><div class="knob" style="left:35%"></div></div>
+      <div class="scale"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+      <div class="vals"><span>48</span><span>3%</span></div>
+    </div>
+    <div class="sld">
+      <div class="track"><div class="fill" style="width:62%"></div><div class="knob" style="left:62%"></div></div>
+      <div class="scale"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+      <div class="vals"><span>104</span><span>62%</span></div>
+    </div>
+    <div class="sld">
+      <div class="track"><div class="fill" style="width:82%"></div><div class="knob" style="left:82%"></div></div>
+      <div class="scale"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+      <div class="vals"><span>14</span><span>82%</span></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CopyCat · Product Roadmap</title>
+<style>
+  :root {
+    --bg: #0f0f11;
+    --bg2: #18181c;
+    --bg3: #222228;
+    --border: #2e2e38;
+    --indigo: #5C67F2;
+    --indigo-dim: #3d4699;
+    --indigo-light: #e8eaff;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --amber: #d97706;
+    --amber-bg: #fef3c7;
+    --red: #dc2626;
+    --red-bg: #fee2e2;
+    --blue: #2563eb;
+    --blue-bg: #dbeafe;
+    --purple: #7c3aed;
+    --purple-bg: #ede9fe;
+    --text: #f1f1f3;
+    --text-2: #9898a8;
+    --text-3: #5a5a6e;
+    --radius: 8px;
+    --radius-sm: 5px;
+    --shadow: 0 2px 8px rgba(0,0,0,.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; min-height: 100vh; }
+
+  /* ─── Layout ─── */
+  .app { display: flex; flex-direction: column; height: 100vh; }
+
+  header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 24px; height: 56px;
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
+  .logo-dot { width: 24px; height: 24px; border-radius: 6px; background: var(--indigo); display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; font-weight: 800; }
+  .divider { width: 1px; height: 20px; background: var(--border); }
+  .header-title { color: var(--text-2); font-size: 13px; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+  /* ─── Tabs ─── */
+  .tab-bar {
+    display: flex; align-items: center; gap: 0;
+    padding: 0 24px;
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .tab {
+    padding: 12px 18px; font-size: 13px; font-weight: 500; color: var(--text-2);
+    border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;
+    transition: color .15s, border-color .15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--indigo); border-color: var(--indigo); }
+  .tab-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--bg3); color: var(--text-2); font-size: 10px; font-weight: 700;
+    min-width: 18px; height: 18px; border-radius: 9px; padding: 0 5px; margin-left: 6px;
+  }
+  .tab.active .tab-badge { background: var(--indigo-dim); color: #fff; }
+
+  /* ─── Main content ─── */
+  .main { flex: 1; overflow: auto; }
+  .view { display: none; padding: 28px 24px; }
+  .view.active { display: block; }
+
+  /* ─── Buttons ─── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
+    cursor: pointer; border: none; transition: opacity .15s, background .15s;
+  }
+  .btn:hover { opacity: .88; }
+  .btn-primary { background: var(--indigo); color: #fff; }
+  .btn-ghost { background: transparent; color: var(--text-2); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); background: var(--bg3); }
+  .btn-danger { background: var(--red-bg); color: var(--red); border: none; }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+
+  /* ─── Section header ─── */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-title { font-size: 16px; font-weight: 700; }
+  .section-sub { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+
+  /* ─── Cards ─── */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+    margin-bottom: 12px;
+  }
+
+  /* ─── Chips / Tags ─── */
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 7px; font-size: 11px; font-weight: 600;
+  }
+  .chip-indigo { background: var(--indigo-light); color: var(--indigo); }
+  .chip-green { background: var(--green-bg); color: var(--green); }
+  .chip-amber { background: var(--amber-bg); color: var(--amber); }
+  .chip-red { background: var(--red-bg); color: var(--red); }
+  .chip-blue { background: var(--blue-bg); color: var(--blue); }
+  .chip-purple { background: var(--purple-bg); color: var(--purple); }
+  .chip-gray { background: var(--bg3); color: var(--text-2); }
+
+  /* ─── Score bar ─── */
+  .score-bar-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .score-bar-bg { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .score-bar-fill { height: 100%; background: var(--indigo); border-radius: 2px; transition: width .3s; }
+
+  /* ─── Table ─── */
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--bg3); color: var(--text-2); font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em;
+    padding: 10px 14px; text-align: left; white-space: nowrap;
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 2;
+  }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,.02); }
+
+  /* ─── Modal ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,.7); align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+    width: 560px; max-width: 96vw; max-height: 90vh; overflow-y: auto;
+    padding: 28px; box-shadow: 0 24px 80px rgba(0,0,0,.6);
+  }
+  .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; }
+  .modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
+
+  /* ─── Form elements ─── */
+  .field { margin-bottom: 16px; }
+  .label { font-size: 12px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; display: block; letter-spacing: .03em; }
+  input[type=text], textarea, select {
+    width: 100%; padding: 9px 12px; border-radius: var(--radius-sm);
+    background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+    font-size: 13px; font-family: inherit; outline: none; transition: border-color .15s;
+  }
+  input[type=text]:focus, textarea:focus, select:focus { border-color: var(--indigo); }
+  textarea { resize: vertical; min-height: 72px; }
+  select option { background: var(--bg2); }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  /* ─── Score sliders ─── */
+  .slider-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+  .slider-item label { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-2); margin-bottom: 5px; }
+  .slider-item label strong { color: var(--indigo); font-size: 13px; }
+  input[type=range] { width: 100%; accent-color: var(--indigo); }
+
+  /* ─── Roadmap phases ─── */
+  .roadmap-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .phase-col { }
+  .phase-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; border-radius: var(--radius) var(--radius) 0 0;
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    border: 1px solid var(--border);
+  }
+  .phase-header.now { background: rgba(92,103,242,.12); border-color: rgba(92,103,242,.3); color: var(--indigo); }
+  .phase-header.next { background: rgba(217,119,6,.08); border-color: rgba(217,119,6,.25); color: var(--amber); }
+  .phase-header.later { background: rgba(90,90,110,.12); border-color: var(--border); color: var(--text-2); }
+  .phase-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .now .phase-dot { background: var(--indigo); }
+  .next .phase-dot { background: var(--amber); }
+  .later .phase-dot { background: var(--text-3); }
+
+  .phase-items { border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); min-height: 80px; }
+
+  .roadmap-item {
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: background .12s;
+  }
+  .roadmap-item:last-child { border-bottom: none; }
+  .roadmap-item:hover { background: rgba(255,255,255,.025); }
+  .roadmap-item-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .roadmap-item-problem { font-size: 12px; color: var(--text-2); margin-bottom: 8px; line-height: 1.45; }
+  .roadmap-item-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+  /* ─── Priority score badge ─── */
+  .priority-score {
+    font-size: 13px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 8px;
+  }
+  .ps-high { background: rgba(92,103,242,.15); color: var(--indigo); }
+  .ps-med { background: rgba(217,119,6,.12); color: var(--amber); }
+  .ps-low { background: var(--bg3); color: var(--text-2); }
+
+  /* ─── Theme pills ─── */
+  .theme-selector { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .theme-pill {
+    padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 2px solid transparent; transition: all .15s;
+    background: var(--bg3); color: var(--text-2);
+  }
+  .theme-pill.sel { border-color: var(--indigo); color: var(--indigo); background: rgba(92,103,242,.1); }
+
+  /* ─── Themes view ─── */
+  .themes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .theme-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .theme-card-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .theme-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .theme-card-items { padding: 8px 0; }
+  .theme-card-item { padding: 8px 18px; font-size: 13px; display: flex; align-items: center; gap: 8px; color: var(--text-2); }
+  .theme-card-item:hover { background: rgba(255,255,255,.02); color: var(--text); }
+  .theme-count { margin-left: auto; font-size: 11px; background: var(--bg3); padding: 2px 7px; border-radius: 10px; }
+
+  /* ─── Empty state ─── */
+  .empty { text-align: center; padding: 48px 24px; color: var(--text-3); }
+  .empty-icon { font-size: 32px; margin-bottom: 12px; }
+  .empty-msg { font-size: 13px; }
+
+  /* ─── Progress stats ─── */
+  .stats-row { display: flex; gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    flex: 1; background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+  }
+  .stat-value { font-size: 24px; font-weight: 800; color: var(--text); }
+  .stat-label { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+  /* ─── Effort badge ─── */
+  .effort-1 { color: var(--green); }
+  .effort-2 { color: var(--green); }
+  .effort-3 { color: var(--amber); }
+  .effort-4 { color: var(--amber); }
+  .effort-5 { color: var(--red); }
+
+  /* ─── Category tag ─── */
+  .cat-foundation { background: rgba(92,103,242,.1); color: var(--indigo); }
+  .cat-feature { background: rgba(22,163,74,.1); color: var(--green); }
+
+  .tag-foundation { background: rgba(92,103,242,.12); color: #818cf8; border-radius: 7px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+  .tag-feature { background: rgba(22,163,74,.12); color: #4ade80; border-radius: 7px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+
+  /* ─── Scrollbar ─── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ─── Toast ─── */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--text); color: var(--bg); padding: 10px 20px; border-radius: 99px;
+    font-size: 13px; font-weight: 600; z-index: 999; transition: transform .25s; pointer-events: none;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ─── Backlog table extras ─── */
+  .action-btns { display: flex; gap: 6px; }
+  .icon-btn {
+    width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center;
+    justify-content: center; cursor: pointer; border: 1px solid var(--border);
+    background: transparent; color: var(--text-2); font-size: 14px;
+    transition: background .12s, color .12s;
+  }
+  .icon-btn:hover { background: var(--bg3); color: var(--text); }
+  .icon-btn.del:hover { background: var(--red-bg); color: var(--red); border-color: transparent; }
+
+  .type-toggle { display: flex; gap: 6px; margin-top: 6px; }
+  .type-btn {
+    padding: 5px 12px; border-radius: 7px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 2px solid transparent; transition: all .15s;
+    background: var(--bg3); color: var(--text-2);
+  }
+  .type-btn.sel-foundation { border-color: var(--indigo); color: var(--indigo); background: rgba(92,103,242,.1); }
+  .type-btn.sel-feature { border-color: var(--green); color: var(--green); background: rgba(22,163,74,.1); }
+
+  /* Roadmap table view */
+  .roadmap-table-wrap { margin-top: 0; }
+  .roadmap-section-label {
+    display: flex; align-items: center; gap: 10px;
+    padding: 16px 0 10px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--text-3);
+  }
+  .roadmap-section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  .users-affected { font-size: 13px; }
+
+  /* ─── Status toggles (Designed / Developed) ─── */
+  .status-track { display: flex; gap: 4px; }
+  .status-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 7px; font-size: 11px; font-weight: 600;
+    cursor: pointer; border: 1.5px solid var(--border); background: transparent;
+    color: var(--text-3); transition: all .15s; white-space: nowrap; user-select: none;
+  }
+  .status-btn:hover { border-color: var(--text-2); color: var(--text-2); }
+  .status-btn.on-designed { border-color: #818cf8; color: #818cf8; background: rgba(129,140,248,.1); }
+  .status-btn.on-developed { border-color: var(--green); color: var(--green); background: rgba(22,163,74,.1); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* ─── Done row tint in backlog ─── */
+  tr.row-done td { opacity: .55; }
+  tr.row-done:hover td { opacity: .75; }
+  tr.row-done .item-name { text-decoration: line-through; }
+
+  /* ─── Done column in roadmap ─── */
+  .phase-header.done { background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.25); color: var(--green); }
+  .done .phase-dot { background: var(--green); }
+  .done-section-label {
+    display: flex; align-items: center; gap: 10px;
+    padding: 28px 0 10px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--green);
+  }
+  .done-section-label::after { content: ''; flex: 1; height: 1px; background: rgba(22,163,74,.25); }
+  .roadmap-item.done-item { opacity: .6; }
+  .roadmap-item.done-item:hover { opacity: 1; }
+  tr.tr-done td { opacity: .55; }
+  tr.tr-done:hover td { opacity: .8; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-dot">CC</div>
+      CopyCat
+    </div>
+    <div class="divider"></div>
+    <span class="header-title">Product Roadmap</span>
+    <div class="header-right">
+      <button class="btn btn-ghost btn-sm" onclick="exportCSV()">↓ Export CSV</button>
+      <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Add item</button>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <div class="tab active" data-tab="backlog" onclick="switchTab('backlog')">
+      Backlog <span class="tab-badge" id="badge-backlog">0</span>
+    </div>
+    <div class="tab" data-tab="themes" onclick="switchTab('themes')">
+      Themes <span class="tab-badge" id="badge-themes">0</span>
+    </div>
+    <div class="tab" data-tab="scoring" onclick="switchTab('scoring')">
+      Scoring
+    </div>
+    <div class="tab" data-tab="roadmap" onclick="switchTab('roadmap')">
+      Now / Next / Later <span class="tab-badge" id="badge-done" style="background:rgba(22,163,74,.15);color:var(--green);">0</span>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- ── BACKLOG VIEW ── -->
+    <div class="view active" id="view-backlog">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Backlog</div>
+          <div class="section-sub">All incoming requests, normalized into problem statements.</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="filter-theme" onchange="renderBacklog()" style="width:160px;">
+            <option value="">All themes</option>
+          </select>
+          <select id="filter-phase" onchange="renderBacklog()" style="width:130px;">
+            <option value="">All phases</option>
+            <option value="now">Now</option>
+            <option value="next">Next</option>
+            <option value="later">Later</option>
+            <option value="unassigned">Unassigned</option>
+          </select>
+          <select id="filter-type" onchange="renderBacklog()" style="width:150px;">
+            <option value="">All types</option>
+            <option value="foundation">Foundation</option>
+            <option value="feature">User Feature</option>
+          </select>
+          <select id="filter-status" onchange="renderBacklog()" style="width:150px;">
+            <option value="">All statuses</option>
+            <option value="not-started">Not started</option>
+            <option value="designed">Designed only</option>
+            <option value="in-progress">In progress</option>
+            <option value="done">✅ Done</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:200px;">Item</th>
+              <th style="width:260px;">Problem</th>
+              <th>Users Affected</th>
+              <th>Theme</th>
+              <th>Type</th>
+              <th>Priority Score</th>
+              <th>Phase</th>
+              <th>Notes</th>
+              <th>Status</th>
+              <th style="width:80px;"></th>
+            </tr>
+          </thead>
+          <tbody id="backlog-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── THEMES VIEW ── -->
+    <div class="view" id="view-themes">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Themes</div>
+          <div class="section-sub">Grouped problem areas. Items belong to one theme.</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="openThemeModal()">+ New theme</button>
+      </div>
+      <div class="themes-grid" id="themes-grid"></div>
+    </div>
+
+    <!-- ── SCORING VIEW ── -->
+    <div class="view" id="view-scoring">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Scoring</div>
+          <div class="section-sub">Score each item across 6 dimensions. Priority = weighted average.</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <select id="scoring-filter" onchange="renderScoring()" style="width:150px;">
+            <option value="">All items</option>
+            <option value="now">Phase: Now</option>
+            <option value="next">Phase: Next</option>
+            <option value="later">Phase: Later</option>
+            <option value="unassigned">Unassigned</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Weights explanation -->
+      <div class="card" style="margin-bottom:24px;background:rgba(92,103,242,.06);border-color:rgba(92,103,242,.2);">
+        <div style="font-size:12px;font-weight:700;color:var(--indigo);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;">Score formula</div>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.7;">
+          <strong style="color:var(--text);">Priority Score</strong> = (Impact × 1.8 + Reach × 1.4 + Severity × 1.4 + Strategic Fit × 1.2) ÷ 4 − (Effort × 0.6) + Dependency Boost
+          <br>Scores are normalized to 1–10. <strong style="color:var(--text);">Effort is a cost</strong> — higher effort lowers the score. Dependencies flag blockers.
+        </div>
+      </div>
+
+      <div id="scoring-list"></div>
+    </div>
+
+    <!-- ── ROADMAP VIEW ── -->
+    <div class="view" id="view-roadmap">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Now / Next / Later</div>
+          <div class="section-sub">Deliberate split: 🏗 Platform Foundations · ✨ User-visible Features</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="roadmap-view-mode" onchange="renderRoadmap()" style="width:130px;">
+            <option value="columns">Column view</option>
+            <option value="table">Table view</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="roadmap-stats" class="stats-row"></div>
+      <div id="roadmap-content"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── ADD/EDIT ITEM MODAL ── -->
+<div class="modal-overlay" id="item-modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Add item to backlog</div>
+
+    <div class="field">
+      <label class="label">Item name *</label>
+      <input type="text" id="f-name" placeholder="e.g. Role-based permissions">
+    </div>
+    <div class="field">
+      <label class="label">Problem statement *</label>
+      <textarea id="f-problem" placeholder="Users need different access levels — admins, editors, viewers — but everyone currently sees the same UI"></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label class="label">Users affected</label>
+        <input type="text" id="f-users" placeholder="e.g. 8 teams, all PPC users">
+      </div>
+      <div class="field">
+        <label class="label">Theme</label>
+        <select id="f-theme">
+          <option value="">— none —</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Type</label>
+      <div class="type-toggle">
+        <button class="type-btn" id="type-btn-foundation" onclick="selectType('foundation')">🏗 Platform Foundation</button>
+        <button class="type-btn" id="type-btn-feature" onclick="selectType('feature')">✨ User Feature</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Phase</label>
+      <div class="theme-selector">
+        <span class="theme-pill" id="phase-now" onclick="selectPhase('now')">🟣 Now</span>
+        <span class="theme-pill" id="phase-next" onclick="selectPhase('next')">🟡 Next</span>
+        <span class="theme-pill" id="phase-later" onclick="selectPhase('later')">⚪ Later</span>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Notes / dependencies</label>
+      <input type="text" id="f-notes" placeholder="e.g. Blocks creative flow; needs event system first">
+    </div>
+
+    <!-- Scores -->
+    <div style="margin-top:4px;margin-bottom:4px;">
+      <label class="label" style="margin-bottom:12px;">Scores <span style="font-weight:400;color:var(--text-3)">(1 = low, 5 = high)</span></label>
+      <div class="slider-group">
+        <div class="slider-item">
+          <label>Impact <strong id="lbl-impact">3</strong></label>
+          <input type="range" min="1" max="5" value="3" id="s-impact" oninput="document.getElementById('lbl-impact').textContent=this.value">
+        </div>
+        <div class="slider-item">
+          <label>Reach <strong id="lbl-reach">3</strong></label>
+          <input type="range" min="1" max="5" value="3" id="s-reach" oninput="document.getElementById('lbl-reach').textContent=this.value">
+        </div>
+        <div class="slider-item">
+          <label>Severity <strong id="lbl-severity">3</strong></label>
+          <input type="range" min="1" max="5" value="3" id="s-severity" oninput="document.getElementById('lbl-severity').textContent=this.value">
+        </div>
+        <div class="slider-item">
+          <label>Strategic Fit <strong id="lbl-strategic">3</strong></label>
+          <input type="range" min="1" max="5" value="3" id="s-strategic" oninput="document.getElementById('lbl-strategic').textContent=this.value">
+        </div>
+        <div class="slider-item">
+          <label>Effort <strong id="lbl-effort">3</strong></label>
+          <input type="range" min="1" max="5" value="3" id="s-effort" oninput="document.getElementById('lbl-effort').textContent=this.value">
+        </div>
+        <div class="slider-item">
+          <label>Dependencies <strong id="lbl-deps">1</strong></label>
+          <input type="range" min="1" max="5" value="1" id="s-deps" oninput="document.getElementById('lbl-deps').textContent=this.value">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('item-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveItem()">Save item</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── THEME MODAL ── -->
+<div class="modal-overlay" id="theme-modal">
+  <div class="modal" style="width:400px;">
+    <div class="modal-title">New theme</div>
+    <div class="field">
+      <label class="label">Theme name *</label>
+      <input type="text" id="t-name" placeholder="e.g. Access & Permissions">
+    </div>
+    <div class="field">
+      <label class="label">Description</label>
+      <input type="text" id="t-desc" placeholder="e.g. Who can see and do what">
+    </div>
+    <div class="field">
+      <label class="label">Icon (emoji)</label>
+      <input type="text" id="t-icon" placeholder="🔐" style="width:80px;">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('theme-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTheme()">Save theme</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let editingId = null;
+let selectedPhase = null;
+let selectedType = null;
+
+const THEME_COLORS = ['#5C67F2','#16a34a','#d97706','#7c3aed','#2563eb','#dc2626','#0891b2','#db2777'];
+
+let themes = [
+  { id: 't1', name: 'Access & Permissions', desc: 'Who can see and do what', icon: '🔐', color: '#5C67F2' },
+  { id: 't2', name: 'Workflow & Approvals', desc: 'Creative review, gating, sign-off', icon: '✅', color: '#16a34a' },
+  { id: 't3', name: 'Integrations & Sync', desc: 'Kueez CMS, Slack, external tools', icon: '🔗', color: '#d97706' },
+  { id: 't4', name: 'Analytics & Reporting', desc: 'Dashboards, KPIs, trend reporting', icon: '📊', color: '#7c3aed' },
+  { id: 't5', name: 'Creative Production', desc: 'Template engine, generation, review', icon: '🎨', color: '#2563eb' },
+  { id: 't6', name: 'Tasks & Pipeline', desc: 'Task management, PPC flow, backlog', icon: '📋', color: '#0891b2' },
+  { id: 't7', name: 'Content Intelligence', desc: 'BI-driven topic discovery, AI article generation', icon: '🧠', color: '#db2777' },
+  { id: 't8', name: 'AI & Automation', desc: 'Platform-level AI agent and workflow automation', icon: '🤖', color: '#0891b2' },
+];
+
+let items = [
+  {
+    id: 'i1', name: 'Role-based permissions', type: 'foundation', phase: 'now', theme: 't1',
+    problem: 'All users see the same UI — admins, editors, and viewers need different access levels',
+    users: '8 teams', notes: 'Foundation for all multi-user workflows',
+    impact: 5, reach: 5, severity: 4, strategic: 5, effort: 3, deps: 1,
+    designed: false, developed: false
+  },
+  {
+    id: 'i2', name: 'Approval workflow', type: 'foundation', phase: 'now', theme: 't2',
+    problem: 'Manual approvals happen in Slack/email — no structured review gate before creative goes live',
+    users: '5 teams', notes: 'Lighthouse use case; gates Upload to Kueez step',
+    impact: 5, reach: 4, severity: 5, strategic: 5, effort: 4, deps: 2,
+    designed: true, developed: false
+  },
+  {
+    id: 'i3', name: 'Upload to Kueez CMS', type: 'feature', phase: 'now', theme: 't3',
+    problem: 'Creatives are downloaded manually and re-uploaded to Kueez — no direct push from CopyCat',
+    users: 'All PPC users', notes: 'Final step of creative flow; high daily frequency',
+    impact: 5, reach: 5, severity: 4, strategic: 5, effort: 3, deps: 1,
+    designed: false, developed: false
+  },
+  {
+    id: 'i4', name: 'Figma design sync', type: 'foundation', phase: 'now', theme: 't5',
+    problem: 'Prototype (HTML) is far ahead of the Figma file — engineers have no handoff source of truth',
+    users: 'Dev team', notes: 'Blocks engineering implementation',
+    impact: 4, reach: 3, severity: 4, strategic: 4, effort: 2, deps: 1,
+    designed: true, developed: false
+  },
+  {
+    id: 'i5', name: 'Slack notifications', type: 'feature', phase: 'next', theme: 't3',
+    problem: 'Users miss status changes — no push alerts when a task moves to Ready for PPC or gets approved',
+    users: '6 teams', notes: 'Depends on event system (approval workflow)',
+    impact: 3, reach: 5, severity: 3, strategic: 3, effort: 2, deps: 3,
+    designed: false, developed: false
+  },
+  {
+    id: 'i6', name: 'Live search & filters', type: 'feature', phase: 'now', theme: 't6',
+    problem: 'Users with 100+ tasks can\'t quickly find what they need — no real-time filter across columns',
+    users: 'All users', notes: 'Partially built in prototype; needs backend query support',
+    impact: 4, reach: 5, severity: 3, strategic: 3, effort: 2, deps: 1,
+    designed: true, developed: true
+  },
+  {
+    id: 'i7', name: 'Advanced analytics dashboard', type: 'feature', phase: 'later', theme: 't4',
+    problem: 'Leaders want trend reporting across creative performance, PPC outcomes, and team velocity',
+    users: '3 teams', notes: 'Needs clean data model + 90 days of production data first',
+    impact: 3, reach: 2, severity: 2, strategic: 4, effort: 5, deps: 4,
+    designed: false, developed: false
+  },
+  {
+    id: 'i8', name: 'Duplicate-winner flow', type: 'feature', phase: 'next', theme: 't5',
+    problem: 'Top-performing creatives need to be remixed for new articles — no structured duplication path',
+    users: '4 teams', notes: 'Step 1 "Duplicate Winner" path in creative flow',
+    impact: 4, reach: 4, severity: 3, strategic: 4, effort: 3, deps: 2,
+    designed: false, developed: false
+  },
+  {
+    id: 'i9', name: 'Influencer creative path', type: 'feature', phase: 'next', theme: 't5',
+    problem: 'Influencer-sourced content has no structured intake path — handled ad hoc outside the tool',
+    users: '3 teams', notes: 'Third article-path option in Step 1 Setup',
+    impact: 3, reach: 3, severity: 2, strategic: 4, effort: 3, deps: 2,
+    designed: false, developed: false
+  },
+  {
+    id: 'i10', name: 'Bulk creative actions', type: 'feature', phase: 'now', theme: 't5',
+    problem: 'Reviewers must act on creatives one at a time — no way to approve or reject a batch',
+    users: 'PPC team', notes: 'Floating bulk-action bar partially built in prototype',
+    impact: 4, reach: 3, severity: 4, strategic: 3, effort: 2, deps: 1,
+    designed: true, developed: true
+  },
+  {
+    id: 'i11', name: 'PPC-ready gating logic', type: 'foundation', phase: 'now', theme: 't6',
+    problem: 'Row checkbox can be triggered before article + creatives are complete — no enforcement',
+    users: 'All PPC users', notes: 'Checkbox disabled until both actions complete',
+    impact: 4, reach: 5, severity: 4, strategic: 4, effort: 1, deps: 1,
+    designed: true, developed: true
+  },
+  {
+    id: 'i12', name: 'Template library management', type: 'feature', phase: 'next', theme: 't5',
+    problem: 'Templates are hardcoded — no way to add, retire, or organise templates without a deploy',
+    users: 'Creative team', notes: 'Admin-facing; unlocks creative ops self-service',
+    impact: 3, reach: 2, severity: 3, strategic: 4, effort: 4, deps: 3,
+    designed: false, developed: false
+  },
+  {
+    id: 'i13', name: 'CSV export for tasks', type: 'feature', phase: 'now', theme: 't6',
+    problem: 'PMs need a snapshot of the pipeline for stakeholder reporting — no download option',
+    users: '4 managers', notes: 'Low effort; toolbar-level feature',
+    impact: 2, reach: 3, severity: 2, strategic: 2, effort: 1, deps: 1,
+    designed: true, developed: true
+  },
+  {
+    id: 'i14', name: 'Event / audit log', type: 'foundation', phase: 'later', theme: 't1',
+    problem: 'No record of who changed what or when — compliance and debugging are impossible',
+    users: 'Admins', notes: 'Prerequisite for SOC2 if needed; heavy backend work',
+    impact: 2, reach: 1, severity: 3, strategic: 3, effort: 5, deps: 2,
+    designed: false, developed: false
+  },
+
+  // ── NEW ITEMS FROM SESSION ──────────────────────────────────────────
+
+  {
+    id: 'i15', name: 'AI article title generator', type: 'feature', phase: 'next', theme: 't7',
+    problem: 'Content creators manually research and brainstorm article titles — no system to analyze BI top-performers, generate optimized title variants automatically, or enforce the required category taxonomy on each new title',
+    users: 'Content creators, editorial team',
+    notes: 'Requires BI data access + category list definition; generated titles feed directly into the article creation flow',
+    impact: 5, reach: 4, severity: 3, strategic: 5, effort: 4, deps: 3,
+    designed: false, developed: false
+  },
+  {
+    id: 'i16', name: 'Storefront-per-template toggle', type: 'foundation', phase: 'now', theme: 't5',
+    problem: 'Step 2 (Storefront Connection) is a mandatory separate step that adds friction — designers need storefront to be a per-template on/off toggle embedded inside the Templates step, not a standalone gate every user must pass through',
+    users: 'Marketing designers, creative team',
+    notes: 'Removes Step 2 from the creative flow entirely; storefront toggle moves into each template card in Step 3',
+    impact: 4, reach: 4, severity: 4, strategic: 4, effort: 3, deps: 1,
+    designed: false, developed: false
+  },
+  {
+    id: 'i17', name: 'Bulk article generation', type: 'feature', phase: 'next', theme: 't7',
+    problem: 'Creating articles one at a time is a bottleneck for content teams running large topic batches — there is no way to queue and generate multiple articles from a single trigger',
+    users: 'Content creators',
+    notes: 'Depends on single-article AI generation being stable; requires queue UI and progress tracking',
+    impact: 4, reach: 3, severity: 3, strategic: 4, effort: 4, deps: 3,
+    designed: false, developed: false
+  },
+  {
+    id: 'i18', name: 'Content & template playground', type: 'feature', phase: 'next', theme: 't5',
+    problem: 'Teams experiment with new article formats and creative templates directly in production — there is no isolated sandbox to test generation settings, new templates, or prompt variations without affecting live data',
+    users: 'Content creators, creative designers',
+    notes: 'Isolated environment; outputs explicitly marked "draft / not live"',
+    impact: 3, reach: 3, severity: 3, strategic: 4, effort: 4, deps: 2,
+    designed: false, developed: false
+  },
+  {
+    id: 'i19', name: 'Article topic discovery screen', type: 'feature', phase: 'next', theme: 't7',
+    problem: 'Content creators have no structured way to find what to write about next — subject selection is manual, informal, and disconnected from BI performance signals, leading to poor topic choices and duplicated effort',
+    users: 'Content creators, editorial leads',
+    notes: 'Powered by BI data; suggested topics feed into article creation flow; links to AI title generator (i15)',
+    impact: 4, reach: 4, severity: 3, strategic: 5, effort: 3, deps: 3,
+    designed: false, developed: false
+  },
+  {
+    id: 'i20', name: 'Manager presets & advanced settings', type: 'foundation', phase: 'now', theme: 't1',
+    problem: 'Managers cannot define team-wide defaults for generation settings, workflow rules, or quality thresholds — each user configures independently, producing inconsistent outputs; there is also no admin-only section for future role-based feature gating',
+    users: 'Managers, admins',
+    notes: 'Phase 1 of role-based permissions (i1); admin-only section; sets defaults that propagate to all team members',
+    impact: 4, reach: 3, severity: 3, strategic: 5, effort: 3, deps: 2,
+    designed: false, developed: false
+  },
+  {
+    id: 'i21', name: 'Team status dashboard', type: 'feature', phase: 'next', theme: 't6',
+    problem: 'Managers have no real-time visibility into their team\'s progress — who is working on what, what is blocked, and where pipeline bottlenecks are forming across the tasks list',
+    users: 'Team managers, leads',
+    notes: 'Manager-only view; aggregates task status per team member; complements the existing Tasks Pipeline table',
+    impact: 4, reach: 3, severity: 4, strategic: 4, effort: 3, deps: 2,
+    designed: false, developed: false
+  },
+  {
+    id: 'i22', name: 'Creatives library', type: 'feature', phase: 'next', theme: 't5',
+    problem: 'Creatives are generated per article and then siloed — there is no central library to browse past creatives, reuse strong performers, or generate new variations from existing assets',
+    users: 'Creative team, PPC team',
+    notes: 'Filterable by date, PID, template, status, and performance; variation generation links back to the creative creation flow',
+    impact: 4, reach: 4, severity: 3, strategic: 4, effort: 4, deps: 2,
+    designed: false, developed: false
+  },
+  {
+    id: 'i23', name: 'Articles overview screen', type: 'feature', phase: 'next', theme: 't6',
+    problem: 'There is no single screen showing the full article catalogue with performance context — users cannot see how many creatives exist per article, which articles are live, or which are ready for PPC without navigating each task individually',
+    users: 'All users',
+    notes: 'Cross-references articles with creative counts, PID, and PPC status; low-effort, high-reach',
+    impact: 4, reach: 5, severity: 3, strategic: 4, effort: 2, deps: 1,
+    designed: false, developed: false
+  },
+  {
+    id: 'i24', name: 'AI in-platform agent', type: 'feature', phase: 'later', theme: 't8',
+    problem: 'Complex multi-step workflows (create article → pick templates → generate → upload) require navigating multiple screens; an AI agent could execute these actions through a natural-language interface, dramatically reducing time-to-live for creatives',
+    users: 'All users',
+    notes: 'Long-term vision; requires a stable, well-documented API layer across all platform actions; depends on most other features being shipped first',
+    impact: 5, reach: 5, severity: 2, strategic: 5, effort: 5, deps: 5,
+    designed: false, developed: false
+  },
+];
+
+// ═══════════════════════════════════════════
+// SCORING
+// ═══════════════════════════════════════════
+function calcScore(item) {
+  const raw = (item.impact * 1.8 + item.reach * 1.4 + item.severity * 1.4 + item.strategic * 1.2) / 4
+              - (item.effort * 0.6)
+              + (item.deps > 2 ? -0.3 : 0);
+  return Math.min(10, Math.max(1, Math.round(raw * 10) / 10));
+}
+
+function scoreClass(s) {
+  if (s >= 4) return 'ps-high';
+  if (s >= 2.5) return 'ps-med';
+  return 'ps-low';
+}
+
+function priorityLabel(s) {
+  if (s >= 4) return '<span class="chip chip-indigo">High</span>';
+  if (s >= 2.5) return '<span class="chip chip-amber">Medium</span>';
+  return '<span class="chip chip-gray">Low</span>';
+}
+
+function effortLabel(n) {
+  const labels = ['','XS','S','M','L','XL'];
+  return `<span class="effort-${n}" style="font-weight:700;">${labels[n]}</span>`;
+}
+
+function phaseChip(p) {
+  if (p === 'now') return '<span class="chip chip-indigo">Now</span>';
+  if (p === 'next') return '<span class="chip chip-amber">Next</span>';
+  if (p === 'later') return '<span class="chip chip-gray">Later</span>';
+  return '<span class="chip chip-gray" style="opacity:.5">—</span>';
+}
+
+function typeTag(t) {
+  if (t === 'foundation') return '<span class="tag-foundation">🏗 Foundation</span>';
+  if (t === 'feature') return '<span class="tag-feature">✨ Feature</span>';
+  return '';
+}
+
+function themeOf(id) {
+  return themes.find(t => t.id === id);
+}
+
+// ═══════════════════════════════════════════
+// STATUS TOGGLES
+// ═══════════════════════════════════════════
+function toggleStatus(id, field, event) {
+  event.stopPropagation();
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  if (field === 'developed') {
+    item.developed = !item.developed;
+    // auto-mark designed when developed
+    if (item.developed) item.designed = true;
+  } else {
+    item.designed = !item.designed;
+    // can't undesign if developed
+    if (!item.designed && item.developed) { item.designed = true; return; }
+  }
+  // re-render whichever view is active
+  const activeView = document.querySelector('.view.active')?.id;
+  if (activeView === 'view-backlog') renderBacklog();
+  if (activeView === 'view-roadmap') renderRoadmap();
+  if (activeView === 'view-scoring') renderScoring();
+  if (activeView === 'view-themes') renderThemes();
+  updateBadges();
+  showToast(field === 'developed'
+    ? (item.developed ? '✅ Marked as Developed' : 'Unmarked Developed')
+    : (item.designed ? '🎨 Marked as Designed' : 'Unmarked Designed'));
+}
+
+function statusTrack(item) {
+  return `<div class="status-track">
+    <button class="status-btn ${item.designed ? 'on-designed' : ''}"
+      onclick="toggleStatus('${item.id}','designed',event)" title="${item.designed ? 'Click to unmark' : 'Mark as Designed'}">
+      <span class="status-dot"></span>${item.designed ? 'Designed' : 'Design'}
+    </button>
+    <button class="status-btn ${item.developed ? 'on-developed' : ''}"
+      onclick="toggleStatus('${item.id}','developed',event)" title="${item.developed ? 'Click to unmark' : 'Mark as Developed'}">
+      <span class="status-dot"></span>${item.developed ? 'Developed' : 'Dev'}
+    </button>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+  if (name === 'backlog') renderBacklog();
+  if (name === 'themes') renderThemes();
+  if (name === 'scoring') renderScoring();
+  if (name === 'roadmap') renderRoadmap();
+  updateBadges();
+}
+
+function updateBadges() {
+  const done = items.filter(i => i.developed).length;
+  document.getElementById('badge-backlog').textContent = items.length;
+  document.getElementById('badge-themes').textContent = themes.length;
+  const doneBadge = document.getElementById('badge-done');
+  if (doneBadge) doneBadge.textContent = done;
+}
+
+// ═══════════════════════════════════════════
+// BACKLOG
+// ═══════════════════════════════════════════
+function renderBacklog() {
+  const themeFilter = document.getElementById('filter-theme').value;
+  const phaseFilter = document.getElementById('filter-phase').value;
+  const typeFilter = document.getElementById('filter-type').value;
+  const statusFilter = document.getElementById('filter-status').value;
+
+  let filtered = items.filter(i => {
+    if (themeFilter && i.theme !== themeFilter) return false;
+    if (phaseFilter === 'unassigned' && i.phase) return false;
+    if (phaseFilter && phaseFilter !== 'unassigned' && i.phase !== phaseFilter) return false;
+    if (typeFilter && i.type !== typeFilter) return false;
+    if (statusFilter === 'done' && !i.developed) return false;
+    if (statusFilter === 'designed' && !i.designed) return false;
+    if (statusFilter === 'in-progress' && (i.developed || (!i.designed && !i.developed))) return false;
+    if (statusFilter === 'not-started' && (i.designed || i.developed)) return false;
+    return true;
+  });
+
+  // Sort: not-done items by score desc, done items last
+  const sorted = [...filtered].sort((a,b) => {
+    if (a.developed !== b.developed) return a.developed ? 1 : -1;
+    return calcScore(b) - calcScore(a);
+  });
+
+  const tb = document.getElementById('backlog-body');
+
+  if (!sorted.length) {
+    tb.innerHTML = `<tr><td colspan="10"><div class="empty"><div class="empty-icon">📭</div><div class="empty-msg">No items match the current filters.</div></div></td></tr>`;
+    return;
+  }
+
+  tb.innerHTML = sorted.map(item => {
+    const score = calcScore(item);
+    const th = themeOf(item.theme);
+    const isDone = item.developed;
+    return `
+    <tr class="${isDone ? 'row-done' : ''}">
+      <td><strong class="item-name" style="font-size:13px;">${item.name}</strong></td>
+      <td style="color:var(--text-2);font-size:12px;line-height:1.45;">${item.problem}</td>
+      <td class="users-affected">${item.users || '—'}</td>
+      <td>${th ? `<span class="chip" style="background:${th.color}22;color:${th.color};">${th.icon} ${th.name}</span>` : '<span style="color:var(--text-3)">—</span>'}</td>
+      <td>${typeTag(item.type)}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="priority-score ${scoreClass(score)}">${score}</div>
+          ${priorityLabel(score)}
+        </div>
+      </td>
+      <td>${phaseChip(item.phase)}</td>
+      <td>${statusTrack(item)}</td>
+      <td style="color:var(--text-2);font-size:12px;max-width:180px;">${item.notes || '—'}</td>
+      <td>
+        <div class="action-btns">
+          <button class="icon-btn" onclick="openEditModal('${item.id}')" title="Edit">✏️</button>
+          <button class="icon-btn del" onclick="deleteItem('${item.id}')" title="Delete">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // populate theme filter
+  const tf = document.getElementById('filter-theme');
+  const curVal = tf.value;
+  tf.innerHTML = '<option value="">All themes</option>' +
+    themes.map(t => `<option value="${t.id}" ${curVal===t.id?'selected':''}>${t.icon} ${t.name}</option>`).join('');
+  tf.value = curVal;
+}
+
+// ═══════════════════════════════════════════
+// THEMES
+// ═══════════════════════════════════════════
+function renderThemes() {
+  const grid = document.getElementById('themes-grid');
+  if (!themes.length) {
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">🗂</div><div class="empty-msg">No themes yet. Add one to group your backlog.</div></div>`;
+    return;
+  }
+  grid.innerHTML = themes.map(theme => {
+    const themeItems = items.filter(i => i.theme === theme.id);
+    const now = themeItems.filter(i => i.phase === 'now').length;
+    const next = themeItems.filter(i => i.phase === 'next').length;
+    const later = themeItems.filter(i => i.phase === 'later').length;
+    return `
+    <div class="theme-card">
+      <div class="theme-card-header">
+        <div class="theme-icon" style="background:${theme.color}22;font-size:15px;">${theme.icon}</div>
+        <div>
+          <div style="font-weight:700;font-size:14px;">${theme.name}</div>
+          <div style="font-size:12px;color:var(--text-2);">${theme.desc}</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:4px;">
+          ${now ? `<span class="chip chip-indigo" style="font-size:10px;">${now} Now</span>` : ''}
+          ${next ? `<span class="chip chip-amber" style="font-size:10px;">${next} Next</span>` : ''}
+          ${later ? `<span class="chip chip-gray" style="font-size:10px;">${later} Later</span>` : ''}
+        </div>
+      </div>
+      <div class="theme-card-items">
+        ${themeItems.length ? themeItems.sort((a,b) => calcScore(b)-calcScore(a)).map(i => `
+          <div class="theme-card-item">
+            ${typeTag(i.type)}
+            <span style="flex:1;">${i.name}</span>
+            <div class="priority-score ${scoreClass(calcScore(i))}" style="width:26px;height:26px;font-size:11px;">${calcScore(i)}</div>
+            <span class="theme-count">${phaseChip(i.phase)}</span>
+          </div>`).join('') :
+          `<div class="theme-card-item" style="color:var(--text-3);font-style:italic;">No items yet</div>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// SCORING
+// ═══════════════════════════════════════════
+function renderScoring() {
+  const filter = document.getElementById('scoring-filter').value;
+  let filtered = items.filter(i => {
+    if (!filter) return true;
+    if (filter === 'unassigned') return !i.phase;
+    return i.phase === filter;
+  });
+  const sorted = [...filtered].sort((a,b) => calcScore(b) - calcScore(a));
+  const el = document.getElementById('scoring-list');
+
+  if (!sorted.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">🎯</div><div class="empty-msg">No items to score.</div></div>`;
+    return;
+  }
+
+  el.innerHTML = sorted.map((item, idx) => {
+    const score = calcScore(item);
+    const dims = [
+      { key: 'impact', label: 'Impact', val: item.impact, weight: 'High' },
+      { key: 'reach', label: 'Reach', val: item.reach, weight: 'Med' },
+      { key: 'severity', label: 'Severity', val: item.severity, weight: 'Med' },
+      { key: 'strategic', label: 'Strategic', val: item.strategic, weight: 'Med' },
+      { key: 'effort', label: 'Effort (cost)', val: item.effort, weight: 'Cost', isInverse: true },
+      { key: 'deps', label: 'Dependencies', val: item.deps, weight: 'Risk', isInverse: true },
+    ];
+    return `
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:14px;">
+        <div style="font-size:20px;font-weight:900;color:${score>=4?'var(--indigo)':score>=2.5?'var(--amber)':'var(--text-3)'}">
+          #${idx+1}
+        </div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:15px;">${item.name}</div>
+          <div style="font-size:12px;color:var(--text-2);margin-top:2px;">${item.problem}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+          <div class="priority-score ${scoreClass(score)}" style="width:44px;height:44px;font-size:18px;">${score}</div>
+          <div>${phaseChip(item.phase)}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+        ${dims.map(d => `
+        <div>
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:4px;display:flex;justify-content:space-between;">
+            <span>${d.label}</span>
+            <span>${d.val}/5</span>
+          </div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width:${d.val/5*100}%;background:${d.isInverse?(d.val>=4?'#dc2626':d.val>=3?'#d97706':'#16a34a'):'var(--indigo)'}"></div>
+          </div>
+        </div>`).join('')}
+      </div>
+      <div style="margin-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        ${typeTag(item.type)}
+        ${(() => { const th = themeOf(item.theme); return th ? `<span class="chip" style="background:${th.color}22;color:${th.color};">${th.icon} ${th.name}</span>` : ''; })()}
+        ${item.users ? `<span style="font-size:12px;color:var(--text-2);">👥 ${item.users}</span>` : ''}
+        ${item.notes ? `<span style="font-size:12px;color:var(--text-3);">📎 ${item.notes}</span>` : ''}
+        <span style="margin-left:auto;">
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal('${item.id}')">Edit scores</button>
+        </span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// ROADMAP
+// ═══════════════════════════════════════════
+function roadmapItemCard(item, isDone) {
+  const score = calcScore(item);
+  const th = themeOf(item.theme);
+  return `
+  <div class="roadmap-item ${isDone ? 'done-item' : ''}" onclick="openEditModal('${item.id}')">
+    <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;">
+      <div style="flex:1;">
+        <div class="roadmap-item-name" style="${isDone ? 'text-decoration:line-through;color:var(--text-2)' : ''}">${item.name}</div>
+      </div>
+      <div class="priority-score ${scoreClass(score)}" style="width:26px;height:26px;font-size:11px;flex-shrink:0;">${score}</div>
+    </div>
+    <div class="roadmap-item-problem">${item.problem}</div>
+    <div class="roadmap-item-meta" style="margin-top:6px;">
+      ${typeTag(item.type)}
+      ${th ? `<span class="chip" style="background:${th.color}22;color:${th.color};font-size:10px;">${th.icon} ${th.name}</span>` : ''}
+      ${statusTrack(item)}
+    </div>
+    ${item.notes ? `<div style="font-size:11px;color:var(--text-3);margin-top:6px;">📎 ${item.notes}</div>` : ''}
+  </div>`;
+}
+
+function renderRoadmap() {
+  const mode = document.getElementById('roadmap-view-mode').value;
+
+  // Separate done from active
+  const doneItems = items.filter(i => i.developed).sort((a,b) => calcScore(b)-calcScore(a));
+  const activeItems = items.filter(i => !i.developed);
+
+  const now = activeItems.filter(i => i.phase === 'now');
+  const next = activeItems.filter(i => i.phase === 'next');
+  const later = activeItems.filter(i => i.phase === 'later');
+  const unassigned = activeItems.filter(i => !i.phase || !['now','next','later'].includes(i.phase));
+  const foundations = items.filter(i => i.type === 'foundation');
+  const features = items.filter(i => i.type === 'feature');
+
+  document.getElementById('roadmap-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-value" style="color:var(--indigo)">${now.length}</div><div class="stat-label">Now</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--amber)">${next.length}</div><div class="stat-label">Next</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--text-2)">${later.length}</div><div class="stat-label">Later</div></div>
+    <div class="stat-card" style="border-color:rgba(22,163,74,.3);"><div class="stat-value" style="color:var(--green)">${doneItems.length}</div><div class="stat-label">✅ Done</div></div>
+    <div class="stat-card"><div class="stat-value">${foundations.length}</div><div class="stat-label">🏗 Foundations</div></div>
+    <div class="stat-card"><div class="stat-value">${features.length}</div><div class="stat-label">✨ Features</div></div>
+    ${unassigned.length ? `<div class="stat-card" style="border-color:rgba(220,38,38,.3);"><div class="stat-value" style="color:var(--red)">${unassigned.length}</div><div class="stat-label">Unassigned</div></div>` : ''}
+  `;
+
+  const el = document.getElementById('roadmap-content');
+
+  if (mode === 'columns') {
+    // 4-column layout: Now / Next / Later / Done
+    el.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;" id="roadmap-cols"></div>`;
+    const cols = [
+      { phase: 'now', label: 'Now', list: now },
+      { phase: 'next', label: 'Next', list: next },
+      { phase: 'later', label: 'Later', list: later },
+      { phase: 'done', label: '✅ Done', list: doneItems },
+    ];
+    cols.forEach(({ phase, label, list }) => {
+      const col = document.createElement('div');
+      col.className = 'phase-col';
+      col.innerHTML = `
+        <div class="phase-header ${phase}">
+          <div class="phase-dot"></div>
+          ${label}
+          <span style="margin-left:auto;font-size:10px;font-weight:500;">${list.length} item${list.length !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="phase-items">
+          ${list.length
+            ? list.map(item => roadmapItemCard(item, phase === 'done')).join('')
+            : `<div class="empty" style="padding:32px;"><div class="empty-icon" style="font-size:20px;">${phase==='done'?'🎉':'📭'}</div><div class="empty-msg">${phase==='done'?'Nothing shipped yet':'Nothing here yet'}</div></div>`
+          }
+        </div>`;
+      document.getElementById('roadmap-cols').appendChild(col);
+    });
+  } else {
+    // Table view — active phases, then Done section
+    const makeTable = (phaseItems, isDone) => phaseItems.map(item => {
+      const score = calcScore(item);
+      return `
+      <tr class="${isDone ? 'tr-done' : ''}">
+        <td>
+          <div style="font-weight:700;${isDone?'text-decoration:line-through;color:var(--text-2)':''}">${item.name}</div>
+          <div style="margin-top:4px;">${typeTag(item.type)}</div>
+        </td>
+        <td style="font-size:12px;color:var(--text-2);">${item.problem}</td>
+        <td>${item.users || '—'}</td>
+        <td><strong>${item.impact}</strong>/5</td>
+        <td>${effortLabel(item.effort)}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="priority-score ${scoreClass(score)}" style="width:26px;height:26px;font-size:11px;">${score}</div>
+            ${priorityLabel(score)}
+          </div>
+        </td>
+        <td>${statusTrack(item)}</td>
+        <td style="font-size:12px;color:var(--text-2);max-width:200px;">${item.notes || '—'}</td>
+      </tr>`;
+    }).join('');
+
+    const tableHead = `<thead><tr>
+      <th style="width:200px;">Item</th>
+      <th style="width:260px;">Problem</th>
+      <th>Users affected</th>
+      <th>Impact</th>
+      <th>Effort</th>
+      <th>Priority</th>
+      <th>Status</th>
+      <th>Notes</th>
+    </tr></thead>`;
+
+    el.innerHTML = `<div class="roadmap-table-wrap">` +
+    [
+      { label: '🟣 Now', list: now },
+      { label: '🟡 Next', list: next },
+      { label: '⚪ Later', list: later },
+    ].filter(s => s.list.length).map(s => `
+      <div class="roadmap-section-label">${s.label}</div>
+      <div class="tbl-wrap" style="margin-bottom:28px;">
+        <table>${tableHead}<tbody>${makeTable(s.list, false)}</tbody></table>
+      </div>`).join('') +
+    (doneItems.length ? `
+      <div class="done-section-label">✅ Done</div>
+      <div class="tbl-wrap" style="margin-bottom:28px;border-color:rgba(22,163,74,.2);">
+        <table>${tableHead}<tbody>${makeTable(doneItems, true)}</tbody></table>
+      </div>` : '') +
+    `</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════
+// MODAL — ADD / EDIT
+// ═══════════════════════════════════════════
+function populateThemeSelect(selectedId) {
+  const sel = document.getElementById('f-theme');
+  sel.innerHTML = '<option value="">— none —</option>' +
+    themes.map(t => `<option value="${t.id}" ${t.id === selectedId ? 'selected' : ''}>${t.icon} ${t.name}</option>`).join('');
+}
+
+function openAddModal() {
+  editingId = null;
+  selectedPhase = null;
+  selectedType = null;
+  document.getElementById('modal-title').textContent = 'Add item to backlog';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-problem').value = '';
+  document.getElementById('f-users').value = '';
+  document.getElementById('f-notes').value = '';
+  populateThemeSelect('');
+  resetSliders();
+  updatePhaseUI();
+  updateTypeUI();
+  document.getElementById('item-modal').classList.add('open');
+  setTimeout(() => document.getElementById('f-name').focus(), 50);
+}
+
+function openEditModal(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  editingId = id;
+  selectedPhase = item.phase || null;
+  selectedType = item.type || null;
+  document.getElementById('modal-title').textContent = 'Edit item';
+  document.getElementById('f-name').value = item.name;
+  document.getElementById('f-problem').value = item.problem;
+  document.getElementById('f-users').value = item.users || '';
+  document.getElementById('f-notes').value = item.notes || '';
+  populateThemeSelect(item.theme);
+  setSlider('s-impact', 'lbl-impact', item.impact);
+  setSlider('s-reach', 'lbl-reach', item.reach);
+  setSlider('s-severity', 'lbl-severity', item.severity);
+  setSlider('s-strategic', 'lbl-strategic', item.strategic);
+  setSlider('s-effort', 'lbl-effort', item.effort);
+  setSlider('s-deps', 'lbl-deps', item.deps);
+  updatePhaseUI();
+  updateTypeUI();
+  document.getElementById('item-modal').classList.add('open');
+}
+
+function setSlider(id, lblId, val) {
+  document.getElementById(id).value = val;
+  document.getElementById(lblId).textContent = val;
+}
+
+function resetSliders() {
+  ['impact','reach','severity','strategic','effort'].forEach(k => setSlider('s-'+k,'lbl-'+k,3));
+  setSlider('s-deps','lbl-deps',1);
+}
+
+function selectPhase(p) {
+  selectedPhase = selectedPhase === p ? null : p;
+  updatePhaseUI();
+}
+
+function updatePhaseUI() {
+  ['now','next','later'].forEach(p => {
+    document.getElementById('phase-'+p).classList.toggle('sel', selectedPhase === p);
+  });
+}
+
+function selectType(t) {
+  selectedType = selectedType === t ? null : t;
+  updateTypeUI();
+}
+
+function updateTypeUI() {
+  ['foundation','feature'].forEach(t => {
+    const btn = document.getElementById('type-btn-'+t);
+    btn.className = 'type-btn' + (selectedType === t ? ' sel-'+t : '');
+  });
+}
+
+function saveItem() {
+  const name = document.getElementById('f-name').value.trim();
+  const problem = document.getElementById('f-problem').value.trim();
+  if (!name || !problem) { showToast('Name and problem are required'); return; }
+
+  const payload = {
+    name, problem,
+    users: document.getElementById('f-users').value.trim(),
+    theme: document.getElementById('f-theme').value,
+    notes: document.getElementById('f-notes').value.trim(),
+    phase: selectedPhase,
+    type: selectedType,
+    impact: parseInt(document.getElementById('s-impact').value),
+    reach: parseInt(document.getElementById('s-reach').value),
+    severity: parseInt(document.getElementById('s-severity').value),
+    strategic: parseInt(document.getElementById('s-strategic').value),
+    effort: parseInt(document.getElementById('s-effort').value),
+    deps: parseInt(document.getElementById('s-deps').value),
+  };
+
+  if (editingId) {
+    const idx = items.findIndex(i => i.id === editingId);
+    // preserve designed/developed — those are toggled inline, not via modal
+    payload.designed = items[idx].designed;
+    payload.developed = items[idx].developed;
+    items[idx] = { ...items[idx], ...payload };
+    showToast('Item updated');
+  } else {
+    payload.id = 'i' + Date.now();
+    payload.designed = false;
+    payload.developed = false;
+    items.push(payload);
+    showToast('Item added');
+  }
+
+  closeModal('item-modal');
+  updateBadges();
+  renderBacklog();
+}
+
+function deleteItem(id) {
+  if (!confirm('Delete this item?')) return;
+  items = items.filter(i => i.id !== id);
+  updateBadges();
+  renderBacklog();
+  showToast('Item deleted');
+}
+
+// ═══════════════════════════════════════════
+// MODAL — THEME
+// ═══════════════════════════════════════════
+function openThemeModal() {
+  document.getElementById('t-name').value = '';
+  document.getElementById('t-desc').value = '';
+  document.getElementById('t-icon').value = '📁';
+  document.getElementById('theme-modal').classList.add('open');
+  setTimeout(() => document.getElementById('t-name').focus(), 50);
+}
+
+function saveTheme() {
+  const name = document.getElementById('t-name').value.trim();
+  if (!name) { showToast('Theme name is required'); return; }
+  themes.push({
+    id: 't' + Date.now(),
+    name,
+    desc: document.getElementById('t-desc').value.trim(),
+    icon: document.getElementById('t-icon').value.trim() || '📁',
+    color: THEME_COLORS[themes.length % THEME_COLORS.length]
+  });
+  closeModal('theme-modal');
+  updateBadges();
+  renderThemes();
+  showToast('Theme added');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+});
+
+// ═══════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════
+function exportCSV() {
+  const sorted = [...items].sort((a,b) => {
+    const po = {now:0,next:1,later:2};
+    return (po[a.phase]??3) - (po[b.phase]??3) || calcScore(b) - calcScore(a);
+  });
+  const header = ['Item','Problem','Users Affected','Theme','Type','Impact','Reach','Severity','Strategic Fit','Effort','Dependencies','Priority Score','Priority','Phase','Designed','Developed','Notes'];
+  const rows = sorted.map(i => {
+    const score = calcScore(i);
+    const th = themeOf(i.theme);
+    return [
+      i.name, i.problem, i.users || '',
+      th ? th.name : '',
+      i.type === 'foundation' ? 'Platform Foundation' : i.type === 'feature' ? 'User Feature' : '',
+      i.impact, i.reach, i.severity, i.strategic, i.effort, i.deps,
+      score,
+      score >= 4 ? 'High' : score >= 2.5 ? 'Medium' : 'Low',
+      i.phase || 'Unassigned',
+      i.designed ? 'Yes' : 'No',
+      i.developed ? 'Yes' : 'No',
+      i.notes || ''
+    ];
+  });
+  const csv = [header, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'copycat-roadmap.csv';
+  a.click();
+  showToast('CSV exported');
+}
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+renderBacklog();
+updateBadges();
+</script>
+</body>
+</html>

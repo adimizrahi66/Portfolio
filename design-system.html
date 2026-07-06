@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────────
+       DESIGN TOKENS
+    ───────────────────────────────────────────── */
+    :root {
+      /* Backgrounds */
+      --bg:             #0B0A09;
+      --surface:        #141210;
+      --surface-2:      #1D1B18;
+      --surface-3:      #262320;
+
+      /* Borders */
+      --border:         #272421;
+      --border-mid:     #363230;
+      --border-strong:  #4A4542;
+
+      /* Text */
+      --text:           #EDE9E3;
+      --text-muted:     #7C7874;
+      --text-subtle:    #4A4744;
+
+      /* Accent – warm gold */
+      --accent:         #C4986A;
+      --accent-light:   #E8C99A;
+      --accent-dim:     #7A5C38;
+      --on-accent:      #0B0A09;
+
+      /* Action – off-white primary */
+      --primary:        #EDE9E3;
+      --on-primary:     #0B0A09;
+
+      /* Semantic */
+      --success:        #4CAF82;
+      --error:          #E05252;
+      --warning:        #D4A045;
+
+      /* Spacing (4pt grid) */
+      --space-1:  4px;
+      --space-2:  8px;
+      --space-3:  12px;
+      --space-4:  16px;
+      --space-6:  24px;
+      --space-8:  32px;
+      --space-12: 48px;
+      --space-16: 64px;
+      --space-24: 96px;
+      --space-32: 128px;
+
+      /* Radius */
+      --radius-sharp: 0px;
+      --radius-sm:    4px;
+      --radius-md:    8px;
+      --radius-lg:    12px;
+
+      /* Typography */
+      --font: 'Poppins', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─────────────────────────────────────────────
+       LAYOUT
+    ───────────────────────────────────────────── */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-16) var(--space-8);
+    }
+
+    .section {
+      margin-bottom: var(--space-24);
+      padding-bottom: var(--space-16);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--space-6);
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: var(--space-8);
+      letter-spacing: 0.02em;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-6); }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+    .flex-row { display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-start; }
+
+    /* ─────────────────────────────────────────────
+       PAGE HEADER
+    ───────────────────────────────────────────── */
+    .ds-header {
+      margin-bottom: var(--space-24);
+      padding-bottom: var(--space-12);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ds-header .eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--space-4);
+    }
+
+    .ds-header h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.0;
+      color: var(--text);
+      margin-bottom: var(--space-4);
+    }
+
+    .ds-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 520px;
+    }
+
+    /* ─────────────────────────────────────────────
+       COLOR SWATCHES
+    ───────────────────────────────────────────── */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: var(--space-4);
+    }
+
+    .swatch {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .swatch-color {
+      height: 80px;
+      display: flex;
+      align-items: flex-end;
+      padding: var(--space-2) var(--space-3);
+    }
+
+    .swatch-contrast {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 3px 6px;
+      border-radius: 2px;
+      background: rgba(0,0,0,0.35);
+      color: #fff;
+    }
+
+    .swatch-info {
+      background: var(--surface-2);
+      padding: var(--space-3);
+    }
+
+    .swatch-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .swatch-hex {
+      font-size: 10px;
+      font-family: monospace;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .swatch-usage {
+      font-size: 9px;
+      color: var(--text-subtle);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ─────────────────────────────────────────────
+       TYPOGRAPHY
+    ───────────────────────────────────────────── */
+    .type-specimen {
+      padding: var(--space-8) 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .type-specimen:last-child {
+      border-bottom: none;
+    }
+
+    .type-meta {
+      display: flex;
+      gap: var(--space-6);
+      margin-bottom: var(--space-3);
+    }
+
+    .type-meta span {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+    }
+
+    .type-meta span strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .t-display {
+      font-size: 72px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 0.95;
+      color: var(--text);
+    }
+
+    .t-h1 {
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      color: var(--text);
+    }
+
+    .t-h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .t-h3 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      color: var(--text);
+    }
+
+    .t-h4 {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--text);
+    }
+
+    .t-body {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text);
+      max-width: 620px;
+    }
+
+    .t-body-muted {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 600px;
+    }
+
+    .t-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .t-label-accent {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .t-small {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .t-number {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--text);
+    }
+
+    /* ─────────────────────────────────────────────
+       BUTTONS
+    ───────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--font);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-decoration: none;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      padding: 12px 28px;
+    }
+
+    .btn-primary:hover {
+      background: var(--text);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      padding: 11px 27px;
+      border: 1px solid var(--border-strong);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--text-muted);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      padding: 10px 16px;
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: var(--on-accent);
+      padding: 12px 28px;
+    }
+
+    .btn-sm {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      padding: 8px 18px;
+    }
+
+    .btn-lg {
+      font-size: 15px;
+      padding: 16px 40px;
+    }
+
+    /* ─────────────────────────────────────────────
+       TAGS & LABELS
+    ───────────────────────────────────────────── */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .tag-default {
+      background: var(--surface-2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .tag-accent {
+      background: rgba(196, 152, 106, 0.12);
+      color: var(--accent-light);
+      border: 1px solid var(--accent-dim);
+    }
+
+    .tag-outline {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-mid);
+    }
+
+    .dot-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .dot-label::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       NAV COMPONENT
+    ───────────────────────────────────────────── */
+    .nav-demo {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-8);
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    /* ─────────────────────────────────────────────
+       CASE STUDY CARD
+    ───────────────────────────────────────────── */
+    .case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .case-card-image {
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: var(--surface-3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .case-card-image-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-3) 100%);
+    }
+
+    .image-placeholder-text {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+    }
+
+    .case-card-body {
+      padding: var(--space-6);
+    }
+
+    .case-card-category {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--space-2);
+    }
+
+    .case-card-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: var(--space-3);
+    }
+
+    .case-card-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-muted);
+    }
+
+    .case-card-footer {
+      padding: var(--space-4) var(--space-6);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .case-card-tags {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .case-card-arrow {
+      font-size: 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s, transform 0.15s;
+      display: inline-block;
+    }
+
+    /* ─────────────────────────────────────────────
+       FORM ELEMENTS
+    ───────────────────────────────────────────── */
+    .form-group {
+      margin-bottom: var(--space-6);
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: var(--space-2);
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .form-input::placeholder {
+      color: var(--text-subtle);
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* ─────────────────────────────────────────────
+       STAT / METRIC
+    ───────────────────────────────────────────── */
+    .stat-card {
+      padding: var(--space-8);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .stat-number {
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--text);
+    }
+
+    .stat-suffix {
+      font-size: 32px;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: var(--space-3);
+    }
+
+    /* ─────────────────────────────────────────────
+       DIVIDER
+    ───────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: var(--space-8) 0;
+    }
+
+    .divider-accent {
+      height: 1px;
+      background: var(--accent-dim);
+      margin: var(--space-8) 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       SPACING DEMO
+    ───────────────────────────────────────────── */
+    .spacing-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-3);
+    }
+
+    .spacing-block {
+      background: var(--accent-dim);
+      height: 20px;
+      border-radius: 2px;
+    }
+
+    .spacing-info {
+      display: flex;
+      gap: var(--space-4);
+      min-width: 160px;
+    }
+
+    .spacing-token {
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--accent-light);
+      min-width: 100px;
+    }
+
+    .spacing-value {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ─────────────────────────────────────────────
+       RADIUS DEMO
+    ───────────────────────────────────────────── */
+    .radius-demo {
+      display: flex;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+
+    .radius-box {
+      width: 80px;
+      height: 80px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-mid);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .radius-name {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .radius-val {
+      font-size: 10px;
+      font-family: monospace;
+      color: var(--accent);
+    }
+
+    /* ─────────────────────────────────────────────
+       HERO PREVIEW
+    ───────────────────────────────────────────── */
+    .hero-preview {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-24) var(--space-16);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-preview::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(196,152,106,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--space-6);
+    }
+
+    .hero-title {
+      font-size: 72px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 0.95;
+      color: var(--text);
+      margin-bottom: var(--space-6);
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto var(--space-12);
+      line-height: 1.65;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: center;
+    }
+
+    /* ─────────────────────────────────────────────
+       ANIMATION CLASSES (reference only)
+    ───────────────────────────────────────────── */
+    .anim-ref {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-6);
+    }
+
+    .anim-row {
+      display: flex;
+      gap: var(--space-4);
+      align-items: center;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .anim-row:last-child {
+      border-bottom: none;
+    }
+
+    .anim-token {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--accent-light);
+      min-width: 160px;
+    }
+
+    .anim-value {
+      font-size: 11px;
+      color: var(--text-muted);
+      flex: 1;
+    }
+
+    .anim-use {
+      font-size: 11px;
+      color: var(--text-subtle);
+      min-width: 200px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ───── HEADER ───── -->
+  <div class="ds-header">
+    <p class="eyebrow">Portfolio · Design System v1.0</p>
+    <h1>Style Guide</h1>
+    <p>Dark editorial aesthetic inspired by Magnetto. Poppins typeface. Warm gold accent. Built for a product design portfolio.</p>
+  </div>
+
+  <!-- ───── 01 COLORS ───── -->
+  <div class="section">
+    <p class="section-label">01 · Colors</p>
+    <div class="swatch-grid">
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0B0A09;">
+          <span class="swatch-contrast">BG</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Background</div>
+          <div class="swatch-hex">#0B0A09</div>
+          <div class="swatch-usage">Page background</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#141210;">
+          <span class="swatch-contrast">SURFACE</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Surface</div>
+          <div class="swatch-hex">#141210</div>
+          <div class="swatch-usage">Cards, panels</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1D1B18;">
+          <span class="swatch-contrast">SURFACE 2</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Surface 2</div>
+          <div class="swatch-hex">#1D1B18</div>
+          <div class="swatch-usage">Hover states, inputs</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#262320;">
+          <span class="swatch-contrast">SURFACE 3</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Surface 3</div>
+          <div class="swatch-hex">#262320</div>
+          <div class="swatch-usage">Image placeholders</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#EDE9E3;">
+          <span class="swatch-contrast" style="color:#0B0A09; background:rgba(0,0,0,0.12);">16.8:1 AAA</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Text</div>
+          <div class="swatch-hex">#EDE9E3</div>
+          <div class="swatch-usage">Primary text, buttons</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#7C7874;">
+          <span class="swatch-contrast">5.2:1 AA</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Text Muted</div>
+          <div class="swatch-hex">#7C7874</div>
+          <div class="swatch-usage">Secondary text, captions</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#4A4744;">
+          <span class="swatch-contrast">2.8:1</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Text Subtle</div>
+          <div class="swatch-hex">#4A4744</div>
+          <div class="swatch-usage">Placeholders, dividers</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#C4986A;">
+          <span class="swatch-contrast" style="color:#0B0A09; background:rgba(0,0,0,0.15);">3.5:1 AA</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Accent Gold</div>
+          <div class="swatch-hex">#C4986A</div>
+          <div class="swatch-usage">Labels, highlights, borders</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#E8C99A;">
+          <span class="swatch-contrast" style="color:#0B0A09; background:rgba(0,0,0,0.15);">On dark: use for text</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Accent Light</div>
+          <div class="swatch-hex">#E8C99A</div>
+          <div class="swatch-usage">Accent text on dark surface</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#7A5C38;">
+          <span class="swatch-contrast">Accent Dim</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Accent Dim</div>
+          <div class="swatch-hex">#7A5C38</div>
+          <div class="swatch-usage">Accent borders, tag bg</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#4CAF82;">
+          <span class="swatch-contrast" style="color:#0B0A09; background:rgba(0,0,0,0.15);">4.9:1 AA</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Success</div>
+          <div class="swatch-hex">#4CAF82</div>
+          <div class="swatch-usage">Positive states</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#E05252;">
+          <span class="swatch-contrast">5.0:1 AA</span>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Error</div>
+          <div class="swatch-hex">#E05252</div>
+          <div class="swatch-usage">Error states</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ───── 02 TYPOGRAPHY ───── -->
+  <div class="section">
+    <p class="section-label">02 · Typography · Poppins</p>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <span><strong>Display</strong></span>
+        <span>72px · 700 · −0.03em · lh 0.95</span>
+        <span>Hero headlines</span>
+      </div>
+      <div class="t-display">Product Design</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <span><strong>H1</strong></span>
+        <span>52px · 700 · −0.025em · lh 1.05</span>
+        <span>Page titles</span>
+      </div>
+      <div class="t-h1">CS3 Seller SaaS</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <span><strong>H2</strong></span>
+        <span>36px · 700 · −0.02em · lh 1.1</span>
+        <span>Section titles</span>
+      </div>
+      <div class="t-h2">The Challenge</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <span><strong>H3</strong></span>
+        <span>24px · 600 · −0.01em · lh 1.25</span>
+        <span>Subsections, card titles</span>
+      </div>
+      <div class="t-h3">User Research Findings</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <span><strong>H4</strong></span>
+        <span>18px · 600 · 0em · lh 1.35</span>
+        <span>Labels, subheadings</span>
+      </div>
+      <div class="t-h4">Design Process</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <span><strong>Body</strong></span>
+        <span>16px · 400 · 0em · lh 1.7</span>
+        <span>Main content</span>
+      </div>
+      <div class="t-body">The platform needed to help sellers manage their Amazon storefronts with clarity and speed. We redesigned the core workflow from the ground up, focusing on reducing cognitive load and surfacing the metrics that matter most.</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <span><strong>Body Muted</strong></span>
+        <span>15px · 400 · 0em · lh 1.7</span>
+        <span>Secondary descriptions</span>
+      </div>
+      <div class="t-body-muted">Performance marketing meets product design. Built for eCommerce scale with a focus on data clarity and decision-making speed.</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <span><strong>Label</strong></span>
+        <span>10px · 600 · 0.16em · UPPERCASE</span>
+        <span>Category tags, section markers</span>
+      </div>
+      <div style="display:flex; gap:32px; align-items:center; flex-wrap:wrap;">
+        <div class="t-label">Product Design</div>
+        <div class="t-label-accent">UX Research · Roundforest</div>
+        <div class="dot-label">Case Study</div>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <span><strong>Number / Stat</strong></span>
+        <span>64px · 700 · −0.04em · lh 1.0</span>
+        <span>Milestone counters</span>
+      </div>
+      <div style="display:flex; gap:64px; flex-wrap:wrap;">
+        <div>
+          <div class="t-number">4<span style="color:var(--accent);font-size:40px;">+</span></div>
+          <div class="t-label" style="margin-top:8px;">Years Experience</div>
+        </div>
+        <div>
+          <div class="t-number">12<span style="color:var(--accent);font-size:40px;">+</span></div>
+          <div class="t-label" style="margin-top:8px;">Case Studies</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───── 03 BUTTONS ───── -->
+  <div class="section">
+    <p class="section-label">03 · Buttons & Actions</p>
+
+    <p class="section-title">Sizes</p>
+    <div class="flex-row" style="margin-bottom:var(--space-8);">
+      <button class="btn btn-primary btn-sm">View Work</button>
+      <button class="btn btn-primary">View Case Study</button>
+      <button class="btn btn-primary btn-lg">Get in Touch</button>
+    </div>
+
+    <p class="section-title">Variants</p>
+    <div class="flex-row">
+      <button class="btn btn-primary">View Case Study →</button>
+      <button class="btn btn-secondary">Download CV</button>
+      <button class="btn btn-ghost">Learn More</button>
+      <button class="btn btn-accent">Contact Me</button>
+    </div>
+  </div>
+
+  <!-- ───── 04 TAGS ───── -->
+  <div class="section">
+    <p class="section-label">04 · Tags & Labels</p>
+    <div class="flex-row">
+      <span class="tag tag-default">Product Design</span>
+      <span class="tag tag-accent">UX Research</span>
+      <span class="tag tag-outline">Figma</span>
+      <span class="tag tag-default">SaaS</span>
+      <span class="tag tag-accent">eCommerce</span>
+      <span class="tag tag-outline">Affiliate</span>
+      <span class="tag tag-default">Data Viz</span>
+    </div>
+  </div>
+
+  <!-- ───── 05 NAVIGATION ───── -->
+  <div class="section">
+    <p class="section-label">05 · Navigation</p>
+    <div class="nav-demo">
+      <div class="nav-logo">ADM</div>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Work</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <button class="btn btn-primary btn-sm">Let's Talk</button>
+    </div>
+  </div>
+
+  <!-- ───── 06 CASE STUDY CARDS ───── -->
+  <div class="section">
+    <p class="section-label">06 · Case Study Cards</p>
+    <div class="grid-2">
+
+      <div class="case-card">
+        <div class="case-card-image">
+          <div class="case-card-image-placeholder">
+            <span class="image-placeholder-text">Project Image</span>
+          </div>
+        </div>
+        <div class="case-card-body">
+          <div class="case-card-category">Product Design · SaaS</div>
+          <div class="case-card-title">CS3 Seller Platform</div>
+          <div class="case-card-desc">Redesigning the core seller workflow for Amazon storefronts, reducing task completion time by 40%.</div>
+        </div>
+        <div class="case-card-footer">
+          <div class="case-card-tags">
+            <span class="tag tag-default">UX Research</span>
+            <span class="tag tag-outline">Figma</span>
+          </div>
+          <span class="case-card-arrow">→</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-card-image">
+          <div class="case-card-image-placeholder">
+            <span class="image-placeholder-text">Project Image</span>
+          </div>
+        </div>
+        <div class="case-card-body">
+          <div class="case-card-category">UX Design · eCommerce</div>
+          <div class="case-card-title">Affiliate Storefront</div>
+          <div class="case-card-desc">Scaling a content-driven affiliate experience to serve millions of daily users across mobile and desktop.</div>
+        </div>
+        <div class="case-card-footer">
+          <div class="case-card-tags">
+            <span class="tag tag-default">Design System</span>
+            <span class="tag tag-outline">Analytics</span>
+          </div>
+          <span class="case-card-arrow">→</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ───── 07 STATS ───── -->
+  <div class="section">
+    <p class="section-label">07 · Stats / Milestones</p>
+    <div class="grid-3">
+      <div class="stat-card">
+        <div class="stat-number">4<span class="stat-suffix">+</span></div>
+        <div class="stat-label">Years in Product Design</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">12<span class="stat-suffix">+</span></div>
+        <div class="stat-label">Projects Shipped</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3<span class="stat-suffix">M</span></div>
+        <div class="stat-label">Daily Users Impacted</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── 08 FORMS ───── -->
+  <div class="section">
+    <p class="section-label">08 · Form Elements</p>
+    <div class="grid-2">
+      <div>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" placeholder="Adi Mizrahi">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="hello@adi.design">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-input form-textarea" placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button class="btn btn-primary">Send Message →</button>
+      </div>
+      <div></div>
+    </div>
+  </div>
+
+  <!-- ───── 09 SPACING ───── -->
+  <div class="section">
+    <p class="section-label">09 · Spacing Scale (4pt grid)</p>
+    <div>
+      <div class="spacing-row">
+        <div class="spacing-info">
+          <span class="spacing-token">--space-1</span>
+          <span class="spacing-value">4px</span>
+        </div>
+        <div class="spacing-block" style="width:4px;"></div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-info">
+          <span class="spacing-token">--space-2</span>
+          <span class="spacing-value">8px</span>
+        </div>
+        <div class="spacing-block" style="width:8px;"></div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-info">
+          <span class="spacing-token">--space-3</span>
+          <span class="spacing-value">12px</span>
+        </div>
+        <div class="spacing-block" style="width:12px;"></div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-info">
+          <span class="spacing-token">--space-4</span>
+          <span class="spacing-value">16px</span>
+        </div>
+        <div class="spacing-block" style="width:16px;"></div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-info">
+          <span class="spacing-token">--space-6</span>
+          <span class="spacing-value">24px</span>
+        </div>
+        <div class="spacing-block" style="width:24px;"></div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-info">
+          <span class="spacing-token">--space-8</span>
+          <span class="spacing-value">32px</span>
+        </div>
+        <div class="spacing-block" style="width:32px;"></div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-info">
+          <span class="spacing-token">--space-12</span>
+          <span class="spacing-value">48px</span>
+        </div>
+        <div class="spacing-block" style="width:48px;"></div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-info">
+          <span class="spacing-token">--space-16</span>
+          <span class="spacing-value">64px</span>
+        </div>
+        <div class="spacing-block" style="width:64px;"></div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-info">
+          <span class="spacing-token">--space-24</span>
+          <span class="spacing-value">96px</span>
+        </div>
+        <div class="spacing-block" style="width:96px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── 10 BORDER RADIUS ───── -->
+  <div class="section">
+    <p class="section-label">10 · Border Radius</p>
+    <div class="radius-demo">
+      <div class="radius-box" style="border-radius:0px;">
+        <div class="radius-name">Sharp</div>
+        <div class="radius-val">0px</div>
+      </div>
+      <div class="radius-box" style="border-radius:4px;">
+        <div class="radius-name">Small</div>
+        <div class="radius-val">4px</div>
+      </div>
+      <div class="radius-box" style="border-radius:8px;">
+        <div class="radius-name">Medium</div>
+        <div class="radius-val">8px</div>
+      </div>
+      <div class="radius-box" style="border-radius:12px;">
+        <div class="radius-name">Large</div>
+        <div class="radius-val">12px</div>
+      </div>
+      <div class="radius-box" style="border-radius:999px; width:80px; height:36px;">
+        <div class="radius-name">Pill</div>
+        <div class="radius-val">999px</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── 11 ANIMATIONS ───── -->
+  <div class="section">
+    <p class="section-label">11 · Motion & Transitions</p>
+    <div class="anim-ref">
+      <div class="anim-row">
+        <span class="anim-token">transition-fast</span>
+        <span class="anim-value">0.12s ease</span>
+        <span class="anim-use">Hover color, icon changes</span>
+      </div>
+      <div class="anim-row">
+        <span class="anim-token">transition-base</span>
+        <span class="anim-value">0.18s ease</span>
+        <span class="anim-use">Button hover, link states</span>
+      </div>
+      <div class="anim-row">
+        <span class="anim-token">transition-medium</span>
+        <span class="anim-value">0.28s ease</span>
+        <span class="anim-use">Panel open, card reveal</span>
+      </div>
+      <div class="anim-row">
+        <span class="anim-token">transition-slow</span>
+        <span class="anim-value">0.45s ease</span>
+        <span class="anim-use">Page transitions, hero enter</span>
+      </div>
+      <div class="anim-row">
+        <span class="anim-token">easing-spring</span>
+        <span class="anim-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span>
+        <span class="anim-use">Cards on hover scale</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── 12 HERO PREVIEW ───── -->
+  <div class="section">
+    <p class="section-label">12 · Hero Preview</p>
+    <div class="hero-preview">
+      <div class="hero-eyebrow">Product Designer · Roundforest</div>
+      <div class="hero-title">Crafting Digital<br>Experiences</div>
+      <div class="hero-sub">I design products that move fast, feel good, and deliver results — where performance marketing meets thoughtful UX.</div>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg">View My Work →</button>
+        <button class="btn btn-secondary btn-lg">About Me</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

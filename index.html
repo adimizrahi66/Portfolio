@@ -17,7 +17,7 @@
       --text-subtle:#C0BCB5;
       --accent:     #C4986A;
       --font:       'Poppins', sans-serif;
-      --pad:        20px;
+      --pad:        24px;
       --radius:     48px;
     }
 
@@ -54,7 +54,7 @@
       overflow: hidden;
       min-height: calc(100vh - var(--pad) * 2);
       display: grid;
-      grid-template-rows: 1fr auto;
+      grid-template-rows: auto auto 1fr;
       grid-template-columns: 1fr 1fr;
       box-shadow: 0 40px 90px -30px rgba(0,0,0,0.28), 0 12px 40px -20px rgba(0,0,0,0.18), 0 -18px 50px -24px rgba(0,0,0,0.16);
     }
@@ -167,6 +167,38 @@
       margin-top: 4px;
     }
 
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      background: var(--text);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      padding: 14px 24px;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .hero-cta:hover { opacity: 0.85; }
+
+    .hero-cta .arrow {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .hero-cta:hover .arrow { transform: translate(2px, -2px); }
+
     /* ─────────────────────────────────────────
        HERO BOTTOM BAR
     ───────────────────────────────────────── */
@@ -177,14 +209,14 @@
       z-index: 1;
       display: flex;
       align-items: flex-end;
-      justify-content: space-between;
-      padding: 0 60px 52px;
+      justify-content: flex-end;
+      padding: 60px 60px 52px;
     }
 
     .hero-tags {
       display: flex;
       gap: 12px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
     .hero-tag {
@@ -196,6 +228,7 @@
       padding: 8px 16px;
       border: 1px solid #B0ABA2;
       border-radius: 999px;
+      white-space: nowrap;
     }
 
     .hero-scroll {
@@ -206,7 +239,7 @@
       font-weight: 600;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--text-subtle);
+      color: #6E6A64;
       cursor: pointer;
     }
 
@@ -214,7 +247,7 @@
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      border: 1px solid #C8C4BC;
+      border: 1px solid #6E6A64;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -278,23 +311,23 @@
     ───────────────────────────────────────── */
     .nav-bar {
       position: fixed;
-      bottom: 20px;
+      top: 36px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 200;
       display: flex;
       align-items: center;
       gap: 2px;
-      background: rgba(16, 14, 11, 0.72);
+      background: rgba(255, 255, 255, 0.55);
       backdrop-filter: blur(24px) saturate(160%);
       -webkit-backdrop-filter: blur(24px) saturate(160%);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 999px;
       padding: 6px;
       box-shadow:
-        0 16px 40px rgba(0, 0, 0, 0.22),
-        0 4px 12px rgba(0, 0, 0, 0.14),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        0 16px 40px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
     }
 
     .nav-avatar {
@@ -322,7 +355,7 @@
     .nav-links a {
       font-size: 13px;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.55);
+      color: rgba(12, 11, 10, 0.6);
       text-decoration: none;
       padding: 6px 14px;
       border-radius: 999px;
@@ -331,20 +364,20 @@
     }
 
     .nav-links a:hover {
-      color: rgba(255, 255, 255, 0.95);
-      background: rgba(255, 255, 255, 0.08);
+      color: rgba(12, 11, 10, 0.95);
+      background: rgba(12, 11, 10, 0.06);
     }
 
     .nav-links a.active {
-      color: rgba(255, 255, 255, 0.95);
+      color: rgba(12, 11, 10, 0.95);
     }
 
     .nav-cta {
       font-family: var(--font);
       font-size: 13px;
       font-weight: 600;
-      background: var(--hero-bg);
-      color: var(--text);
+      background: var(--text);
+      color: #fff;
       border: none;
       border-radius: 999px;
       padding: 7px 18px;
@@ -363,22 +396,22 @@
 
     .contact-menu {
       position: absolute;
-      bottom: calc(100% + 12px);
+      top: calc(100% + 12px);
       right: 0;
       min-width: 200px;
       display: flex;
       flex-direction: column;
       gap: 2px;
       padding: 6px;
-      background: rgba(16, 14, 11, 0.92);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(24px) saturate(160%);
       -webkit-backdrop-filter: blur(24px) saturate(160%);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 16px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
       opacity: 0;
       visibility: hidden;
-      transform: translateY(6px);
+      transform: translateY(-6px);
       transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
     }
 
@@ -393,7 +426,7 @@
       font-size: 13px;
       font-weight: 500;
       text-align: left;
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba(12, 11, 10, 0.85);
       background: none;
       border: none;
       border-radius: 10px;
@@ -407,14 +440,14 @@
     }
 
     .contact-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
+      background: rgba(12, 11, 10, 0.06);
+      color: var(--text);
     }
 
     .contact-hint {
       font-size: 11px;
       font-weight: 400;
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(12, 11, 10, 0.45);
       text-transform: none;
     }
 
@@ -483,12 +516,28 @@
     /* ── Individual Card (text left · image right) ── */
     .work-card {
       display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: 1fr 1fr;
       gap: 56px;
       align-items: center;
       text-decoration: none;
       color: inherit;
       cursor: pointer;
+    }
+
+    /* ── Scroll reveal ── */
+    .js .work-card {
+      opacity: 0;
+      transform: translateY(48px);
+      transition: opacity 0.75s ease, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .js .work-card.in-view {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .js .work-card { opacity: 1; transform: none; transition: none; }
     }
 
     /* ── Left: text column ── */
@@ -520,7 +569,7 @@
       font-size: 44px;
       font-weight: 600;
       letter-spacing: -0.03em;
-      line-height: 1.0;
+      line-height: 1.18;
       color: var(--text);
     }
 
@@ -667,6 +716,14 @@
     @media (max-width: 768px) {
       :root { --pad: 12px; --radius: 28px; }
 
+      .page-wrapper { min-height: auto; }
+
+      .hero { min-height: auto; }
+
+      .hero-tags { display: none; }
+
+      .work-header { height: 16px; }
+
       .hero-top {
         grid-template-columns: 1fr;
         padding: 36px 32px 0;
@@ -681,7 +738,7 @@
       }
 
       .hero-bottom {
-        padding: 0 32px 40px;
+        padding: 40px 32px 60px;
         flex-direction: column;
         align-items: flex-start;
         gap: 20px;
@@ -701,7 +758,14 @@
       .work-card {
         grid-template-columns: 1fr;
         gap: 24px;
+        border: 1px solid #9B9590;
+        border-radius: 28px;
+        padding: 20px;
       }
+
+      .card-media { order: -1; }
+
+      .card-title br { display: none; }
 
       .card-media { border-radius: 24px; }
 
@@ -709,9 +773,75 @@
 
       .work-title { font-size: 28px; }
 
-      .card-title { font-size: 30px; }
+      .card-title {
+        font-size: 30px;
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
+        align-self: stretch;
+        overflow-wrap: break-word;
+        word-break: break-word;
+      }
+
+      /* ── Mobile UX refinements (mobile-only) ── */
+      html { scroll-behavior: smooth; }
+      body { overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+
+      /* Keep floating nav on-screen + thumb-friendly tap targets */
+      .nav-bar {
+        top: auto;
+        right: auto;
+        bottom: var(--pad);
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: calc(100vw - var(--pad) * 2);
+        gap: 0;
+        padding: 5px;
+      }
+      .contact-menu {
+        top: auto;
+        bottom: calc(100% + 12px);
+        transform: translateY(6px);
+      }
+      .contact-menu.open { transform: translateY(0); }
+      .nav-links { padding: 0 2px; }
+      .nav-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 9px 11px;
+      }
+      .nav-cta { min-height: 44px; display: inline-flex; align-items: center; }
+      .contact-item { min-height: 44px; }
+      .contact-menu { min-width: 220px; }
+
+      /* Larger, clearly readable body copy for scanning */
+      .card-description { font-size: 14px; line-height: 1.65; }
+
+      /* Full-width primary CTA = easy thumb reach */
+      .card-cta {
+        width: 100%;
+        justify-content: center;
+        padding: 16px 24px;
+        font-size: 15px;
+      }
+
+      /* Comfortable spacing between tag chips (avoids mis-taps) */
+      .hero-tags { gap: 8px; flex-wrap: wrap; }
+      .hero-tag { font-size: 9.5px; letter-spacing: 0.14em; padding: 6px 12px; }
+      .card-labels { gap: 8px; }
+    }
+
+    /* ── Small phones ── */
+    @media (max-width: 400px) {
+      .hero-top { padding: 32px 22px 0; }
+      .hero-bottom { padding: 40px 22px 60px; }
+      .work-section { padding: 0 20px 96px; }
+      .hero-title { font-size: clamp(48px, 15vw, 72px); }
+      .nav-links a { padding: 9px 9px; font-size: 12px; }
     }
   </style>
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
@@ -746,21 +876,21 @@
         <p class="hero-desc">
           I design digital products where performance marketing meets thoughtful UX — at the intersection of data, craft, and clarity.
         </p>
+        <div class="hero-tags">
+          <span class="hero-tag">Product Design</span>
+          <span class="hero-tag">UX Research</span>
+          <span class="hero-tag">SaaS · eCommerce</span>
+          <span class="hero-tag">Data Driven</span>
+          <span class="hero-tag">Performance Specialist</span>
+        </div>
       </div>
 
     </div>
 
     <!-- Bottom bar -->
     <div class="hero-bottom">
-      <div class="hero-tags">
-        <span class="hero-tag">Product Design</span>
-        <span class="hero-tag">UX Research</span>
-        <span class="hero-tag">SaaS · eCommerce</span>
-        <span class="hero-tag">Data Driven</span>
-        <span class="hero-tag">Performance Specialist</span>
-      </div>
       <div class="hero-scroll">
-        <span>Scroll</span>
+        <span>Scroll to view my work</span>
         <span class="arrow">↓</span>
       </div>
     </div>
@@ -780,7 +910,7 @@
       <div class="card-text">
         <div class="card-labels"><span>SaaS</span><span>B2B</span></div>
         <span class="card-company">Roundforest</span>
-        <h3 class="card-title">Seller<br>Platform</h3>
+        <h3 class="card-title">Seller <br>Platform</h3>
         <p class="card-description">Streamlining the interface to allow account syncing with a single ID and using contextual sidebar tooltips minimized user friction. This UX optimization successfully drove a 60% migration rate within the first week and motivated 5% of sellers to select higher commission tiers.</p>
         <span class="card-cta">Open case study <span class="arrow">↗</span></span>
       </div>
@@ -795,7 +925,7 @@
       <div class="card-text">
         <div class="card-labels"><span>Web</span><span>Mobile</span><span>B2C</span></div>
         <span class="card-company">Roundforest</span>
-        <h3 class="card-title">Data Driven<br>UX Funnel</h3>
+        <h3 class="card-title">Data Driven <br>UX Funnel</h3>
         <p class="card-description">This case study focuses on introducing interactive filter chips and optimized mobile layouts to reduce choice paralysis and simplify product scanning. These iterative UX improvements successfully boosted user engagement and increased conversion behaviors across high-volume traffic funnels.</p>
         <span class="card-cta">Open case study <span class="arrow">↗</span></span>
       </div>
@@ -810,7 +940,7 @@
       <div class="card-text">
         <div class="card-labels"><span>SaaS</span><span>B2B</span></div>
         <span class="card-company">Roundforest</span>
-        <h3 class="card-title">Copycat Internal<br>Platform</h3>
+        <h3 class="card-title">Copycat Internal <br>Platform</h3>
         <p class="card-description">This case study focuses on unifying a fragmented marketing workflow into a centralized, automated platform featuring a sequential article and ad creation flow. These UX improvements eliminated repetitive manual tasks, reducing content production time by 75%.</p>
         <span class="card-cta">Open case study <span class="arrow">↗</span></span>
       </div>
@@ -840,7 +970,7 @@
       <div class="card-text">
         <div class="card-labels"><span>Web</span><span>Mobile</span><span>B2C</span></div>
         <span class="card-company">Botson.ai</span>
-        <h3 class="card-title">The Questionnaire<br>Engagement Strategy</h3>
+        <h3 class="card-title">The Questionnaire <br>Engagement Strategy</h3>
         <p class="card-description"></p>
       </div>
       <div class="card-media">
@@ -857,7 +987,6 @@
 
 <!-- ─── STICKY GLASS NAV ─── -->
 <nav class="nav-bar" aria-label="Main navigation">
-  <div class="nav-avatar" aria-label="Adi Mizrahi">AM</div>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="#work">Work</a></li>
@@ -867,7 +996,7 @@
   <div class="nav-contact-wrap">
     <button class="nav-cta" id="contactBtn" aria-haspopup="true" aria-expanded="false">Contact +</button>
     <div class="contact-menu" id="contactMenu" role="menu" aria-hidden="true">
-      <a class="contact-item" href="https://www.linkedin.com/in/adi-mizrahi" target="_blank" rel="noopener" role="menuitem">LinkedIn</a>
+      <a class="contact-item" href="https://www.linkedin.com/in/adi-mizrahi/" target="_blank" rel="noopener" role="menuitem">LinkedIn</a>
       <button class="contact-item" type="button" role="menuitem" data-copy="adimizrahi66@gmail.com">Email<span class="contact-hint">adimizrahi66@gmail.com</span></button>
       <button class="contact-item" type="button" role="menuitem" data-copy="+972 544304626">Phone<span class="contact-hint">+972 54-430-4626</span></button>
     </div>
@@ -989,6 +1118,27 @@
     }
 
     tick();
+  })();
+</script>
+
+<!-- ─── SCROLL REVEAL ─── -->
+<script>
+  (function () {
+    const cards = document.querySelectorAll('.work-card');
+    if (!cards.length) return;
+    if (!('IntersectionObserver' in window)) {
+      cards.forEach(c => c.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    cards.forEach(c => io.observe(c));
   })();
 </script>
 

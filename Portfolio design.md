@@ -516,3 +516,46 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Impact section: "–5 clicks" → "–36 clicks" + new label ("automated PID/metadata transfers…"); bg `#5967FB` → `#929BFF`
 - Full-prototype heading em-dash → short hyphen
 - Hero height parity: seller-platform (`.hero-title .outline`) + cs2-funnel (`.hero-title span`) got `white-space:nowrap` so second title row stays one line (no font change) → same height as copycat
+
+## Mobile optimization pass (mobile-only, desktop untouched)
+- All edits scoped inside `@media (max-width:768px)` + new `@media (max-width:400px)` per file; desktop CSS unchanged
+- Touch targets: nav links, Contact CTA, contact-menu items, before/after toggle → `min-height:44px`
+- Floating glass nav: `max-width:calc(100vw - 20px)` so it never overflows narrow screens
+- Body copy enlarged + `overflow-x:hidden`; smooth scroll; wider chip gaps to avoid mis-taps
+- Metrics kept 3-up side-by-side (compact numbers) so they stay comparable, not stacked
+- cs2 funnel diagram → vertical flow, arrows rotated to point down
+- copycat before/after toggle → full-width
+- index cards: image moved above text (`.card-media order:-1`); `.card-description` 16px→14px
+- index cards: 1px black border + radius + padding; `.card-title br { display:none }` so titles stay one line
+
+## Mobile home-page pass (index.html, ≤768px only)
+- `.card-title` → Figma "Fill container": `flex:1 1 auto; width:100%; align-self:stretch`
+- `.card-title` overflow fix (5th "Coming Soon" title): `min-width:0; overflow-wrap/word-break: break-word`
+- CS card stroke color changed `#000` → `#9B9590`
+- hero-scroll → bottom of hero = 60px (`.hero`/`.page-wrapper` min-height auto so hero sizes to content; hero-bottom padding-bottom 60px)
+- hero chips hidden on mobile (`.hero-tags { display:none }`)
+- hero→first CS card spacing = 28px (`.work-header` height 16px + 12px page padding)
+
+## Hero + nav adjustments pass (index.html + 3 case studies)
+- Page side spacing set to 24px (`--pad: 24px`)
+- Hero chips moved into `.hero-left` under the description; desktop chips forced one line (`flex-wrap:nowrap`); mobile chips wrap + smaller (`9.5px`, tighter padding)
+- Hero grid → `auto auto 1fr`; chips-to-scroll gap = 60px (`.hero-bottom` padding-top 60px)
+- Scroll cue text "Scroll" → "Scroll to view my work"; color matched to chip text `#6E6A64` (text + arrow border)
+- Case-study card images realigned to hero gridline (`.work-card` → `1fr 1fr`)
+- Cards fade/slide in on scroll (IntersectionObserver + `.js .work-card` reveal; desktop + mobile)
+- `.card-title` line-height 1.0 → 1.18 for space between stacked words
+- Sticky nav → white glass (dark text for contrast), kept blur; top-center on desktop, bottom-center on mobile (padding aligned to page spacing)
+- Nav trimmed: removed "AM" avatar + "View my work" hero CTA; Contact + dropdown removed then re-added
+- LinkedIn button → https://www.linkedin.com/in/adi-mizrahi/ (all pages)
+- index card titles: added space before each `<br>` so words don't join on mobile (where `br` is hidden)
+
+## Case-study refinements pass (seller-platform + all CS pages)
+- seller-platform hero title = Figma "Fill container": `flex:1 1 auto; align-self:stretch; width:100%`; inner flex column centered
+- Mobile hero overflow fix: `.hero-title .outline { white-space:normal }` + title floor lowered to `clamp(32px,9vw,72px)`
+- All 3 case-study pages: reduced every font-size by 2px inside mobile breakpoints only (desktop + index untouched)
+- Overview section: replaced video with `Overview - catalog managment.svg`; path corrected after file moved out of "Seller platform" subfolder
+- Overview image scaled up: desktop grid `1fr 1.5fr`; mobile full-bleed to section edges (`margin:0 -24px; width:calc(100% + 48px)`), SVG `object-fit:contain`
+
+## Nav tweaks pass (index.html)
+- Desktop nav `top` spacing set to 36px (base rule; mobile stays bottom-anchored)
+- Nav glass more transparent: background `rgba(255,255,255,0.72)` → `0.55`

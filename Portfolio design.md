@@ -559,3 +559,10 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 ## Nav tweaks pass (index.html)
 - Desktop nav `top` spacing set to 36px (base rule; mobile stays bottom-anchored)
 - Nav glass more transparent: background `rgba(255,255,255,0.72)` → `0.55`
+
+## Git workflow fix
+- GitHub Desktop showed no changes because the tracked repo is `~/Documents/GitHub/Portfolio`, not the edited copy in `~/Downloads/Portfolio`
+- Edits had been saving to the Downloads copy, which is not a git repo
+- Copied the 4 changed HTML files (index, copycat, cs2-funnel, seller-platform) from Downloads into the GitHub repo; now show as modified, ready to commit + push
+- Non-HTML diffs left untouched: Portfolio design.md, resume.md, Adi_Mizrahi_Resume.pdf
+- Going forward: all HTML edits happen directly in `~/Documents/GitHub/Portfolio` (single source of truth)

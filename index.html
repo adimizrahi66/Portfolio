@@ -311,19 +311,19 @@
     ───────────────────────────────────────── */
     .nav-bar {
       position: fixed;
-      top: 36px;
+      top: 32px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 200;
       display: flex;
       align-items: center;
-      gap: 2px;
-      background: rgba(255, 255, 255, 0.55);
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.72);
       backdrop-filter: blur(24px) saturate(160%);
       -webkit-backdrop-filter: blur(24px) saturate(160%);
       border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 999px;
-      padding: 6px;
+      padding: 10px 16px;
       box-shadow:
         0 16px 40px rgba(0, 0, 0, 0.12),
         0 4px 12px rgba(0, 0, 0, 0.08),
@@ -349,7 +349,15 @@
       display: flex;
       align-items: center;
       list-style: none;
-      padding: 0 6px;
+      gap: 4px;
+      padding: 0;
+    }
+
+    .nav-divider {
+      width: 1px;
+      height: 16px;
+      background: rgba(12, 11, 10, 0.12);
+      margin: 0 4px;
     }
 
     .nav-links a {
@@ -991,8 +999,9 @@
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="#work">Work</a></li>
     <li><a href="#">About</a></li>
-    <li><a href="#">Resume</a></li>
+    <li><a href="https://drive.google.com/file/d/1uRP53tAgmmI5lmz5DV1OdcEo4znaL47q/view" target="_blank" rel="noopener">Resume</a></li>
   </ul>
+  <div class="nav-divider"></div>
   <div class="nav-contact-wrap">
     <button class="nav-cta" id="contactBtn" aria-haspopup="true" aria-expanded="false">Contact +</button>
     <div class="contact-menu" id="contactMenu" role="menu" aria-hidden="true">

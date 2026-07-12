@@ -566,3 +566,13 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Copied the 4 changed HTML files (index, copycat, cs2-funnel, seller-platform) from Downloads into the GitHub repo; now show as modified, ready to commit + push
 - Non-HTML diffs left untouched: Portfolio design.md, resume.md, Adi_Mizrahi_Resume.pdf
 - Going forward: all HTML edits happen directly in `~/Documents/GitHub/Portfolio` (single source of truth)
+
+## Unit.e.p case study build (unit-ep.html)
+- Connected the GitHub folder (`~/Documents/GitHub/Portfolio`) as source of truth; content came from `Unit.e.p Case Study (1).md`
+- Built `unit-ep.html` by reusing cs3-seller (seller-platform.html) structure/styles/nav verbatim, swapping in Unit.e.p content only
+- Sections: hero (text-only), meta (Solo Product Designer/Freelance · 1 Behavioral Commander + 1 Engineer · 6 months), Overview, Challenge/Strategy/Results trio, Defining the Problem, User Flow Mapping + Product Context, Design Solutions (dark), Streamlining the Workflow, Multi-Step Evaluation Flow, Results (accent), Interactive Prototype
+- 8 image slots left as labeled empty placeholders (SVGs to be added next step)
+- Prev/next nav: Copycat ← / Back to Home →
+- Accent color changed from pink `#FF628D` → `#59D7A1`; light Results bg `#FFADC4` → `#9FE5C7`
+- Connected homepage card (index.html, Card 4): activated from `is-soon`/"Coming Soon" → live link to unit-ep.html, added labels + description + CTA
+- Replaced all long dashes (em/en) in unit-ep.html with short hyphens

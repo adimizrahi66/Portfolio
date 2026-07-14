@@ -49,14 +49,228 @@
     ───────────────────────────────────────── */
     .hero {
       position: relative;
-      background: var(--hero-bg);
       border-radius: var(--radius);
       overflow: hidden;
       min-height: calc(100vh - var(--pad) * 2);
-      display: grid;
-      grid-template-rows: auto auto 1fr;
-      grid-template-columns: 1fr 1fr;
+      background:
+        radial-gradient(120% 130% at 16% 20%, #FBD9E4 0%, rgba(251,217,228,0) 46%),
+        radial-gradient(120% 130% at 84% 28%, #D5D3F8 0%, rgba(213,211,248,0) 50%),
+        radial-gradient(120% 130% at 26% 94%, #C7EBD6 0%, rgba(199,235,214,0) 52%),
+        radial-gradient(130% 130% at 94% 90%, #E8EBF3 0%, rgba(232,235,243,0) 55%),
+        #F1EFEA;
       box-shadow: 0 40px 90px -30px rgba(0,0,0,0.28), 0 12px 40px -20px rgba(0,0,0,0.18), 0 -18px 50px -24px rgba(0,0,0,0.16);
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ── STAGE ── */
+    .hero-stage { position: absolute; inset: 0; }
+
+    /* ── CENTRAL BUBBLE ── */
+    .hero-bubble {
+      position: absolute;
+      left: 49%; top: 45%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      width: min(40vw, 400px);
+      background: #FFFFFF;
+      border-radius: 40px;
+      padding: 40px 44px 44px;
+      text-align: center;
+      box-shadow: 0 34px 64px -26px rgba(24,20,34,0.30), 0 10px 26px -14px rgba(24,20,34,0.16);
+    }
+    .hero-bubble h1 {
+      font-size: clamp(30px, 3.4vw, 46px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      color: #101010;
+      margin-bottom: 16px;
+    }
+    .hero-bubble p {
+      font-size: clamp(16px, 1.55vw, 23px);
+      font-weight: 500;
+      line-height: 1.3;
+      color: #1D1D1D;
+    }
+
+    /* ── FLOATING VECTOR ELEMENTS ── */
+    .float {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 8;
+      cursor: pointer;
+      animation: floatBob var(--bob, 7s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+    .fimg-wrap { transition: transform 0.5s cubic-bezier(0.22,1,0.36,1); }
+    .float img {
+      display: block;
+      width: var(--w, 180px);
+      height: auto;
+      pointer-events: none;
+      filter: drop-shadow(0 22px 32px rgba(24,20,34,0.16));
+      transition: filter 0.5s ease;
+    }
+    .float:hover { z-index: 40; animation-play-state: paused; }
+    .float:hover .fimg-wrap { transform: translateY(-10px) scale(1.06); }
+    .float:hover img { filter: drop-shadow(0 34px 46px rgba(24,20,34,0.26)); }
+
+    .f-bouquet   { left: 32%; top: 33%; --w: 190px; --delay: -1.2s; --bob: 8s; }
+    .f-dashboard { left: 66%; top: 26%; --w: 240px; --delay: -3.0s; --bob: 9s; }
+    .f-phone     { left: 34%; top: 72%; --w: 282px; --delay: -2.1s; --bob: 7.5s; }
+    .f-backpack  { left: 63%; top: 66%; --w: 150px; --delay: -4.0s; --bob: 8.5s; }
+
+    @keyframes floatBob {
+      0%, 100% { translate: 0 0; }
+      50%      { translate: 0 -12px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .float { animation: none; } }
+
+    /* ── HOVER TEXT CHIP ── */
+    .chip {
+      position: absolute;
+      z-index: 3;
+      background: #3B6FF6;
+      color: #FFFFFF;
+      font-size: 13.5px;
+      font-weight: 500;
+      line-height: 1.42;
+      letter-spacing: -0.01em;
+      padding: 10px 15px;
+      border-radius: 15px;
+      width: max-content;
+      max-width: 232px;
+      box-shadow: 0 16px 28px -10px rgba(59,111,246,0.55);
+      opacity: 0;
+      translate: 0 8px;
+      pointer-events: none;
+      transition: opacity 0.32s ease, translate 0.32s cubic-bezier(0.22,1,0.36,1);
+    }
+    .float:hover .chip { opacity: 1; translate: 0 0; }
+
+    .f-dashboard .chip { left: 76%; top: 88%; }
+    .f-bouquet   .chip { left: 78%; top: 26%; }
+    .f-phone     .chip { left: 60%; top: 4%; max-width: 240px; }
+    .f-backpack  .chip { left: 84%; top: 58%; }
+
+    .backpack-tap {
+      position: absolute;
+      left: 50%; bottom: -14px;
+      transform: translateX(-50%);
+      z-index: 4;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #3B6FF6;
+      background: rgba(255,255,255,0.9);
+      padding: 4px 9px;
+      border-radius: 999px;
+      box-shadow: 0 8px 16px -8px rgba(24,20,34,0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+    }
+    .f-backpack:hover .backpack-tap { opacity: 1; }
+
+    /* ── SPARKLE ── */
+    .hero-sparkle {
+      position: absolute;
+      right: 7%; bottom: 15%;
+      z-index: 1;
+      font-size: 26px;
+      color: rgba(255,255,255,0.9);
+      pointer-events: none;
+      animation: floatBob 6s ease-in-out infinite;
+    }
+
+    /* ── VIDEO MODAL ── */
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15,14,20,0.55);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+    .video-modal.open { display: flex; }
+    .video-window {
+      position: relative;
+      width: min(92vw, 460px);
+      background: #0E0D12;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 44px 90px -20px rgba(0,0,0,0.62);
+      opacity: 0;
+      transform: translateY(10px) scale(0.97);
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+    .video-modal.open .video-window { opacity: 1; transform: none; }
+    .vw-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #15141B;
+    }
+    .vw-title {
+      margin-right: auto;
+      color: #EDEAF2;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .vw-time {
+      color: #B9B4C6;
+      font-size: 12px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+      margin-right: 4px;
+    }
+    .vw-btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.16s ease;
+    }
+    .vw-btn:hover { background: rgba(255,255,255,0.24); }
+    .video-window #vwVideo { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+    .video-window #vwVideo iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+    @media (max-width: 900px) {
+      .hero-bubble { width: min(72vw, 340px); padding: 30px 30px 34px; }
+      .f-dashboard { --w: 180px; }
+      .f-phone { --w: 168px; }
+      .f-bouquet { --w: 118px; }
+      .f-backpack { --w: 96px; }
+      .chip { font-size: 12px; max-width: 180px; }
+    }
+    @media (max-width: 560px) {
+      .hero-stage { transform: scale(0.82); }
+      .hero-bubble { width: 74vw; }
     }
 
     /* ─────────────────────────────────────────
@@ -856,54 +1070,56 @@
 <!-- ─── PAGE ─── -->
 <div class="page-wrapper">
   <section class="hero" id="hero">
+    <div class="hero-stage">
 
-    <!-- Blobs -->
-    <div class="blobs">
-      <div class="blob b1" id="b1"></div>
-      <div class="blob b2" id="b2"></div>
-      <div class="blob b3" id="b3"></div>
-      <div class="blob b4" id="b4"></div>
-      <div class="blob b5" id="b5"></div>
-    </div>
-
-    <!-- Cursor tracker -->
-    <div class="cursor-dot" id="cursorDot"></div>
-
-    <!-- Year -->
-    <div class="year-badge">© 2026</div>
-
-    <!-- Top grid -->
-    <div class="hero-top">
-
-      <div class="hero-left">
-        <div class="hero-eyebrow">Product Designer</div>
-        <div class="hero-title">
-          ADI<br>
-          <span class="outline">MIZRAHI</span>
-        </div>
-        <p class="hero-desc">
-          I design digital products where performance marketing meets thoughtful UX — at the intersection of data, craft, and clarity.
-        </p>
-        <div class="hero-tags">
-          <span class="hero-tag">Product Design</span>
-          <span class="hero-tag">UX Research</span>
-          <span class="hero-tag">SaaS · eCommerce</span>
-          <span class="hero-tag">Data Driven</span>
-          <span class="hero-tag">Performance Specialist</span>
-        </div>
+      <!-- Flowers -->
+      <div class="float f-bouquet">
+        <div class="fimg-wrap"><img src="images and videos/flowe bouquet.svg" alt="Flower bouquet"></div>
+        <span class="chip">Did you know? I started my design journey with flowers.</span>
       </div>
 
-    </div>
-
-    <!-- Bottom bar -->
-    <div class="hero-bottom">
-      <div class="hero-scroll">
-        <span>Scroll to view my work</span>
-        <span class="arrow">↓</span>
+      <!-- Dashboard -->
+      <div class="float f-dashboard">
+        <div class="fimg-wrap"><img src="budget_dashboard 1.svg" alt="Profit dashboard"></div>
+        <span class="chip">I'm a data-driven designer focused on impact.</span>
       </div>
-    </div>
 
+      <!-- Phone card -->
+      <div class="float f-phone">
+        <div class="fimg-wrap"><img src="phone card.svg" alt="Smartphone rating card"></div>
+        <span class="chip">E-commerce is my playground - designing for conversion.</span>
+      </div>
+
+      <!-- Backpack (opens video) -->
+      <div class="float f-backpack" id="backpackTrigger" role="button" tabindex="0" aria-label="Play industrial design project video">
+        <div class="fimg-wrap"><img src="images and videos/backpack.svg" alt="Backpack design"></div>
+        <span class="chip">Bag design is my thing - tap to check out my final industrial design project ✨</span>
+        <span class="backpack-tap">Tap to play ▸</span>
+      </div>
+
+      <!-- Central bubble -->
+      <div class="hero-bubble">
+        <h1>Hey, I'm Adi</h1>
+        <p>I'm a product designer<br>Problem solver,<br>Passionate creator.</p>
+      </div>
+
+      <span class="hero-sparkle">✦</span>
+
+    </div>
   </section>
+
+  <!-- Video modal -->
+  <div class="video-modal" id="videoModal" role="dialog" aria-modal="true" aria-label="Industrial design project video">
+    <div class="video-window">
+      <div class="vw-bar">
+        <span class="vw-title">Final Project — Industrial Design</span>
+        <span class="vw-time" id="vwTime">0:00 / 0:00</span>
+        <button class="vw-btn" id="vwToggle" type="button" aria-label="Play or pause">❚❚</button>
+        <button class="vw-btn" id="vwClose" type="button" aria-label="Close video">✕</button>
+      </div>
+      <div id="vwVideo"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ─── WORK SECTION ─── -->
@@ -1051,82 +1267,113 @@
   })();
 </script>
 
-<!-- ─── BLOB ANIMATION ─── -->
+<!-- ─── BACKPACK VIDEO MODAL (YouTube) ─── -->
 <script>
   (function () {
-    const hero = document.getElementById('hero');
+    const trigger = document.getElementById('backpackTrigger');
+    const modal   = document.getElementById('videoModal');
+    const holder  = document.getElementById('vwVideo');
+    const toggle  = document.getElementById('vwToggle');
+    const closeBtn= document.getElementById('vwClose');
+    const timeEl  = document.getElementById('vwTime');
+    if (!trigger || !modal || !holder) return;
 
-    // Blob definitions: origin positions (% of hero), influence on mouse, lag
-    const defs = [
-      { id: 'b1', ox: 0.28, oy: 0.38, inf: 0.62, lag: 0.038 },
-      { id: 'b2', ox: 0.68, oy: 0.25, inf: 0.48, lag: 0.028 },
-      { id: 'b3', ox: 0.50, oy: 0.70, inf: -0.42, lag: 0.022 },
-      { id: 'b4', ox: 0.18, oy: 0.62, inf: 0.56, lag: 0.032 },
-      { id: 'b5', ox: 0.80, oy: 0.60, inf: -0.36, lag: 0.018 },
-    ];
+    const VIDEO_ID = 'zp7TQRIEH0o';
+    let player = null, ready = false, pendingOpen = false, timer = null;
 
-    const blobs = defs.map(d => ({
-      el: document.getElementById(d.id),
-      ox: d.ox, oy: d.oy,
-      cx: d.ox, cy: d.oy,
-      inf: d.inf, lag: d.lag,
-    }));
+    const fmt = s => {
+      s = Math.max(0, Math.floor(s || 0));
+      return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    };
+    const isPlaying = () => player && player.getPlayerState && player.getPlayerState() === 1;
+    const setIcon = () => { toggle.textContent = isPlaying() ? '❚❚' : '▶'; };
+    const updTime = () => {
+      if (!timeEl || !player || !player.getDuration) return;
+      timeEl.textContent = fmt(player.getCurrentTime()) + ' / ' + fmt(player.getDuration());
+    };
+    const startTimer = () => { stopTimer(); timer = setInterval(() => { updTime(); setIcon(); }, 250); };
+    const stopTimer = () => { if (timer) { clearInterval(timer); timer = null; } };
 
-    // Init positions
-    blobs.forEach(b => {
-      b.el.style.left = (b.cx * 100) + '%';
-      b.el.style.top  = (b.cy * 100) + '%';
-    });
+    // Load the YouTube IFrame API
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
 
-    let mx = 0.5, my = 0.5;
-
-    const cursorDot = document.getElementById('cursorDot');
-
-    hero.addEventListener('mousemove', e => {
-      const r = hero.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      mx = Math.max(0, Math.min(1, x / r.width));
-      my = Math.max(0, Math.min(1, y / r.height));
-      cursorDot.style.left = x + 'px';
-      cursorDot.style.top  = y + 'px';
-    });
-
-    // Idle drift when no mouse input
-    let idleT = 0;
-    let lastMove = Date.now();
-
-    document.addEventListener('mousemove', () => { lastMove = Date.now(); });
-
-    function lerp(a, b, t) { return a + (b - a) * t; }
-
-    function tick() {
-      const idle = Date.now() - lastMove > 3000;
-      idleT += 0.004;
-
-      blobs.forEach((b, i) => {
-        let tx, ty;
-        if (idle) {
-          // gentle autonomous drift
-          const phase = idleT + i * 1.3;
-          tx = b.ox + Math.sin(phase * 0.7 + i) * 0.12;
-          ty = b.oy + Math.cos(phase * 0.5 + i * 0.8) * 0.10;
-        } else {
-          tx = b.ox + (mx - 0.5) * b.inf;
-          ty = b.oy + (my - 0.5) * b.inf;
+    window.onYouTubeIframeAPIReady = function () {
+      player = new YT.Player(holder, {
+        videoId: VIDEO_ID,
+        playerVars: { controls: 0, modestbranding: 1, rel: 0, playsinline: 1, fs: 0, disablekb: 1 },
+        events: {
+          onReady: () => { ready = true; updTime(); setIcon(); if (pendingOpen) { pendingOpen = false; startPlayback(); } },
+          onStateChange: () => { setIcon(); updTime(); }
         }
-
-        b.cx = lerp(b.cx, tx, b.lag);
-        b.cy = lerp(b.cy, ty, b.lag);
-
-        b.el.style.left = (b.cx * 100) + '%';
-        b.el.style.top  = (b.cy * 100) + '%';
       });
+    };
 
-      requestAnimationFrame(tick);
+    function startPlayback() {
+      if (!ready) { pendingOpen = true; return; }
+      player.seekTo(0);
+      player.playVideo();
+      startTimer();
+      setIcon();
+    }
+    function open() {
+      modal.classList.add('open');
+      startPlayback();
+    }
+    function close() {
+      modal.classList.remove('open');
+      if (ready) player.pauseVideo();
+      stopTimer();
+      setIcon();
     }
 
-    tick();
+    trigger.addEventListener('click', open);
+    trigger.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
+
+    toggle.addEventListener('click', () => {
+      if (!ready) return;
+      if (isPlaying()) player.pauseVideo(); else player.playVideo();
+      setIcon();
+    });
+
+    closeBtn.addEventListener('click', close);
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) close();
+    });
+  })();
+</script>
+
+<!-- ─── STICKY HOVER CHIPS ─── -->
+<script>
+  (function () {
+    const OFFSET = 18;
+    document.querySelectorAll('.float').forEach(float => {
+      const chip = float.querySelector('.chip');
+      if (!chip) return;
+      let tx = 0, ty = 0, cx = 0, cy = 0, raf = null, init = false;
+
+      function loop() {
+        cx += (tx - cx) * 0.2;
+        cy += (ty - cy) * 0.2;
+        chip.style.left = cx + 'px';
+        chip.style.top  = cy + 'px';
+        if (Math.abs(tx - cx) > 0.4 || Math.abs(ty - cy) > 0.4) raf = requestAnimationFrame(loop);
+        else raf = null;
+      }
+      float.addEventListener('mouseenter', () => { chip.style.transform = 'none'; });
+      float.addEventListener('mousemove', e => {
+        const r = float.getBoundingClientRect();
+        tx = e.clientX - r.left + OFFSET;
+        ty = e.clientY - r.top + OFFSET;
+        if (!init) { cx = tx; cy = ty; init = true; }
+        if (!raf) raf = requestAnimationFrame(loop);
+      });
+      float.addEventListener('mouseleave', () => { init = false; });
+    });
   })();
 </script>
 

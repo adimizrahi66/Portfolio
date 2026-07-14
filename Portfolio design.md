@@ -576,3 +576,14 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Accent color changed from pink `#FF628D` → `#59D7A1`; light Results bg `#FFADC4` → `#9FE5C7`
 - Connected homepage card (index.html, Card 4): activated from `is-soon`/"Coming Soon" → live link to unit-ep.html, added labels + description + CTA
 - Replaced all long dashes (em/en) in unit-ep.html with short hyphens
+
+## Homepage hero redesign (index.html)
+- Replaced the "ADI MIZRAHI" text hero with a floating-composition hero matching the provided screenshot
+- Soft pastel gradient background (pink/lavender/mint/gray radial blobs) inside the rounded hero card; removed old blob mouse-tracking + cursor dot
+- Central white bubble: "Hey, I'm Adi / I'm a product designer / Problem solver, / Passionate creator." — clean rounded rectangle, no speech tail (removed for straight edges)
+- 4 floating vector elements with gentle idle bob animation: flowers (`images and videos/flowe bouquet.svg`), profit dashboard (`budget_dashboard 1.svg`), phone rating card (`phone card.svg`), backpack (`images and videos/backpack.svg`)
+- Hover: element lifts to front (scale + shadow micro-interaction) and a blue text chip appears; chips follow the cursor with a soft trailing motion (JS)
+- Chip texts: dashboard "I'm a data-driven designer focused on impact." · flowers "Did you know? I started my design journey with flowers." · phone "E-commerce is my playground - designing for conversion." · backpack "Bag design is my thing - tap to check out my final industrial design project ✨" (short hyphens)
+- Backpack click opens a video modal (small window) playing `images and videos/Final project industrial design.mp4` with play/pause, close (✕ / Esc / click-outside), and elapsed/total time display
+- Sizing/position tuning: flowers raised near "Hey, I'm Adi" line and enlarged; phone card enlarged (282px); backpack enlarged
+- Note: extension file-URL access is off, so live render (hover trail, video) verified via composited SVG preview rather than the user's browser

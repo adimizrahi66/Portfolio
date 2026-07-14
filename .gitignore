@@ -1,0 +1,6 @@
+# Video now hosted on YouTube — local copies kept out of Git
+*.mp4
+*.mov
+
+# macOS system files
+.DS_Store

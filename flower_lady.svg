@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 736 981" width="100%" height="100%">
+  <defs>
+    <style>
+      .daisy-white { fill:#F7F0E4; }
+      .pink { fill:#EBA5A6; }
+      .red { fill:#D64C3B; }
+      .yellow { fill:#E0A93B; }
+      .blue { fill:#9DBFD6; }
+      .leaf { fill:#2F5B3E; }
+      .leaf2 { fill:#3E7A4E; }
+      .center { fill:#E0A93B; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="736" height="981" fill="#F4E7DB"/>
+
+  <!-- LEGS (green striped pants, tree pose) -->
+  <g>
+    <!-- straight leg -->
+    <path d="M368 560 L470 560 Q478 640 468 720 L455 860 Q450 920 440 950 L410 950 Q416 880 415 800 L400 690 L378 780 Q372 850 360 900 L332 895 Q345 800 352 700 Q356 620 368 560 Z" fill="#4C7A3A"/>
+    <!-- bent leg (foot tucked) -->
+    <path d="M362 570 Q320 600 285 660 Q252 715 240 760 L268 775 Q285 720 320 675 Q350 640 372 620 Z" fill="#4C7A3A"/>
+    <!-- stripes on straight leg -->
+    <g stroke="#EDE3D2" stroke-width="4" fill="none" stroke-linecap="round">
+      <path d="M382 590 L370 900"/>
+      <path d="M398 588 L388 895"/>
+      <path d="M414 586 L410 895"/>
+      <path d="M430 586 L440 890"/>
+      <path d="M446 588 L458 850"/>
+      <path d="M462 592 L470 760"/>
+    </g>
+    <!-- stripes on bent leg -->
+    <g stroke="#EDE3D2" stroke-width="4" fill="none" stroke-linecap="round">
+      <path d="M358 600 Q305 650 260 760"/>
+      <path d="M348 615 Q300 665 250 765"/>
+      <path d="M370 615 Q320 660 278 770"/>
+    </g>
+    <!-- feet -->
+    <path d="M332 895 Q320 920 322 950 Q325 972 342 972 Q356 970 358 945 L360 900 Z" fill="#EBC7A8"/>
+    <path d="M240 760 Q225 775 226 792 Q228 806 244 804 Q262 800 268 778 Z" fill="#EBC7A8"/>
+  </g>
+
+  <!-- BOUQUET -->
+  <!-- leaves back layer -->
+  <g class="leaf">
+    <path d="M300 300 Q250 260 220 210 Q270 240 310 290 Z"/>
+    <path d="M470 300 Q540 250 570 200 Q520 260 480 300 Z"/>
+    <path d="M250 420 Q190 410 150 380 Q210 420 260 430 Z"/>
+    <path d="M540 420 Q610 410 640 370 Q580 420 530 430 Z"/>
+    <path d="M300 520 Q250 560 210 590 Q270 560 320 530 Z"/>
+    <path d="M470 520 Q540 560 575 585 Q515 555 460 525 Z"/>
+    <ellipse cx="290" cy="330" rx="45" ry="90" transform="rotate(-30 290 330)"/>
+    <ellipse cx="470" cy="330" rx="45" ry="90" transform="rotate(30 470 330)"/>
+    <ellipse cx="380" cy="480" rx="50" ry="95" class="leaf2"/>
+  </g>
+
+  <!-- small leaves / stems -->
+  <g class="leaf2">
+    <path d="M560 430 q30 10 45 40 q-30 -5 -50 -25 z"/>
+    <path d="M575 470 q28 15 35 45 q-28 -10 -42 -32 z"/>
+    <path d="M200 440 q-30 10 -45 40 q30 -5 50 -25 z"/>
+  </g>
+
+  <!-- FLOWERS -->
+  <!-- white daisies -->
+  <g>
+    <g transform="translate(275,265)">
+      <g class="daisy-white"><ellipse rx="10" ry="24" cy="0"/><ellipse rx="10" ry="24" transform="rotate(45)"/><ellipse rx="10" ry="24" transform="rotate(90)"/><ellipse rx="10" ry="24" transform="rotate(135)"/></g>
+      <circle r="9" class="center"/>
+    </g>
+    <g transform="translate(475,395)">
+      <g class="daisy-white"><ellipse rx="11" ry="26" cy="0"/><ellipse rx="11" ry="26" transform="rotate(45)"/><ellipse rx="11" ry="26" transform="rotate(90)"/><ellipse rx="11" ry="26" transform="rotate(135)"/></g>
+      <circle r="10" class="center"/>
+    </g>
+    <g transform="translate(360,360)">
+      <g class="daisy-white"><ellipse rx="11" ry="26" cy="0"/><ellipse rx="11" ry="26" transform="rotate(45)"/><ellipse rx="11" ry="26" transform="rotate(90)"/><ellipse rx="11" ry="26" transform="rotate(135)"/></g>
+      <circle r="10" class="center"/>
+    </g>
+  </g>
+
+  <!-- red flowers -->
+  <g class="red">
+    <g transform="translate(330,250)"><g><circle cx="0" cy="-16" r="13"/><circle cx="15" cy="-5" r="13"/><circle cx="9" cy="13" r="13"/><circle cx="-9" cy="13" r="13"/><circle cx="-15" cy="-5" r="13"/></g><circle r="9" fill="#B03A2A"/></g>
+    <g transform="translate(240,355)"><g><circle cx="0" cy="-16" r="13"/><circle cx="15" cy="-5" r="13"/><circle cx="9" cy="13" r="13"/><circle cx="-9" cy="13" r="13"/><circle cx="-15" cy="-5" r="13"/></g><circle r="9" fill="#B03A2A"/></g>
+    <g transform="translate(520,350)"><g><circle cx="0" cy="-16" r="13"/><circle cx="15" cy="-5" r="13"/><circle cx="9" cy="13" r="13"/><circle cx="-9" cy="13" r="13"/><circle cx="-15" cy="-5" r="13"/></g><circle r="9" fill="#B03A2A"/></g>
+    <g transform="translate(415,505)"><g><circle cx="0" cy="-16" r="13"/><circle cx="15" cy="-5" r="13"/><circle cx="9" cy="13" r="13"/><circle cx="-9" cy="13" r="13"/><circle cx="-15" cy="-5" r="13"/></g><circle r="9" fill="#B03A2A"/></g>
+  </g>
+
+  <!-- pink flowers -->
+  <g class="pink">
+    <g transform="translate(385,270)"><g><circle cx="0" cy="-15" r="12"/><circle cx="14" cy="-5" r="12"/><circle cx="9" cy="12" r="12"/><circle cx="-9" cy="12" r="12"/><circle cx="-14" cy="-5" r="12"/></g><circle r="7" class="center"/></g>
+    <g transform="translate(300,430)"><g><circle cx="0" cy="-15" r="12"/><circle cx="14" cy="-5" r="12"/><circle cx="9" cy="12" r="12"/><circle cx="-9" cy="12" r="12"/><circle cx="-14" cy="-5" r="12"/></g><circle r="7" class="center"/></g>
+    <g transform="translate(455,460)"><g><circle cx="0" cy="-15" r="12"/><circle cx="14" cy="-5" r="12"/><circle cx="9" cy="12" r="12"/><circle cx="-9" cy="12" r="12"/><circle cx="-14" cy="-5" r="12"/></g><circle r="7" class="center"/></g>
+    <g transform="translate(330,520)"><g><circle cx="0" cy="-15" r="12"/><circle cx="14" cy="-5" r="12"/><circle cx="9" cy="12" r="12"/><circle cx="-9" cy="12" r="12"/><circle cx="-14" cy="-5" r="12"/></g><circle r="7" class="center"/></g>
+    <g transform="translate(530,420)"><g><circle cx="0" cy="-13" r="10"/><circle cx="12" cy="-4" r="10"/><circle cx="8" cy="11" r="10"/><circle cx="-8" cy="11" r="10"/><circle cx="-12" cy="-4" r="10"/></g><circle r="6" class="center"/></g>
+  </g>
+
+  <!-- yellow flowers -->
+  <g class="yellow">
+    <g transform="translate(455,290)"><g><ellipse rx="7" ry="15"/><ellipse rx="7" ry="15" transform="rotate(45)"/><ellipse rx="7" ry="15" transform="rotate(90)"/><ellipse rx="7" ry="15" transform="rotate(135)"/></g><circle r="6" fill="#B03A2A"/></g>
+    <g transform="translate(370,440)"><g><ellipse rx="8" ry="17"/><ellipse rx="8" ry="17" transform="rotate(45)"/><ellipse rx="8" ry="17" transform="rotate(90)"/><ellipse rx="8" ry="17" transform="rotate(135)"/></g><circle r="6" fill="#B03A2A"/></g>
+    <g transform="translate(290,375)"><g><ellipse rx="7" ry="15"/><ellipse rx="7" ry="15" transform="rotate(45)"/><ellipse rx="7" ry="15" transform="rotate(90)"/><ellipse rx="7" ry="15" transform="rotate(135)"/></g><circle r="5" fill="#B03A2A"/></g>
+  </g>
+
+  <!-- blue bell flowers -->
+  <g class="blue">
+    <path d="M300 290 q-8 24 0 40 q8 -16 0 -40 z"/>
+    <path d="M355 400 q-9 26 0 44 q9 -18 0 -44 z"/>
+    <path d="M420 400 q-8 24 0 40 q8 -16 0 -40 z"/>
+    <path d="M480 340 q-8 24 0 40 q8 -16 0 -40 z"/>
+    <path d="M430 500 q-8 24 0 40 q8 -16 0 -40 z"/>
+  </g>
+
+  <!-- BUTTERFLIES -->
+  <!-- orange top -->
+  <g transform="translate(345,185)" fill="#D98C2B">
+    <ellipse cx="-8" cy="-4" rx="9" ry="7"/>
+    <ellipse cx="8" cy="-4" rx="9" ry="7"/>
+    <ellipse cx="-7" cy="6" rx="7" ry="6"/>
+    <ellipse cx="7" cy="6" rx="7" ry="6"/>
+    <rect x="-1.5" y="-8" width="3" height="16" rx="1.5" fill="#7A4A1A"/>
+  </g>
+  <!-- orange left -->
+  <g transform="translate(210,290)" fill="#D98C2B">
+    <ellipse cx="-8" cy="-4" rx="8" ry="6"/>
+    <ellipse cx="8" cy="-4" rx="8" ry="6"/>
+    <ellipse cx="-6" cy="6" rx="6" ry="5"/>
+    <ellipse cx="6" cy="6" rx="6" ry="5"/>
+    <rect x="-1.5" y="-7" width="3" height="14" rx="1.5" fill="#7A4A1A"/>
+  </g>
+  <!-- blue right -->
+  <g transform="translate(540,240)" fill="#9DBFD6">
+    <ellipse cx="-8" cy="-4" rx="9" ry="7"/>
+    <ellipse cx="8" cy="-4" rx="9" ry="7"/>
+    <ellipse cx="-7" cy="6" rx="7" ry="6"/>
+    <ellipse cx="7" cy="6" rx="7" ry="6"/>
+    <rect x="-1.5" y="-8" width="3" height="16" rx="1.5" fill="#4A6274"/>
+  </g>
+</svg>

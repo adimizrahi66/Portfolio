@@ -635,3 +635,7 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Removed: "Phase 02 · Bottom-Funnel Conversion Push" and "Phase 03 · Feature-Rich Layout Experiment" labels, then the entire Phase 2 (mobile product page mockup) and Phase 3 (baseline/new version experiment) blocks; removed the "Key Takeaways" section
 - Impact & Results: converted from dark blue to light theme (`#F5F3F0` bg, blue `#0053D4` label/accents, dark text, white stat/quote cards); H1 → "Better results, step by step"
 - Problem headline → "High Traffic, Low Engagement - Low Google Ranking"
+
+## Data-Driven CS (cs2-funnel.html) — Pre-Iteration 2 section + A/B results
+- New "Pre-Iteration 2 – Decision Making" section inserted between "Narrow Down feature" and "Tweaking for Better Engagement": blue eyebrow label, H1 "User Distraction, The Core Risk.", intro on distraction risk, "Key Objectives & Solutions" heading, and 3 blue-stroked cards (Streamline & Attract, Optimize Placement, Clarity over Content) with beige icon tiles + blue icons; 220px spacing below
+- Phase 1: added "1st A/B test results:" list under the hypothesis box - blue-bullet items "Significant EPU (earn per user) uplift ↑" and "Positive engagement trend (not significant)"; filter1 image centered vertically in its column

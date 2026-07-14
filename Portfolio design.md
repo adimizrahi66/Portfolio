@@ -587,3 +587,9 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Backpack click opens a video modal (small window) playing `images and videos/Final project industrial design.mp4` with play/pause, close (✕ / Esc / click-outside), and elapsed/total time display
 - Sizing/position tuning: flowers raised near "Hey, I'm Adi" line and enlarged; phone card enlarged (282px); backpack enlarged
 - Note: extension file-URL access is off, so live render (hover trail, video) verified via composited SVG preview rather than the user's browser
+
+## Hero centering + View my work button (index.html)
+- Centered the hero composition to the section block: central bubble moved to left 50% / top 50%
+- Mirrored the 4 floating assets symmetrically around center, then nudged for depth: flowers left 36% / top 31%, dashboard left 67% / top 31%, phone left 33% / top 69%, backpack left 64% / top 69%
+- Backpack pulled slightly left and flowers slightly right so both tuck partly behind the main box
+- Added "View my work" button (links to #work): dark pill, centered, absolute-positioned 24px from the hero's bottom edge, with hover lift

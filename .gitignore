@@ -1,6 +1,9 @@
-# Video now hosted on YouTube — local copies kept out of Git
+# Large local video copies kept out of Git
 *.mp4
 *.mov
+
+# except the hero video, which is self-hosted on the site
+!images and videos/Final project industrial design.mp4
 
 # macOS system files
 .DS_Store

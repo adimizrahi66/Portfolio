@@ -77,7 +77,7 @@
     /* ── CENTRAL BUBBLE ── */
     .hero-bubble {
       position: absolute;
-      left: 49%; top: 45%;
+      left: 50%; top: 50%;
       transform: translate(-50%, -50%);
       z-index: 20;
       width: min(40vw, 400px);
@@ -124,10 +124,10 @@
     .float:hover .fimg-wrap { transform: translateY(-10px) scale(1.06); }
     .float:hover img { filter: drop-shadow(0 34px 46px rgba(24,20,34,0.26)); }
 
-    .f-bouquet   { left: 32%; top: 33%; --w: 190px; --delay: -1.2s; --bob: 8s; }
-    .f-dashboard { left: 66%; top: 26%; --w: 240px; --delay: -3.0s; --bob: 9s; }
-    .f-phone     { left: 34%; top: 72%; --w: 282px; --delay: -2.1s; --bob: 7.5s; }
-    .f-backpack  { left: 63%; top: 66%; --w: 150px; --delay: -4.0s; --bob: 8.5s; }
+    .f-bouquet   { left: 36%; top: 31%; --w: 190px; --delay: -1.2s; --bob: 8s; }
+    .f-dashboard { left: 67%; top: 31%; --w: 240px; --delay: -3.0s; --bob: 9s; }
+    .f-phone     { left: 33%; top: 69%; --w: 282px; --delay: -2.1s; --bob: 7.5s; }
+    .f-backpack  { left: 64%; top: 69%; --w: 150px; --delay: -4.0s; --bob: 8.5s; }
 
     @keyframes floatBob {
       0%, 100% { translate: 0 0; }
@@ -182,6 +182,27 @@
       white-space: nowrap;
     }
     .f-backpack:hover .backpack-tap { opacity: 1; }
+
+    /* ── VIEW MY WORK BUTTON ── */
+    .hero-view-work {
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      z-index: 30;
+      display: inline-block;
+      background: #101010;
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 999px;
+      box-shadow: 0 16px 30px -12px rgba(24,20,34,0.4);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .hero-view-work:hover { opacity: 0.88; transform: translateX(-50%) translateY(-2px); }
 
     /* ── SPARKLE ── */
     .hero-sparkle {
@@ -258,7 +279,8 @@
     }
     .vw-btn:hover { background: rgba(255,255,255,0.24); }
     .video-window #vwVideo { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
-    .video-window #vwVideo iframe { width: 100%; height: 100%; border: 0; display: block; }
+    .video-window #vwVideo iframe,
+    .video-window #vwVideo video { width: 100%; height: 100%; border: 0; display: block; object-fit: contain; background: #000; }
 
     @media (max-width: 900px) {
       .hero-bubble { width: min(72vw, 340px); padding: 30px 30px 34px; }
@@ -1105,6 +1127,8 @@
 
       <span class="hero-sparkle">✦</span>
 
+      <a href="#work" class="hero-view-work">View my work</a>
+
     </div>
   </section>
 
@@ -1113,8 +1137,6 @@
     <div class="video-window">
       <div class="vw-bar">
         <span class="vw-title">Final Project — Industrial Design</span>
-        <span class="vw-time" id="vwTime">0:00 / 0:00</span>
-        <button class="vw-btn" id="vwToggle" type="button" aria-label="Play or pause">❚❚</button>
         <button class="vw-btn" id="vwClose" type="button" aria-label="Close video">✕</button>
       </div>
       <div id="vwVideo"></div>
@@ -1273,72 +1295,37 @@
     const trigger = document.getElementById('backpackTrigger');
     const modal   = document.getElementById('videoModal');
     const holder  = document.getElementById('vwVideo');
-    const toggle  = document.getElementById('vwToggle');
     const closeBtn= document.getElementById('vwClose');
-    const timeEl  = document.getElementById('vwTime');
     if (!trigger || !modal || !holder) return;
 
-    const VIDEO_ID = 'zp7TQRIEH0o';
-    let player = null, ready = false, pendingOpen = false, timer = null;
+    const SRC = 'images and videos/Final project industrial design.mp4';
 
-    const fmt = s => {
-      s = Math.max(0, Math.floor(s || 0));
-      return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
-    };
-    const isPlaying = () => player && player.getPlayerState && player.getPlayerState() === 1;
-    const setIcon = () => { toggle.textContent = isPlaying() ? '❚❚' : '▶'; };
-    const updTime = () => {
-      if (!timeEl || !player || !player.getDuration) return;
-      timeEl.textContent = fmt(player.getCurrentTime()) + ' / ' + fmt(player.getDuration());
-    };
-    const startTimer = () => { stopTimer(); timer = setInterval(() => { updTime(); setIcon(); }, 250); };
-    const stopTimer = () => { if (timer) { clearInterval(timer); timer = null; } };
-
-    // Load the YouTube IFrame API
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
-
-    window.onYouTubeIframeAPIReady = function () {
-      player = new YT.Player(holder, {
-        videoId: VIDEO_ID,
-        playerVars: { controls: 0, modestbranding: 1, rel: 0, playsinline: 1, fs: 0, disablekb: 1 },
-        events: {
-          onReady: () => { ready = true; updTime(); setIcon(); if (pendingOpen) { pendingOpen = false; startPlayback(); } },
-          onStateChange: () => { setIcon(); updTime(); }
-        }
-      });
-    };
-
-    function startPlayback() {
-      if (!ready) { pendingOpen = true; return; }
-      player.seekTo(0);
-      player.playVideo();
-      startTimer();
-      setIcon();
-    }
     function open() {
       modal.classList.add('open');
-      startPlayback();
+      if (!holder.querySelector('video')) {
+        const v = document.createElement('video');
+        v.src = encodeURI(SRC);
+        v.controls = true;
+        v.autoplay = true;
+        v.playsInline = true;
+        v.preload = 'metadata';
+        holder.appendChild(v);
+      } else {
+        const v = holder.querySelector('video');
+        v.currentTime = 0;
+        v.play();
+      }
     }
     function close() {
       modal.classList.remove('open');
-      if (ready) player.pauseVideo();
-      stopTimer();
-      setIcon();
+      const v = holder.querySelector('video');
+      if (v) v.pause();
     }
 
     trigger.addEventListener('click', open);
     trigger.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
     });
-
-    toggle.addEventListener('click', () => {
-      if (!ready) return;
-      if (isPlaying()) player.pauseVideo(); else player.playVideo();
-      setIcon();
-    });
-
     closeBtn.addEventListener('click', close);
     modal.addEventListener('click', e => { if (e.target === modal) close(); });
     document.addEventListener('keydown', e => {

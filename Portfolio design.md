@@ -606,3 +606,9 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Disabled the Unit.e.p homepage card (kept visible, non-clickable via `pointer-events:none`, `onclick="return false;"`, `tabindex="-1"`) — still present, just blocked
 - Each CS "Back to Work" now deep-links to the specific homepage card the user came from: added ids `card-copycat`, `card-cs2-funnel`, `card-seller-platform`, `card-unit-ep` and pointed each hero-back link to its matching anchor
 - Removed the blue focus/target outline on `.work-card` and added `scroll-margin-top: 96px` so the anchored card lands fully in view
+
+## Data-Driven CS (cs2-funnel.html) content tweaks
+- Overview: added a small blue `#4F7FE3` "Overview" label above the title; renamed title "Overview" → "About Roundforest"; swapped the image to `list page1.svg`, sized to fit the 4/3 frame (contain, no scroll)
+- Problem: added blue `#3E81EA` "Problem" label (26px spacing to headline); headline "High Traffic, Low Engagement." with "Low Engagement" in black; replaced body text; inserted `overview section google.svg`; laid out to mirror Overview (56px grid, matching 4/3 image frame) with image on the LEFT, text on the right; removed the Millions/Low/3 Phases stats block
+- Removed the "Strategy & Approach" section entirely
+- Design Process: removed the "Observe → Hypothesize → Test → Iterate" subtitle line

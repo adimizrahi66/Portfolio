@@ -766,7 +766,12 @@
       text-decoration: none;
       color: inherit;
       cursor: pointer;
+      scroll-margin-top: 96px;
     }
+
+    .work-card:focus,
+    .work-card:focus-visible,
+    .work-card:target { outline: none; }
 
     /* ── Scroll reveal ── */
     .js .work-card {
@@ -1152,10 +1157,10 @@
   <div class="work-grid">
 
     <!-- Card 1 -->
-    <a class="work-card" href="copycat.html">
+    <a id="card-copycat" class="work-card" href="copycat.html">
       <div class="card-text">
         <div class="card-labels"><span>SaaS</span><span>B2B</span></div>
-        <span class="card-company">Roundforest</span>
+        <span class="card-company"><img src="images and videos/black logo roundforest.svg" alt="Roundforest" style="height:14px;width:auto;display:block"></span>
         <h3 class="card-title">Copycat Internal <br>Platform</h3>
         <p class="card-description">This case study focuses on unifying a fragmented marketing workflow into a centralized, automated platform featuring a sequential article and ad creation flow. These UX improvements eliminated repetitive manual tasks, reducing content production time by 75%.</p>
         <span class="card-cta">Open case study <span class="arrow">↗</span></span>
@@ -1167,10 +1172,10 @@
     </a>
 
     <!-- Card 2 -->
-    <a class="work-card" href="cs2-funnel.html">
+    <a id="card-cs2-funnel" class="work-card" href="cs2-funnel.html">
       <div class="card-text">
         <div class="card-labels"><span>Web</span><span>Mobile</span><span>B2C</span></div>
-        <span class="card-company">Roundforest</span>
+        <span class="card-company"><img src="images and videos/black logo roundforest.svg" alt="Roundforest" style="height:14px;width:auto;display:block"></span>
         <h3 class="card-title">Data Driven <br>UX Funnel</h3>
         <p class="card-description">This case study focuses on introducing interactive filter chips and optimized mobile layouts to reduce choice paralysis and simplify product scanning. These iterative UX improvements successfully boosted user engagement and increased conversion behaviors across high-volume traffic funnels.</p>
         <span class="card-cta">Open case study <span class="arrow">↗</span></span>
@@ -1182,10 +1187,10 @@
     </a>
 
     <!-- Card 3 -->
-    <a class="work-card" href="seller-platform.html">
+    <a id="card-seller-platform" class="work-card" href="seller-platform.html">
       <div class="card-text">
         <div class="card-labels"><span>SaaS</span><span>B2B</span></div>
-        <span class="card-company">Roundforest</span>
+        <span class="card-company"><img src="images and videos/black logo roundforest.svg" alt="Roundforest" style="height:14px;width:auto;display:block"></span>
         <h3 class="card-title">Seller <br>Platform</h3>
         <p class="card-description">Streamlining the interface to allow account syncing with a single ID and using contextual sidebar tooltips minimized user friction. This UX optimization successfully drove a 60% migration rate within the first week and motivated 5% of sellers to select higher commission tiers.</p>
         <span class="card-cta">Open case study <span class="arrow">↗</span></span>
@@ -1197,7 +1202,7 @@
     </a>
 
     <!-- Card 4 -->
-    <a class="work-card" href="unit-ep.html">
+    <a id="card-unit-ep" class="work-card" href="unit-ep.html" aria-disabled="true" onclick="return false;" tabindex="-1" style="pointer-events:none;cursor:default;">
       <div class="card-text">
         <div class="card-labels"><span>Assessment</span><span>Field Ops</span></div>
         <span class="card-company">Freelance · IDF</span>

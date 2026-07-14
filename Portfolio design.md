@@ -593,3 +593,16 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Mirrored the 4 floating assets symmetrically around center, then nudged for depth: flowers left 36% / top 31%, dashboard left 67% / top 31%, phone left 33% / top 69%, backpack left 64% / top 69%
 - Backpack pulled slightly left and flowers slightly right so both tuck partly behind the main box
 - Added "View my work" button (links to #work): dark pill, centered, absolute-positioned 24px from the hero's bottom edge, with hover lift
+
+## Hero video fix (index.html)
+- Hero backpack video showed YouTube Error 153; confirmed cause is a copyright/Content ID claim on the video's music that blocks embedding on outside sites — not fixable via the "allow embedding" setting
+- Switched the modal from the YouTube IFrame player to a self-hosted HTML5 `<video>` loading `images and videos/Final project industrial design.mp4` (bypasses YouTube embed restriction entirely)
+- Modal now injects the video on open, resets/plays on reopen, pauses on close; added `video` sizing to the `#vwVideo` CSS
+- Updated `.gitignore` to whitelist that one ~39 MB mp4 (the 123 MB `_ORIGINAL.mp4` stays ignored, over GitHub's 100 MB limit)
+- No compression needed: ~39 MB deploys fine on GitHub Pages; loads only on click via `preload="metadata"`
+
+## Roundforest logo + Back-to-Work navigation (index.html + CS pages)
+- Replaced the "Roundforest" brand-label text with the SVG wordmark from `images and videos/`, chosen by background contrast: black logo on the light homepage cards, white logo on the dark CS hero labels (cs2-funnel, seller-platform, copycat); left prose mentions, `@roundforest.com` emails, and the "RF" avatar as text
+- Disabled the Unit.e.p homepage card (kept visible, non-clickable via `pointer-events:none`, `onclick="return false;"`, `tabindex="-1"`) — still present, just blocked
+- Each CS "Back to Work" now deep-links to the specific homepage card the user came from: added ids `card-copycat`, `card-cs2-funnel`, `card-seller-platform`, `card-unit-ep` and pointed each hero-back link to its matching anchor
+- Removed the blue focus/target outline on `.work-card` and added `scroll-margin-top: 96px` so the anchored card lands fully in view

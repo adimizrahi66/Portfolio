@@ -612,3 +612,26 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Problem: added blue `#3E81EA` "Problem" label (26px spacing to headline); headline "High Traffic, Low Engagement." with "Low Engagement" in black; replaced body text; inserted `overview section google.svg`; laid out to mirror Overview (56px grid, matching 4/3 image frame) with image on the LEFT, text on the right; removed the Millions/Low/3 Phases stats block
 - Removed the "Strategy & Approach" section entirely
 - Design Process: removed the "Observe → Hypothesize → Test → Iterate" subtitle line
+
+## Hands-On Design process section (cs2-funnel.html) redesign
+- Changed section background from dark `var(--dark)` to `#F5F3F0`; flipped all text/border colors to dark-on-light for contrast (title/strong → `var(--text)`, body → `#5A5651`, accents → `var(--accent)`, borders → `rgba(12,11,10,...)`)
+- Retitled section to "Narrow Down feature, Driving Engagement & Conversions" with intro paragraph on the shopping-experience filter chips
+- Removed the "Phase 01 · Mid-Funnel Intent Capture" label; replaced the "1st iteration" image with `filter 1.svg`, placed beside the intro text (right side, overview-image style, 4/3 frame, contain)
+- Matched the intro title/text font sizes to the sections above (title `clamp(28px,3.5vw,44px)`, body 16px)
+- Moved the "Our hypothesis:" line into a separate box below the intro with a blue `#0053D4` stroke and bold "Our hypothesis:" label
+- Set 40px spacing between the "Hands-On Design process" label and the black title; scaled the filter image up (`scale(1.12)`) and set frame `overflow:visible` so the SVG isn't clipped
+
+## Mobile hero + desktop banner (index.html)
+- Mobile hero (≤768px): full-height card (`100svh - pad*2`), bubble at `min(84vw, 340px)` moved up to `top: 44%`, sparkle hidden, extra size step at ≤400px
+- Vectors repositioned tight around the bubble (edges tucked behind it), scaled up; phone/backpack later enlarged more and nudged down to `top: 67%`
+- Tap-to-chip on touch devices: tapping a vector shows its hover chip (raised above bubble), tap elsewhere closes; backpack = first tap chip, second tap video; desktop cursor-follow chip JS disabled on touch
+- Dashboard/backpack chips repositioned to open inward (right-anchored) so they stay on-screen
+- "View my work" kept above the fold, raised to `bottom: 82px`
+- Mobile-only "Best experienced on desktop" banner: fixed dark rounded card at top with 🖥️ icon + ✕ dismiss, fades in 2s after load, dismissal persists per session
+
+## Data-Driven CS (cs2-funnel.html) — Design Process restructure + light Impact
+- Phase 1 grid: label "Hands-On Design process" moved inside the text column; small label + big title + text now vertically centered to the filter1 image; 220px spacing to the next block
+- "Tweaking for Better Engagement": text revised (clickout/users wording), upgraded to H1 style (`section-title-large`, clamp(28px,3.5vw,44px)) with `section-sub` body; laid out as text-left / `filter2.svg`-right, same 4/3 frame + scale(1.12) as filter1, text centered to image
+- Removed: "Phase 02 · Bottom-Funnel Conversion Push" and "Phase 03 · Feature-Rich Layout Experiment" labels, then the entire Phase 2 (mobile product page mockup) and Phase 3 (baseline/new version experiment) blocks; removed the "Key Takeaways" section
+- Impact & Results: converted from dark blue to light theme (`#F5F3F0` bg, blue `#0053D4` label/accents, dark text, white stat/quote cards); H1 → "Better results, step by step"
+- Problem headline → "High Traffic, Low Engagement - Low Google Ranking"

@@ -639,3 +639,12 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 ## Data-Driven CS (cs2-funnel.html) — Pre-Iteration 2 section + A/B results
 - New "Pre-Iteration 2 – Decision Making" section inserted between "Narrow Down feature" and "Tweaking for Better Engagement": blue eyebrow label, H1 "User Distraction, The Core Risk.", intro on distraction risk, "Key Objectives & Solutions" heading, and 3 blue-stroked cards (Streamline & Attract, Optimize Placement, Clarity over Content) with beige icon tiles + blue icons; 220px spacing below
 - Phase 1: added "1st A/B test results:" list under the hypothesis box - blue-bullet items "Significant EPU (earn per user) uplift ↑" and "Positive engagement trend (not significant)"; filter1 image centered vertically in its column
+
+## About page (about.html) — new
+- Created about.html matching homepage hero language: same gradient card, radius/shadows, glass nav, pill tags, Poppins tokens
+- Nav "About" wired to about.html across index + all 4 case studies; marked active on the page
+- Content rephrased to senior voice from provided screenshots: hero lede (data-driven PD, 5+ yrs, B2C/SaaS, research/AB-testing → measurable lift), "My Story" (art + psychology → UX), 3 principle cards (Evidence over opinion, Psychology-first UX, Craft under constraints)
+- Photo: converted Me.heic → web-ready Me.jpg (1200px, HEIC unsupported in browsers), placed in rotated white photo card with "Product Designer" badge; "AM" monogram fallback
+- All long dashes in page text converted to short hyphens
+- CTAs: "Contact me +" = primary dark button (left), opens same contact menu as nav (shared script handles both); "View my work ↗" = secondary ghost (right)
+- Removed hero `overflow:hidden` that clipped the contact dropdown

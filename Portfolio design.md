@@ -648,3 +648,8 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - All long dashes in page text converted to short hyphens
 - CTAs: "Contact me +" = primary dark button (left), opens same contact menu as nav (shared script handles both); "View my work ↗" = secondary ghost (right)
 - Removed hero `overflow:hidden` that clipped the contact dropdown
+
+## Homepage card image + copy pass (2026-07-15)
+- Card 2 (Data Driven UX Funnel) image swapped to `CS data driven homepage.svg` (portrait phone mockup, 478×909); fit set to `object-fit:contain;padding:32px` so it sits fully visible and scaled down within the landscape card placement (not cropped like `cover`)
+- Copycat + Data Driven card descriptions rewritten (shorter copy)
+- Local commit `5ea99e3` made for the image change; `git push` failed — no GitHub credentials configured in this environment, so nothing has reached the live site (adimiz.com) yet. Pushes must be done manually from a machine with Git auth set up.

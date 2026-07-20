@@ -679,3 +679,8 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - **Next steps survey media**: settled on one `survey answers.svg` in a `wide` media-slot (tried a left/right two-image split first, reverted); removed the dark `#272727` background + drop-shadow so only the section bg shows behind it
 - **UX approach — option cards**: image frame is now square (1:1), fills edge-to-edge (`object-fit:cover`), then inset 16px within an 85%-width frame; card padding tightened to 12px; option-head/title/desc/risk all constrained to the same 85% width + centered so text stays flush with the image on both sides; several padding/gap/font-size experiments were tried and reverted — final font sizes match the original baseline (11/17/15/14px)
 - **Decision block** (now inside "UX approach"): "The Decision" label removed, replaced with a pink bullet dot before the copy; 2px pink border removed; layout changed from side-by-side to stacked (text, then "Image 2 – Contextual sidebar tooltip" below at `max-width:40%`); line break added after "email announcement"; text restyled to match `.section-body` (18px, `var(--text-muted)`)
+
+## Homepage — Unit.e.p card reverted to Coming Soon (2026-07-20)
+- Card 4 (`index.html`) switched back from live link to `is-soon` state: `href="#"`, `aria-disabled`/`pointer-events:none` kept, "Open case study" CTA removed
+- Added `card-chip` "Coming Soon" span (matches Questionnaire card pattern)
+- Added missing `.card-disabled` overlay div inside `.card-media` — gives the washed-out/dimmed look matching the Questionnaire card (was previously only on the Questionnaire card, not Unit.e.p)

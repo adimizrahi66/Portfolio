@@ -707,3 +707,17 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Repointed public links from `copycat.html` (V1) → `copycat-v2.html`: `index.html` work card (`#card-copycat`) and `unit-ep.html` project-nav prev card
 - V1 (`copycat.html`) kept as unlinked backstage file, reachable only by direct URL
 - Noted: `copycat-v2.html` still uses static `task row undone.svg` (pending live task-row component)
+
+## CS Copycat V2 — Challenge & Problem spacing/layout
+- The Challenge: label, title, body, bullets moved into left column of a two-column flex row (`align-items:center`) so text block is vertically centered against the "creatives pins" image; 48px title→body gap
+- The Problem: restructured into two columns — left = label, title, 3 bullets (48px title→bullets gap); right = BEFORE box → down arrow (↓) → AFTER box stacked vertically; KEY INSIGHT bar spans full width below
+- Right column width 42%, 40px gap, top-aligned (`align-items:flex-start`)
+
+## CS Copycat V2 — UX Strategy icons + Solution live prototype (2026-07-22)
+- UX Strategy: added line-style SVG icons (grid/unify, bolt/automate, check/review) using existing `.bullet-icon` accent-chip style; icons sit left of each card heading via new `.intro-card-head` flex row
+- Solution section: replaced static `task row undone.svg` with layered visuals — kept the `task row undone` image (soft shadow added) on top, then the Step 1/2/3 flow cards moved directly beneath it
+- Title "One task list that drives the whole&nbsp;flow" (nbsp keeps "whole flow" together)
+- "Interactive Prototype" H4 + body "Generate an article to unlock the creative builder..."; live prototype now embeds `CopyCat/copycat-crm.html` inline (iframe, 680px), full-screen overlay + postMessage hook removed (reverted the `openArticle` edit in `copycat-tasks-preview.html`)
+- Key Design Decisions: rewrote 4 bullets (Single Source of Truth, Reduced Cognitive Load, Intentional Review Gates, Clear Flow & Status); heading font reduced to 18px to match body
+- Creatives-flow prototype: added Before/After segmented toggle (After default) below "Interactive Prototype – creatives generation flow" text — After = live `copycat-crm.html?flow=creative` iframe, Before = `Copycat before.svg` image; replaced the static `creative creation flow.svg`
+- Impact: body text replaced with "…major turning point… high-impact transformation for Meta."

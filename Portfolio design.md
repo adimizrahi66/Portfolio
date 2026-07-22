@@ -721,3 +721,13 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Key Design Decisions: rewrote 4 bullets (Single Source of Truth, Reduced Cognitive Load, Intentional Review Gates, Clear Flow & Status); heading font reduced to 18px to match body
 - Creatives-flow prototype: added Before/After segmented toggle (After default) below "Interactive Prototype – creatives generation flow" text — After = live `copycat-crm.html?flow=creative` iframe, Before = `Copycat before.svg` image; replaced the static `creative creation flow.svg`
 - Impact: body text replaced with "…major turning point… high-impact transformation for Meta."
+
+## CS Nav — Looping Between Case Studies
+- Replaced "Back to Home" / "Back to Portfolio" Next-card with links cycling through the 3 live CS pages (no page ever points to itself)
+- Loop order: Seller Platform → Data-Driven UX Funnel → Copycat Internal Platform → (back to Seller Platform); prev/next mirror this
+- Fixed seller-platform prev to point to Copycat instead of duplicating the Next card
+
+## Glass Nav — Auto-Hide on Scroll
+- Applied to all CS pages (cs2-funnel, copycat-v2, copycat, unit-ep, seller-platform)
+- Hides when scrolling down past 120px, reappears on scroll-up
+- Slides up on desktop, down on mobile (bottom-positioned); 0.35s transition, `.nav-hidden` class toggled via scroll listener

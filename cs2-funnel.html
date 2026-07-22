@@ -1114,6 +1114,12 @@
       gap: 4px;
       white-space: nowrap;
       box-shadow: 0 16px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+      transition: transform 0.35s ease, opacity 0.35s ease;
+    }
+    .glass-nav.nav-hidden {
+      transform: translate(-50%, calc(-100% - 40px));
+      opacity: 0;
+      pointer-events: none;
     }
 
     .nav-avatar {
@@ -1252,6 +1258,7 @@
       .project-nav { grid-template-columns: 1fr; }
 
       .glass-nav { top: auto; right: auto; bottom: var(--pad); left: 50%; transform: translateX(-50%); max-width: calc(100vw - var(--pad) * 2); padding: 8px 12px; }
+      .glass-nav.nav-hidden { transform: translate(-50%, calc(100% + 40px)); }
       .contact-menu { top: auto; bottom: calc(100% + 12px); transform: translateY(6px); }
       .contact-menu.open { transform: translateY(0); }
       .nav-link { padding: 6px 10px; font-size: 10px; }
@@ -1540,10 +1547,10 @@
       <div class="nav-project-name">Seller Platform</div>
       <div class="nav-project-cat">Product Design · SaaS · B2B</div>
     </a>
-    <a href="index.html" class="project-nav-card next">
-      <div class="nav-direction">All Work →</div>
-      <div class="nav-project-name">Back to Portfolio</div>
-      <div class="nav-project-cat">All Case Studies</div>
+    <a href="copycat-v2.html" class="project-nav-card next">
+      <div class="nav-direction">Next →</div>
+      <div class="nav-project-name">Copycat Internal Platform</div>
+      <div class="nav-project-cat">UX Design · Internal Tools</div>
     </a>
   </div>
 
@@ -1628,5 +1635,21 @@
       } else { root.scrollTop=prev; }
     }
   </script>
+<script>
+  (function () {
+    var nav = document.querySelector('.glass-nav');
+    if (!nav) return;
+    var lastY = window.pageYOffset;
+    window.addEventListener('scroll', function () {
+      var y = window.pageYOffset;
+      if (y > lastY && y > 120) {
+        nav.classList.add('nav-hidden');
+      } else {
+        nav.classList.remove('nav-hidden');
+      }
+      lastY = y;
+    }, { passive: true });
+  })();
+</script>
 </body>
 </html>

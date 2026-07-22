@@ -702,3 +702,8 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Research: `at the office.svg` added right of text, top-aligned, `margin-top:4px` nudge; title given `&nbsp;` to keep "Meta team" on one line
 - Research image swapped `stickynotes.jpg` → `copycat stickynotes.jpg`; caption changed to "A sneak peek at field notes captured while collaborating with the team."
 - Mapping the System: added "Click to view the full mapping →" button opening a full-screen overlay of `User journey.svg`; close via ×/backdrop/Esc; zoom via −/+ controls, wheel, double-click, with drag-to-pan when zoomed
+
+## CS Copycat V2 — connect to live site
+- Repointed public links from `copycat.html` (V1) → `copycat-v2.html`: `index.html` work card (`#card-copycat`) and `unit-ep.html` project-nav prev card
+- V1 (`copycat.html`) kept as unlinked backstage file, reachable only by direct URL
+- Noted: `copycat-v2.html` still uses static `task row undone.svg` (pending live task-row component)

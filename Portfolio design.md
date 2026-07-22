@@ -684,3 +684,21 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Card 4 (`index.html`) switched back from live link to `is-soon` state: `href="#"`, `aria-disabled`/`pointer-events:none` kept, "Open case study" CTA removed
 - Added `card-chip` "Coming Soon" span (matches Questionnaire card pattern)
 - Added missing `.card-disabled` overlay div inside `.card-media` — gives the washed-out/dimmed look matching the Questionnaire card (was previously only on the Questionnaire card, not Unit.e.p)
+
+## CopyCat v2 — new backstage case study (2026-07-22)
+- Created `copycat-v2.html` as unlinked "backstage" draft (cloned from `seller-platform.html`); current `copycat.html` untouched and still linked from homepage `#card-copycat`
+- Hero: "CopyCat — Scaling Creative Production for Meta Acquisition"; role Senior Product Designer · 1 PM + 1 Engineer · 1 month; back link → `#card-copycat`
+- Sections: Context · The Challenge · The Problem · Research · Mapping the System · UX Strategy · Solution · Impact · Next steps
+- Inline visuals built from design tokens: scale-gap bar chart, before/after tools (6→1), key-insight callout, journey stepper, UX-strategy trio, step cards, big-metric impact tiles (75% · 6→1 · –36 clicks)
+- Real assets used: Meta activity flow, sticky notes, task row, creative creation flow
+- Accent recolored `--accent` #FF628D → #5568FF
+- Chart edits: title "Daily creative output vs. profitability"; "Vibe-coding tool (+30%)" bar shows "~130 · Breakeven"; bottom bar "Profitable target" = "<500"
+- Context image: full SVG, no frame BG/shadow, 70% width, `aspect-ratio:auto` + `overflow:visible` to stop clipping; caption removed
+- Pending: repoint homepage `#card-copycat` (`index.html:1294`) to `copycat-v2.html` once approved
+
+## CopyCat v2 — content & interaction pass (2026-07-22)
+- Hero title changed to "Copycat / Scaling Meta Creatives"
+- The Challenge: text width reduced, `creatives pins.svg` added right of text (above chart), transparent frame / no shadow / fit-to-frame
+- Research: `at the office.svg` added right of text, top-aligned, `margin-top:4px` nudge; title given `&nbsp;` to keep "Meta team" on one line
+- Research image swapped `stickynotes.jpg` → `copycat stickynotes.jpg`; caption changed to "A sneak peek at field notes captured while collaborating with the team."
+- Mapping the System: added "Click to view the full mapping →" button opening a full-screen overlay of `User journey.svg`; close via ×/backdrop/Esc; zoom via −/+ controls, wheel, double-click, with drag-to-pan when zoomed

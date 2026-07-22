@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Platform – Adi Mizrahi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────
+       TOKENS  (identical to design system)
+    ───────────────────────────────────────── */
+    :root {
+      --page-bg:     #E2DED6;
+      --hero-bg:     #F5F3EF;
+      --surface:     #F5F3EF;
+      --dark:        #0C0B0A;
+      --warm-dark:   #F5F3F0;
+      --text:        #0C0B0A;
+      --text-muted:  #5A544C;
+      --text-soft:   #7A736A;
+      --text-subtle: #B0AAA2;
+      --accent:      #5568FF;
+      --font:        'Poppins', sans-serif;
+      --pad:         20px;
+      --gap:         12px;
+      --radius-hero: 48px;
+      --radius-card: 36px;
+      --radius-sm:   16px;
+      --radius-pill: 999px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--page-bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page-wrapper {
+      padding: var(--pad);
+      padding-bottom: calc(var(--pad) + 96px);
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
+
+    /* ─────────────────────────────────────────
+       LABEL
+    ───────────────────────────────────────── */
+    .label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .label-light { color: rgba(245,243,239,0.45); }
+    .label-accent { color: var(--accent); }
+
+    /* ─────────────────────────────────────────
+       01 — HERO  (Dark, combined with image)
+    ───────────────────────────────────────── */
+    .hero {
+      position: relative;
+      background: var(--dark);
+      border-radius: var(--radius-hero);
+      overflow: hidden;
+      min-height: calc(100vh - var(--pad) * 2 - 80px);
+      display: flex;
+      flex-direction: column;
+      padding: 40px 48px 48px;
+      gap: 28px;
+    }
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .hero-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 24px;
+    }
+    .hero-visual {
+      position: relative;
+      height: 100%;
+      min-height: 380px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: rgba(245,243,239,0.05);
+      border: 1px solid rgba(245,243,239,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-visual img,
+    .hero-visual video,
+    .hero-visual object {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-visual .media-empty {
+      color: rgba(245,243,239,0.45);
+    }
+    .hero-visual .media-empty .media-name { color: var(--accent); }
+    .hero-visual .media-empty .media-hint { color: rgba(245,243,239,0.55); }
+    .hero-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245,243,239,0.55);
+    }
+    .hero-brand .logo-dot {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .hero-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(245,243,239,0.5);
+      text-decoration: none;
+      transition: color 0.18s ease;
+    }
+    .hero-back:hover { color: var(--hero-bg); }
+    .hero-back svg { width: 16px; height: 16px; }
+    .hero-meta-top { text-align: right; }
+    .hero-meta-top .label { margin-bottom: 4px; }
+    .hero-year {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(245,243,239,0.35);
+    }
+
+    .hero-category {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .hero-title {
+      font-size: clamp(44px, 5.4vw, 80px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 0.98;
+      color: var(--hero-bg);
+      flex: 1 1 auto;
+      align-self: stretch;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .hero-title .outline {
+      display: block;
+      white-space: nowrap;
+      -webkit-text-stroke: 2px rgba(245,243,239,0.5);
+      color: transparent;
+    }
+    .hero-tagline {
+      font-size: clamp(16px, 1.3vw, 19px);
+      font-weight: 400;
+      color: rgba(245,243,239,0.75);
+      line-height: 1.65;
+      max-width: 520px;
+    }
+    .hero-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .hero-pill {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(245,243,239,0.22);
+      color: rgba(245,243,239,0.78);
+    }
+
+    /* ─────────────────────────────────────────
+       META ROW
+    ───────────────────────────────────────── */
+    .meta-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      background: var(--surface);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .meta-card {
+      padding: 28px 32px;
+      position: relative;
+    }
+    .meta-card + .meta-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; bottom: 20%;
+      width: 1px;
+      background: rgba(12,11,10,0.1);
+    }
+    .meta-card .label { display: block; margin-bottom: 10px; }
+    .meta-value {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .meta-sub { font-size: 13px; color: var(--text-soft); }
+
+    /* ─────────────────────────────────────────
+       GENERIC SECTION
+    ───────────────────────────────────────── */
+    .section {
+      background: var(--surface);
+      border-radius: var(--radius-card);
+      padding: 64px 56px;
+    }
+    .section.dark {
+      background: var(--warm-dark);
+      color: var(--text);
+    }
+    .section.accent { background: var(--accent); }
+
+    .section-num-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: block;
+    }
+    .section.dark .section-num-label { color: var(--accent); }
+    .section.dark .section-title-large { color: var(--text); }
+    .section.accent .section-num-label { color: rgba(12,11,10,0.6); }
+
+    .section-title-large {
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text);
+      max-width: 880px;
+    }
+    .section.accent .section-title-large { color: var(--dark); }
+
+    .section-body {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 780px;
+    }
+    .section.dark .section-body { color: var(--text-muted); }
+    .section.accent .section-body { color: rgba(12,11,10,0.78); }
+
+    .section-body + .section-body { margin-top: 18px; }
+
+    /* ─────────────────────────────────────────
+       OVERVIEW — 2-col text + image
+    ───────────────────────────────────────── */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .overview-text { display: flex; flex-direction: column; gap: 14px; }
+    .overview-text .section-num-label { margin-bottom: 0; }
+    .overview-text .section-body { margin: 0; max-width: none; }
+    .read-more { margin-top: 4px; }
+    .read-more summary {
+      cursor: pointer;
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .read-more summary::-webkit-details-marker { display: none; }
+    .read-more summary::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(45deg);
+      transition: transform 0.18s ease;
+      margin-top: -3px;
+    }
+    .read-more[open] summary::after { transform: rotate(-135deg); margin-top: 3px; }
+    .read-more .section-body { margin-top: 12px; }
+    .overview-image {
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--page-bg);
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 320px;
+    }
+    .overview-image img,
+    .overview-image video,
+    .overview-image object {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ─────────────────────────────────────────
+       CHALLENGE / STRATEGY / RESULTS (intro trio)
+    ───────────────────────────────────────── */
+    .intro-trio {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap);
+    }
+    .intro-card {
+      background: var(--surface);
+      border-radius: var(--radius-card);
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .intro-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .intro-card h3 .arrow { color: var(--accent); }
+    .intro-card p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    /* ─────────────────────────────────────────
+       BULLET LIST (used in problem, options, impact, edge cases)
+    ───────────────────────────────────────── */
+    .bullet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 32px;
+      max-width: 900px;
+    }
+    .bullet-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(12,11,10,0.07);
+    }
+    .bullet-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .bullet-marker {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 9px;
+      flex-shrink: 0;
+    }
+    .bullet-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(184,134,90,0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+    .bullet-icon svg { width: 22px; height: 22px; }
+    .section.dark .bullet-icon {
+      background: #EEE4DA;
+      color: var(--accent);
+    }
+    .bullet-text {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--text-muted);
+    }
+    .bullet-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .bullet-text em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .section.dark .bullet-item { border-color: rgba(12,11,10,0.1); }
+    .section.dark .bullet-text { color: var(--text-muted); }
+    .section.dark .bullet-text strong { color: var(--text); }
+    .section.accent .bullet-item { border-color: rgba(12,11,10,0.15); }
+    .section.accent .bullet-text { color: rgba(12,11,10,0.78); }
+    .section.accent .bullet-text strong { color: var(--dark); }
+
+    /* ─────────────────────────────────────────
+       OPTIONS CARDS (User Flow Mapping)
+    ───────────────────────────────────────── */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap);
+      margin-top: 32px;
+    }
+    .option-card {
+      background: var(--page-bg);
+      border-radius: var(--radius-sm);
+      padding: 12px 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border: 2px solid transparent;
+      transition: border-color 0.18s ease;
+    }
+    .option-image {
+      width: 85%;
+      aspect-ratio: 1/1;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 4px;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    .option-image img,
+    .option-image object,
+    .option-image video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .option-image .media-empty {
+      gap: 8px;
+      padding: 12px;
+    }
+    .option-image .media-empty svg { width: 28px; height: 28px; }
+    .option-image .media-empty .media-name { font-size: 10px; }
+    .option-image .media-empty .media-hint { display: none; }
+    .option-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 85%;
+      margin: 0 auto;
+    }
+    .option-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .option-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      line-height: 1.35;
+      width: 85%;
+      margin: 0 auto;
+    }
+    .option-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      width: 85%;
+      margin: 0 auto;
+    }
+    .option-risk {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-soft);
+      padding-top: 14px;
+      border-top: 1px solid rgba(12,11,10,0.1);
+      width: 85%;
+      margin: 0 auto;
+    }
+    .option-card.chosen {
+      border-color: var(--accent);
+      background: var(--page-bg);
+    }
+    .chosen-badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--accent);
+      color: var(--hero-bg);
+    }
+
+    /* ─────────────────────────────────────────
+       DECISION CALLOUT
+    ───────────────────────────────────────── */
+    .decision-block {
+      margin-top: 40px;
+      padding: 32px 36px;
+      background: var(--surface);
+      border-radius: 14px;
+    }
+    .decision-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .decision-text {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    /* ─────────────────────────────────────────
+       MEDIA PLACEHOLDER  (SVG upload slot)
+       ─── Swap the inner block with: <img src="your-file.svg" alt="..."> ───
+    ───────────────────────────────────────── */
+    .media-slot {
+      margin-top: 40px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--page-bg);
+      position: relative;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .media-slot.tall { aspect-ratio: 4/3; }
+    .media-slot.wide { aspect-ratio: 21/9; }
+    .media-slot.video { aspect-ratio: 16/9; }
+    .media-slot.dark {
+      background: var(--surface);
+      border: 1px solid rgba(12,11,10,0.08);
+    }
+    .media-slot img,
+    .media-slot object,
+    .media-slot video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .media-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      color: var(--text-subtle);
+      text-align: center;
+      padding: 24px;
+    }
+    .media-slot.dark .media-empty { color: var(--text-subtle); }
+    .media-empty svg {
+      width: 42px; height: 42px;
+      opacity: 0.5;
+    }
+    .media-empty .media-name {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .media-empty .media-hint {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 320px;
+    }
+    .media-slot.dark .media-empty .media-hint { color: var(--text-soft); }
+    .media-caption {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* ── Filled slots fit to media's natural ratio ── */
+    .overview-image:has(img, video, object),
+    .media-slot:has(img, video, object) {
+      aspect-ratio: auto;
+      min-height: 0;
+    }
+    /* ── Soft shadow behind all filled media ── */
+    .hero-visual:has(img, video, object),
+    .option-image:has(img, video, object),
+    .media-slot:has(img, video, object) {
+      box-shadow: 0 18px 45px rgba(12,11,10,0.14);
+    }
+    .overview-image:has(img, video, object) img,
+    .overview-image:has(img, video, object) video,
+    .overview-image:has(img, video, object) object,
+    .media-slot:has(img, video, object) img,
+    .media-slot:has(img, video, object) video,
+    .media-slot:has(img, video, object) object {
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* ─────────────────────────────────────────
+       FIGMA / EXTERNAL LINK
+    ───────────────────────────────────────── */
+    .ext-link {
+      margin-top: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: var(--radius-pill);
+      background: var(--page-bg);
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+    .ext-link:hover {
+      background: var(--accent);
+      color: var(--hero-bg);
+      transform: translateY(-1px);
+    }
+    .ext-link.dark {
+      background: var(--surface);
+      color: var(--text);
+    }
+    .ext-link.dark:hover { background: var(--accent); color: var(--hero-bg); }
+    .ext-link svg { width: 14px; height: 14px; }
+
+    /* ─────────────────────────────────────────
+       SUB-SECTION (inside dark/light parents)
+    ───────────────────────────────────────── */
+    .subsection { margin-top: 56px; }
+    .subsection:first-of-type { margin-top: 0; }
+    .subsection-title {
+      font-size: clamp(22px, 2.4vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+    .section.dark .subsection-title { color: var(--text); }
+    .subsection-body {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 780px;
+    }
+    .section.dark .subsection-body { color: var(--text-muted); }
+    .subsection-body + .subsection-body { margin-top: 14px; }
+    .subsection-body strong { color: var(--text); font-weight: 600; }
+    .section.dark .subsection-body strong { color: var(--text); }
+
+    .subsection-h4 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-top: 28px;
+      margin-bottom: 14px;
+    }
+    .section.dark .subsection-h4 { color: var(--text); }
+
+    .quote-callout {
+      margin-top: 28px;
+      padding: 28px 32px;
+      background: var(--page-bg);
+      border-radius: 14px;
+      border: 2px solid var(--accent);
+      font-size: 16px;
+      line-height: 1.65;
+      font-style: italic;
+      color: var(--text);
+      max-width: 820px;
+    }
+    .section.dark .quote-callout {
+      background: #FFFFFF;
+      color: var(--text);
+    }
+
+    .self-note {
+      margin-top: 14px;
+      font-size: 12px;
+      font-style: italic;
+      color: var(--text-subtle);
+    }
+
+    /* ─────────────────────────────────────────
+       RESULTS GRID
+    ───────────────────────────────────────── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .result-stat {
+      padding: 28px 26px;
+      background: var(--page-bg);
+      border-radius: 16px;
+    }
+    .result-num {
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .result-label {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ─────────────────────────────────────────
+       PROJECT NAV
+    ───────────────────────────────────────── */
+    .project-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap);
+    }
+    .project-nav-card {
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      padding: 28px 32px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .project-nav-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.07);
+    }
+    .project-nav-card.next { align-items: flex-end; text-align: right; }
+    .nav-direction {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+    }
+    .nav-project-name {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .nav-project-cat { font-size: 11px; color: var(--text-muted); }
+
+    /* ─────────────────────────────────────────
+       GLASS NAV
+    ───────────────────────────────────────── */
+    .glass-nav {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: var(--radius-pill);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .nav-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: #B8865A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      margin-right: 6px;
+    }
+    .nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(12,11,10,0.6);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      transition: color 0.12s ease, background 0.12s ease;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: rgba(12,11,10,0.95);
+      background: rgba(12,11,10,0.06);
+    }
+    .nav-divider {
+      width: 1px; height: 16px;
+      background: rgba(12,11,10,0.12);
+      margin: 0 4px;
+    }
+    .nav-cta {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--dark);
+      text-decoration: none;
+      padding: 7px 18px;
+      border-radius: var(--radius-pill);
+      transition: opacity 0.12s ease;
+      margin-left: 4px;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-cta { font-family: inherit; border: none; cursor: pointer; }
+    .nav-contact-wrap { position: relative; display: inline-flex; }
+    .contact-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
+    }
+    .contact-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
+    .contact-item {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+      color: rgba(12,11,10,0.85);
+      background: none;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: background 0.16s ease, color 0.16s ease;
+    }
+    .contact-item:hover { background: rgba(12,11,10,0.06); color: var(--dark); }
+    .contact-hint { font-size: 11px; font-weight: 400; color: rgba(12,11,10,0.45); }
+    .contact-item.copied .contact-hint::after { content: " — copied"; color: #B8865A; }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      :root {
+        --pad: 12px;
+        --gap: 10px;
+        --radius-hero: 28px;
+        --radius-card: 24px;
+      }
+      .hero { padding: 28px 22px; min-height: auto; gap: 24px; }
+      .hero-title { font-size: clamp(30px, 9vw, 70px); }
+      .hero-title .outline { white-space: normal; }
+      .hero-body { grid-template-columns: 1fr; gap: 28px; }
+      .hero-visual { min-height: 260px; aspect-ratio: 4/3; }
+      .meta-row { grid-template-columns: 1fr; }
+      .meta-card + .meta-card::before { top: 0; bottom: auto; left: 20%; right: 20%; width: auto; height: 1px; }
+      .intro-trio { grid-template-columns: 1fr; }
+      .overview-grid { grid-template-columns: 1fr; }
+      /* Scale the overview image up on mobile: bleed to the section edges */
+      .overview-image { margin: 0 -24px; width: calc(100% + 48px); max-width: none; }
+      .overview-image img { width: 100%; height: auto; object-fit: contain; }
+      .section { padding: 40px 24px; }
+      .options-grid { grid-template-columns: 1fr; }
+      .results-grid { grid-template-columns: 1fr; }
+      .project-nav { grid-template-columns: 1fr; }
+      .glass-nav { top: auto; right: auto; bottom: var(--pad); left: 50%; transform: translateX(-50%); max-width: calc(100vw - var(--pad) * 2); padding: 8px 12px; }
+      .contact-menu { top: auto; bottom: calc(100% + 12px); transform: translateY(6px); }
+      .contact-menu.open { transform: translateY(0); }
+      .nav-link { padding: 6px 10px; font-size: 10px; }
+
+      /* ── Mobile UX refinements (mobile-only) ── */
+      body { overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+
+      /* Floating nav: keep on-screen + 44px tap targets */
+      .glass-nav { max-width: calc(100vw - 20px); gap: 0; }
+      .nav-link { display: inline-flex; align-items: center; min-height: 44px; }
+      .nav-cta { min-height: 44px; display: inline-flex; align-items: center; }
+      .contact-item { min-height: 44px; }
+      .contact-menu { min-width: 220px; }
+
+      /* Comfortable reading sizes for scanning long copy */
+      .section-body { font-size: 14px; line-height: 1.65; }
+      .bullet-text { font-size: 13.5px; }
+
+      /* Keep the 3 result metrics side-by-side so they stay comparable */
+      .results-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 28px;
+      }
+      .result-stat { padding: 16px 12px; border-radius: 12px; }
+      .result-num { font-size: clamp(20px, 7vw, 28px); }
+      .result-label { font-size: 10px; line-height: 1.35; }
+
+      /* Chip spacing avoids mis-taps */
+      .hero-pills { gap: 10px; }
+    }
+
+    /* ── Small phones ── */
+    @media (max-width: 400px) {
+      .hero { padding: 24px 18px; }
+      .section { padding: 36px 18px; }
+      .result-stat { padding: 14px 8px; }
+      .nav-link { padding: 6px 8px; font-size: 9.5px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ──────────────────────────────────────
+       01 · HERO  (header + image combined)
+  ─────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-top">
+      <a href="index.html#card-copycat" class="hero-back">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M10 12L6 8l4-4"/>
+        </svg>
+        Back to Work
+      </a>
+      <div class="hero-brand">
+        <img src="images and videos/white logo roundforest.svg" alt="Roundforest" style="height:20px;width:auto;display:block">
+      </div>
+    </div>
+
+    <div class="hero-body">
+      <div class="hero-text">
+        <div class="hero-category">Product Design · Internal Platform · AI</div>
+        <h1 class="hero-title">
+          Copycat
+          <span class="outline">Scaling Meta Creatives</span>
+        </h1>
+        <p class="hero-tagline">
+          An integrated platform that unifies content and ad-generation into a single ecosystem — cutting creative production time by 75% and unlocking massive creative scale for the growth team.
+        </p>
+        <div class="hero-pills">
+          <div class="hero-pill">UX Design</div>
+          <div class="hero-pill">Workflow Automation</div>
+          <div class="hero-pill">AI Tooling</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────
+       02 · META — Role · Team · Duration
+  ─────────────────────────────────────────── -->
+  <div class="meta-row">
+    <div class="meta-card">
+      <span class="label">My role</span>
+      <div class="meta-value">Senior Product Designer</div>
+      <div class="meta-sub">Research · UX · UI · Prototyping</div>
+    </div>
+    <div class="meta-card">
+      <span class="label">Team</span>
+      <div class="meta-value">1 PM · 1 Engineer</div>
+      <div class="meta-sub">Lean squad</div>
+    </div>
+    <div class="meta-card">
+      <span class="label">Duration</span>
+      <div class="meta-value">1 month</div>
+    </div>
+  </div>
+
+
+  <!-- ──────────────────────────────────────
+       03 · OVERVIEW
+  ─────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-num-label">Context</span>
+    <h2 class="section-title-large">Scaling creative production for Meta acquisition</h2>
+    <p class="section-body" style="margin-top:28px">
+      At Roundforest, the Meta acquisition team operates in the upper funnel. Performance at this stage depends on scale &ndash; producing large volumes of ad creatives and running continuous tests. Creative production is a daily operation, and increasing output directly impacts growth and profitability.
+    </p>
+
+    <div class="media-slot" style="margin-top:32px;background:none;box-shadow:none;width:70%;aspect-ratio:auto;overflow:visible">
+      <img src="images and videos/Meta activity flow.svg" alt="User flow in Meta activity" style="width:100%;height:auto">
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────
+       04 · THE CORE CHALLENGE
+  ─────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-num-label">The Challenge</span>
+    <h2 class="section-title-large">The core challenge</h2>
+
+    <div style="display:flex;gap:40px;align-items:center;margin-top:28px">
+      <div style="flex:1;min-width:0">
+        <p class="section-body">Creative production was fully manual and couldn&rsquo;t keep up with the scale the funnel demanded.</p>
+
+        <div class="bullet-list" style="margin-top:8px">
+          <div class="bullet-item">
+            <div class="bullet-marker"></div>
+            <div class="bullet-text">Creative production was <strong>fully manual</strong>, capped at 70&ndash;100 creatives per day.</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-marker"></div>
+            <div class="bullet-text">To reach breakeven, we needed at least <strong>300 creatives daily</strong>.</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-marker"></div>
+            <div class="bullet-text">A no-code system was later introduced, increasing scale by <strong>30%</strong> &ndash; but efficiency remained a bottleneck.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="media-slot" style="flex:none;width:38%;background:none;box-shadow:none;aspect-ratio:auto;overflow:visible">
+        <img src="images and videos/creatives pins.svg" alt="Creatives pins" style="width:100%;height:auto;object-fit:contain">
+      </div>
+    </div>
+
+    <!-- ── SCALE GAP VISUAL ── -->
+    <div style="margin-top:44px;padding:36px 34px;border-radius:24px;border:1px solid rgba(12,11,10,0.10);background:#F5F3F0">
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text);opacity:0.55;margin-bottom:26px">Daily creative output vs. profitability</div>
+
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <!-- current -->
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:150px;flex:none;font-size:13px;font-weight:600;color:var(--text)">Manual (current)</div>
+          <div style="flex:1;height:34px;border-radius:8px;background:rgba(12,11,10,0.06);overflow:hidden">
+            <div style="width:28%;height:100%;border-radius:8px;background:rgba(12,11,10,0.30);display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-size:12px;font-weight:700;color:#fff">70&ndash;100</div>
+          </div>
+        </div>
+        <!-- no-code -->
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:150px;flex:none;font-size:13px;font-weight:600;color:var(--text)">Vibe-coding tool (+30%)</div>
+          <div style="flex:1;height:34px;border-radius:8px;background:rgba(12,11,10,0.06);overflow:hidden">
+            <div style="width:40%;height:100%;border-radius:8px;background:rgba(12,11,10,0.45);display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-size:12px;font-weight:700;color:#fff">~130 &middot; Breakeven</div>
+          </div>
+        </div>
+        <!-- target -->
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:150px;flex:none;font-size:13px;font-weight:700;color:var(--accent)">Profitable target</div>
+          <div style="flex:1;height:34px;border-radius:8px;background:rgba(12,11,10,0.06);overflow:hidden">
+            <div style="width:100%;height:100%;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-size:12px;font-weight:700;color:#fff">&lt;500</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────
+       05 · THE PROBLEM
+  ─────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-num-label">The Problem</span>
+    <h2 class="section-title-large">A faster process that became harder to run</h2>
+
+    <div class="bullet-list" style="margin-top:28px">
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text">The new system <strong>lacked context</strong> and wasn&rsquo;t integrated with the team&rsquo;s workflow.</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text">To compensate, the team stitched together <strong>~6 different tools</strong>, creating a fragmented and manual-heavy process.</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text">While production became faster, it became significantly <strong>more complex and inefficient</strong>.</div>
+      </div>
+    </div>
+
+    <!-- ── BEFORE / AFTER SYSTEM VISUAL ── -->
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:22px;align-items:center;margin-top:44px">
+      <!-- before: 6 tools -->
+      <div style="padding:26px 24px;border-radius:24px;border:1px dashed rgba(12,11,10,0.22);background:rgba(12,11,10,0.02)">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);opacity:0.5;margin-bottom:18px">Before &middot; 6 fragmented tools</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <span style="font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;border:1px solid rgba(12,11,10,0.15);color:var(--text);background:#fff">Google Sheets</span>
+          <span style="font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;border:1px solid rgba(12,11,10,0.15);color:var(--text);background:#fff">Asana</span>
+          <span style="font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;border:1px solid rgba(12,11,10,0.15);color:var(--text);background:#fff">Gemini</span>
+          <span style="font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;border:1px solid rgba(12,11,10,0.15);color:var(--text);background:#fff">Ideogram</span>
+          <span style="font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;border:1px solid rgba(12,11,10,0.15);color:var(--text);background:#fff">Kueez CMS</span>
+          <span style="font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;border:1px solid rgba(12,11,10,0.15);color:var(--text);background:#fff">CopyCat (old)</span>
+        </div>
+      </div>
+
+      <div style="font-size:26px;font-weight:700;color:var(--accent)">&rarr;</div>
+
+      <!-- after: 1 platform -->
+      <div style="padding:26px 24px;border-radius:24px;border:1px solid var(--accent);background:rgba(12,11,10,0.02)">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-bottom:18px">After &middot; 1 unified platform</div>
+        <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border-radius:16px;background:var(--accent);color:#fff">
+          <span style="font-size:17px;font-weight:700">CopyCat</span>
+          <span style="font-size:12px;font-weight:500;opacity:0.85">One end-to-end workflow</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── KEY INSIGHT CALLOUT ── -->
+    <div style="margin-top:44px;padding:30px 32px;border-radius:24px;background:var(--text);color:#fff;display:flex;gap:16px;align-items:flex-start">
+      <span style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;opacity:0.55;flex:none;margin-top:5px">Key insight</span>
+      <p style="font-size:22px;line-height:1.35;font-weight:600;margin:0">If we fix efficiency, we can at least double output.</p>
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────
+       06 · RESEARCH
+  ─────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-num-label">Research</span>
+    <h2 class="section-title-large">Two weeks embedded with the Meta&nbsp;team</h2>
+    <div style="display:flex;gap:40px;align-items:flex-start;margin-top:28px">
+      <div style="flex:1;min-width:0">
+        <p class="section-body">
+          I conducted an immersive research process by joining the Meta team for two weeks. This hands-on approach was critical &ndash; it let me experience the workflow from the inside rather than from the outside.
+        </p>
+
+        <h4 class="subsection-h4" style="margin-top:32px">It allowed me to:</h4>
+        <div class="bullet-list" style="margin-top:8px">
+          <div class="bullet-item">
+            <div class="bullet-marker"></div>
+            <div class="bullet-text">Experience real pain points firsthand.</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-marker"></div>
+            <div class="bullet-text">Understand the workflow, constraints, and strategy.</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-marker"></div>
+            <div class="bullet-text">Identify gaps between tools and actual needs.</div>
+          </div>
+        </div>
+
+        <h4 class="subsection-h4" style="margin-top:32px">I documented:</h4>
+        <div class="bullet-list" style="margin-top:8px">
+          <div class="bullet-item">
+            <div class="bullet-marker"></div>
+            <div class="bullet-text">Friction points across the flow.</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-marker"></div>
+            <div class="bullet-text">Missed automation opportunities.</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-marker"></div>
+            <div class="bullet-text">Ideas for improving usability and scale.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="media-slot" style="flex:none;width:38%;background:none;box-shadow:none;aspect-ratio:auto;overflow:visible;margin-top:4px">
+        <img src="images and videos/at the office.svg" alt="At the office" style="width:100%;height:auto;object-fit:contain">
+      </div>
+    </div>
+
+    <div class="media-slot" style="box-shadow:none;margin-top:32px;background:#F5F3F0;justify-content:flex-start">
+      <img src="images and videos/copycat stickynotes.jpg" alt="Research notes from embedding with the team" style="max-width:85%;width:auto;margin:0">
+    </div>
+    <p class="media-caption">A sneak peek at field notes captured while collaborating with the team.</p>
+  </section>
+
+
+  <!-- ──────────────────────────────────────
+       07 · MAPPING THE SYSTEM
+  ─────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-num-label">Mapping the System</span>
+    <h2 class="section-title-large">Mapping the full workflow</h2>
+    <p class="section-body" style="margin-top:28px">
+      After onboarding, I mapped the full workflow &ndash; from content ideation to campaign launch. This helped surface where the process broke down.
+    </p>
+
+    <div class="bullet-list" style="margin-top:8px">
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text">Redundant steps.</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text">Tool fragmentation.</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text">Opportunities for consolidation and automation.</div>
+      </div>
+    </div>
+
+    <!-- ── JOURNEY MAP VISUAL ── -->
+    <div style="margin-top:44px;padding:34px 30px;border-radius:24px;border:1px solid rgba(12,11,10,0.10);background:#F5F3F0;overflow-x:auto">
+      <div style="display:flex;align-items:center;gap:10px;min-width:640px">
+        <div style="flex:1;text-align:center;padding:16px 12px;border-radius:14px;background:#fff;border:1px solid rgba(12,11,10,0.12);font-size:13px;font-weight:600;color:var(--text)">Ideation</div>
+        <span style="color:var(--accent);font-weight:700">&rarr;</span>
+        <div style="flex:1;text-align:center;padding:16px 12px;border-radius:14px;background:#fff;border:1px solid rgba(12,11,10,0.12);font-size:13px;font-weight:600;color:var(--text)">Article</div>
+        <span style="color:var(--accent);font-weight:700">&rarr;</span>
+        <div style="flex:1;text-align:center;padding:16px 12px;border-radius:14px;background:#fff;border:1px solid rgba(12,11,10,0.12);font-size:13px;font-weight:600;color:var(--text)">Creatives</div>
+        <span style="color:var(--accent);font-weight:700">&rarr;</span>
+        <div style="flex:1;text-align:center;padding:16px 12px;border-radius:14px;background:#fff;border:1px solid rgba(12,11,10,0.12);font-size:13px;font-weight:600;color:var(--text)">Campaign</div>
+        <span style="color:var(--accent);font-weight:700">&rarr;</span>
+        <div style="flex:1;text-align:center;padding:16px 12px;border-radius:14px;background:#fff;border:1px solid rgba(12,11,10,0.12);font-size:13px;font-weight:600;color:var(--text)">Testing</div>
+      </div>
+    </div>
+
+    <button type="button" onclick="document.getElementById('journeyOverlay').classList.add('open')" style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer">Click to view the full mapping <span aria-hidden="true">&rarr;</span></button>
+  </section>
+
+  <!-- ── FULL-SCREEN JOURNEY OVERLAY ── -->
+  <style>
+    #journeyOverlay.open{display:flex !important}
+    #journeyOverlay .zoom-btn{width:44px;height:44px;border-radius:999px;border:none;background:rgba(255,255,255,0.14);color:#fff;font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    #journeyOverlay .zoom-btn:hover{background:rgba(255,255,255,0.24)}
+    #journeyImg{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;transition:transform .12s ease;cursor:grab;user-select:none;-webkit-user-drag:none}
+    #journeyImg.grabbing{cursor:grabbing;transition:none}
+  </style>
+  <div id="journeyOverlay" style="position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(12,11,10,0.88);padding:40px;overflow:hidden">
+    <button type="button" onclick="document.getElementById('journeyOverlay').classList.remove('open')" aria-label="Close" style="position:absolute;top:24px;right:28px;width:44px;height:44px;border-radius:999px;border:none;background:rgba(255,255,255,0.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;z-index:2">&times;</button>
+    <div style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:8px;border-radius:999px;background:rgba(255,255,255,0.10);z-index:2">
+      <button type="button" class="zoom-btn" id="journeyZoomOut" aria-label="Zoom out">&minus;</button>
+      <span id="journeyZoomLabel" style="min-width:52px;text-align:center;color:#fff;font-size:13px;font-weight:600">100%</span>
+      <button type="button" class="zoom-btn" id="journeyZoomIn" aria-label="Zoom in">+</button>
+    </div>
+    <img id="journeyImg" src="images and videos/User journey.svg" alt="Full user journey mapping">
+  </div>
+  <script>
+    (function () {
+      const ov = document.getElementById('journeyOverlay');
+      const img = document.getElementById('journeyImg');
+      const label = document.getElementById('journeyZoomLabel');
+      let scale = 1, tx = 0, ty = 0;
+      const MIN = 1, MAX = 6;
+      const apply = () => {
+        img.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
+        label.textContent = Math.round(scale * 100) + '%';
+      };
+      const reset = () => { scale = 1; tx = 0; ty = 0; apply(); };
+      const zoom = (f) => { scale = Math.min(MAX, Math.max(MIN, scale * f)); if (scale === 1) { tx = 0; ty = 0; } apply(); };
+      document.getElementById('journeyZoomIn').addEventListener('click', () => zoom(1.3));
+      document.getElementById('journeyZoomOut').addEventListener('click', () => zoom(1 / 1.3));
+      img.addEventListener('wheel', (e) => { e.preventDefault(); zoom(e.deltaY < 0 ? 1.12 : 1 / 1.12); }, { passive: false });
+      img.addEventListener('dblclick', () => { scale > 1 ? reset() : zoom(2); });
+      ov.addEventListener('click', (e) => { if (e.target === ov) { ov.classList.remove('open'); reset(); } });
+      let drag = false, sx = 0, sy = 0;
+      img.addEventListener('pointerdown', (e) => { if (scale <= 1) return; drag = true; sx = e.clientX - tx; sy = e.clientY - ty; img.classList.add('grabbing'); img.setPointerCapture(e.pointerId); });
+      img.addEventListener('pointermove', (e) => { if (!drag) return; tx = e.clientX - sx; ty = e.clientY - sy; apply(); });
+      img.addEventListener('pointerup', () => { drag = false; img.classList.remove('grabbing'); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') reset(); });
+    })();
+  </script>
+
+
+  <!-- ──────────────────────────────────────
+       08 · UX STRATEGY
+  ─────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-num-label">UX Strategy</span>
+    <h2 class="section-title-large">A platform, not just a generator</h2>
+    <p class="section-body" style="margin-top:28px">
+      I approached the system as a holistic platform, not just a creative generator. Three principles guided every decision:
+    </p>
+
+    <div class="intro-trio" style="margin-top:32px">
+      <div class="intro-card">
+        <h3>Unify <span class="arrow">→</span></h3>
+        <p>Bring all tools into one system, replacing six disconnected steps with a single continuous flow.</p>
+      </div>
+      <div class="intro-card">
+        <h3>Automate <span class="arrow">→</span></h3>
+        <p>Automate everything possible &ndash; data handling, layout, and asset generation &ndash; to remove manual work.</p>
+      </div>
+      <div class="intro-card">
+        <h3>Review <span class="arrow">→</span></h3>
+        <p>Keep human review where it matters, protecting quality on high-sensitivity decisions.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────
+       09 · SOLUTION
+  ─────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-num-label">Solution</span>
+    <h2 class="section-title-large">One task list that drives the whole flow</h2>
+    <p class="section-body" style="margin-top:28px">
+      The system is built around a task &amp; content list &ndash; the starting point of the daily workflow. Each task includes article (landing page) generation and creative generation. The system pulls all relevant data directly from each task, enabling a seamless flow from idea to live campaign.
+    </p>
+
+    <div class="media-slot" style="margin-top:32px;background:none;box-shadow:none">
+      <img src="images and videos/task row undone.svg" alt="CopyCat task list — single source of truth">
+    </div>
+    <p class="media-caption">The task list &ndash; a single source of truth that triggers article &amp; creative generation</p>
+
+    <h4 class="subsection-h4" style="margin-top:44px">Key decisions</h4>
+    <div class="bullet-list" style="margin-top:12px">
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text"><strong>Single source of truth:</strong> one list drives the entire process.</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text"><strong>End-to-end flow:</strong> from content &rarr; creatives &rarr; campaign &rarr; testing.</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text"><strong>Step-based creation flow:</strong> reduces errors, ensures completeness, and enables structured automation.</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text"><strong>Built-in review points:</strong> maintains quality without slowing down scale.</div>
+      </div>
+    </div>
+
+    <!-- ── STEP-BASED FLOW VISUAL ── -->
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px">
+      <div style="flex:1;min-width:150px;padding:22px 20px;border-radius:18px;border:1px solid rgba(12,11,10,0.12);background:#F5F3F0">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px">Step 1</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text)">Generate article</div>
+        <p style="font-size:13px;line-height:1.5;color:var(--text);opacity:0.7;margin:6px 0 0">Title syncs, AI pre-populates copy &amp; banner.</p>
+      </div>
+      <div style="flex:1;min-width:150px;padding:22px 20px;border-radius:18px;border:1px solid rgba(12,11,10,0.12);background:#F5F3F0">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px">Step 2</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text)">Generate creatives</div>
+        <p style="font-size:13px;line-height:1.5;color:var(--text);opacity:0.7;margin:6px 0 0">PID &amp; metadata auto-passed into the pipeline.</p>
+      </div>
+      <div style="flex:1;min-width:150px;padding:22px 20px;border-radius:18px;border:1px solid rgba(12,11,10,0.12);background:#F5F3F0">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px">Step 3</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text)">Review &amp; approve</div>
+        <p style="font-size:13px;line-height:1.5;color:var(--text);opacity:0.7;margin:6px 0 0">Human sign-off; task row turns green when done.</p>
+      </div>
+    </div>
+
+    <div class="media-slot" style="margin-top:32px;background:none;box-shadow:none">
+      <img src="images and videos/creative creation flow.svg" alt="Step-based creative creation flow">
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────
+       10 · IMPACT
+  ─────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-num-label">Impact</span>
+    <h2 class="section-title-large">The Impact</h2>
+    <p class="section-body" style="margin-top:28px">
+      Even at this stage, the system significantly improved efficiency and scale:
+    </p>
+
+    <div class="results-grid">
+      <div class="result-stat">
+        <div class="result-num">75%</div>
+        <div class="result-label">reduction in content production time.</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-num">6 &rarr; 1</div>
+        <div class="result-label">tools consolidated into a single platform.</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-num">&ndash;36</div>
+        <div class="result-label">manual clicks eliminated through automation (PID &amp; metadata handling).</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────
+       11 · WHAT'S NEXT?
+  ─────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-num-label">Next steps</span>
+    <h2 class="section-title-large">What's Next?</h2>
+    <p class="section-body" style="margin-top:28px">
+      This is an early stage of a broader vision. Future iterations expand CopyCat from a production tool into a full operating system for acquisition:
+    </p>
+
+    <div class="bullet-list" style="margin-top:8px">
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text">BI and performance data integration.</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text">Direct campaign publishing to Meta.</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-marker"></div>
+        <div class="bullet-text">Expanding into a full operating system for acquisition.</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────
+       PROJECT NAV
+  ─────────────────────────────────────────── -->
+  <div class="project-nav">
+    <a href="cs2-funnel.html" class="project-nav-card prev">
+      <div class="nav-direction">← Previous</div>
+      <div class="nav-project-name">Data-Driven UX Funnel</div>
+      <div class="nav-project-cat">UX Design · A/B Testing · eCommerce</div>
+    </a>
+    <a href="index.html" class="project-nav-card next">
+      <div class="nav-direction">Next →</div>
+      <div class="nav-project-name">Back to Home</div>
+      <div class="nav-project-cat">All Case Studies</div>
+    </a>
+  </div>
+
+</div>
+
+
+<!-- ──────────────────────────────────────
+     GLASS NAV
+─────────────────────────────────────────── -->
+<nav class="glass-nav">
+  <a href="index.html" class="nav-link">Home</a>
+  <a href="index.html#work" class="nav-link active">Work</a>
+  <a href="about.html" class="nav-link">About</a>
+  <a href="https://drive.google.com/file/d/1uRP53tAgmmI5lmz5DV1OdcEo4znaL47q/view" target="_blank" rel="noopener" class="nav-link">Resume</a>
+  <div class="nav-divider"></div>
+  <div class="nav-contact-wrap">
+    <button class="nav-cta" id="contactBtn" aria-haspopup="true" aria-expanded="false">Contact +</button>
+    <div class="contact-menu" id="contactMenu" role="menu" aria-hidden="true">
+      <a class="contact-item" href="https://www.linkedin.com/in/adi-mizrahi/" target="_blank" rel="noopener" role="menuitem">LinkedIn</a>
+      <button class="contact-item" type="button" role="menuitem" data-copy="adimizrahi66@gmail.com">Email<span class="contact-hint">adimizrahi66@gmail.com</span></button>
+      <button class="contact-item" type="button" role="menuitem" data-copy="+972 544304626">Phone<span class="contact-hint">+972 54-430-4626</span></button>
+    </div>
+  </div>
+</nav>
+<script>
+  (function () {
+    const btn = document.getElementById('contactBtn');
+    const menu = document.getElementById('contactMenu');
+    if (!btn || !menu) return;
+    const close = () => {
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('aria-hidden', 'true');
+    };
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = menu.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+      menu.setAttribute('aria-hidden', String(!open));
+    });
+    menu.querySelectorAll('[data-copy]').forEach((el) => {
+      el.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const val = el.getAttribute('data-copy');
+        try { await navigator.clipboard.writeText(val); }
+        catch (err) {
+          const t = document.createElement('textarea');
+          t.value = val; document.body.appendChild(t); t.select();
+          document.execCommand('copy'); document.body.removeChild(t);
+        }
+        el.classList.add('copied');
+        setTimeout(() => el.classList.remove('copied'), 1400);
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target) && e.target !== btn) close();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { close(); document.getElementById('journeyOverlay').classList.remove('open'); } });
+    window.addEventListener('scroll', () => { if (menu.classList.contains('open')) close(); }, { passive: true });
+  })();
+</script>
+
+</body>
+</html>

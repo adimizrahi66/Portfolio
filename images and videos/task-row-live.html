@@ -1,0 +1,88 @@
+<!-- ── CopyCat &middot; Live Task Row (drop-in, self-contained, scoped .ccr-) ── -->
+<div class="ccr">
+  <div class="ccr-scroll">
+    <table class="ccr-tbl">
+      <thead>
+        <tr>
+          <th class="ccr-s1 ccr-c-name">NAME</th>
+          <th class="ccr-s2 ccr-c-page">PAGE TITLE</th>
+          <th>STOREFRONT LINK</th>
+          <th>PID</th>
+          <th>CREATIVES READY?</th>
+          <th>OLD ARTICLE PID</th>
+          <th>CREATIVE ID</th>
+          <th>ASSIGNEE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="ccr-grouprow">
+          <td class="ccr-s1">
+            <span class="ccr-gtag"><span class="ccr-bar"></span>Incoming / Backlog<span class="ccr-cnt">&middot; 10</span></span>
+          </td>
+          <td colspan="7"></td>
+        </tr>
+        <tr>
+          <td class="ccr-s1 ccr-c-name">
+            <div class="ccr-task-name">
+              <input type="checkbox" class="ccr-check" onchange="this.closest('tr').classList.toggle('ccr-row-done',this.checked)">
+              <span class="ccr-t">New Article Task<small>PID &mdash;</small></span>
+            </div>
+          </td>
+          <td class="ccr-s2 ccr-c-page" style="font-weight:600"><span class="ccr-page-cell" title="Keep Your Car 30% Cooler This Summer">Keep Your Car 30% &hellip;</span></td>
+          <td><a class="ccr-link" href="#" onclick="return false">https://www.amazon.c&hellip;</a></td>
+          <td class="ccr-muted">&mdash;</td>
+          <td class="ccr-muted">&mdash;</td>
+          <td class="ccr-muted">&mdash;</td>
+          <td class="ccr-muted">&mdash;</td>
+          <td class="ccr-muted">&mdash;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+.ccr{
+  --primary:#5C67F2; --bg:#F4F5FA; --surface:#FFFFFF; --border:#E7E7EF; --border-soft:#F0F1F6;
+  --text:#1C1B2E; --muted:#8A8FA3; --soft:#B6B9C9; --done-bg:#F1FBF7;
+  font-family:'Inter',system-ui,sans-serif; color:var(--text); font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; background:var(--surface);
+  border:1px solid var(--border); border-radius:14px; overflow:hidden;
+  box-shadow:0 1px 3px rgba(28,27,46,.06),0 1px 2px rgba(28,27,46,.04);
+}
+.ccr *{box-sizing:border-box;margin:0;padding:0}
+.ccr-scroll{overflow-x:auto}
+.ccr-tbl{border-collapse:separate;border-spacing:0;width:100%;min-width:1100px;background:var(--surface)}
+.ccr-tbl thead th{
+  position:sticky;top:0;background:var(--bg);text-align:left;font-size:11px;font-weight:700;
+  color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:11px 20px;
+  border-bottom:1px solid var(--border);white-space:nowrap;z-index:5
+}
+.ccr-tbl td{padding:14px 20px;border-bottom:1px solid var(--border-soft);white-space:nowrap;vertical-align:middle}
+.ccr-c-name{width:200px;min-width:200px}
+.ccr-c-page{width:180px;min-width:140px;max-width:180px}
+.ccr-page-cell{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.ccr-tbl th.ccr-s1,.ccr-tbl td.ccr-s1{position:sticky;left:0;z-index:6;background:var(--surface)}
+.ccr-tbl th.ccr-s2,.ccr-tbl td.ccr-s2{position:sticky;left:200px;z-index:6;padding-left:12px;background:var(--surface)}
+.ccr-tbl thead th.ccr-s1,.ccr-tbl thead th.ccr-s2{z-index:8;background:var(--bg)}
+.ccr-task-name{display:flex;align-items:center;gap:11px}
+.ccr-t{font-weight:600}
+.ccr-t small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+.ccr-check{
+  appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.7px solid var(--soft);
+  border-radius:6px;cursor:pointer;flex-shrink:0;position:relative;transition:.12s
+}
+.ccr-check:hover{border-color:var(--primary)}
+.ccr-check:checked{background:var(--primary);border-color:var(--primary)}
+.ccr-check:checked::after{content:"";position:absolute;left:5px;top:2px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.ccr-link{color:var(--primary);text-decoration:none}
+.ccr-link:hover{text-decoration:underline}
+.ccr-muted{color:var(--muted)}
+.ccr-grouprow td{background:var(--bg);font-weight:700;font-size:12.5px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ccr-grouprow td.ccr-s1{background:var(--bg)}
+.ccr-gtag{display:inline-flex;align-items:center;gap:8px}
+.ccr-bar{width:4px;height:15px;border-radius:3px;background:#5C67F2}
+.ccr-cnt{color:var(--muted);font-weight:500;margin-left:4px}
+.ccr-row-done td{background:var(--done-bg)}
+.ccr-row-done td.ccr-s1,.ccr-row-done td.ccr-s2{background:var(--done-bg)}
+</style>

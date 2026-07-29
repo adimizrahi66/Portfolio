@@ -731,3 +731,17 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Applied to all CS pages (cs2-funnel, copycat-v2, copycat, unit-ep, seller-platform)
 - Hides when scrolling down past 120px, reappears on scroll-up
 - Slides up on desktop, down on mobile (bottom-positioned); 0.35s transition, `.nav-hidden` class toggled via scroll listener
+
+## Homepage — Hero + CS Card Adjustments (2026-07-29)
+- Hero: replaced white bubble card with plain centered Fraunces serif text; "Hey I'm Adi" bold (`.lead`), rest regular; locked to two rows (`white-space:nowrap`), scaled to `clamp(22px,2.6vw,36px)`
+- Added Fraunces font (Google Fonts) alongside Poppins
+- Each floating vector now has a small circle "+" badge (`.plus`, top-left) hinting at hover state; rotates 90° + fills blue on hover — motion/chip behavior unchanged
+- Float positions retuned to match reference: bouquet 29%/24%, dashboard 79%/26%, phone 19%/62%, backpack 74%/78%
+- "View my work" button moved inside bubble, directly below text (40px gap), centered — no longer absolute-positioned
+- Nav bar moved down: `top` 24px → 40px
+- CS cards: title font → Fraunces; text↔image gap = 64px; card centered (`max-width:1040px; margin:0 auto`)
+- CS card media: removed dark placement background, glow, inset border, hover overlay, padding — SVG sits on page bg transparent
+- Card-to-card spacing (`.work-grid` gap) → 194px
+- Data-Driven image scaled up (`transform:scale(1.55)`, padding 0) since it's a tall phone mockup
+- Seller Platform title now one line; body copy → "Automating workflows and removing friction enabled a single-action seller migration, driving majority adoption in one week and boosting high-value upgrades."
+- Data-Driven body copy → "Introducing filter chips and mobile-optimized layouts reduced choice paralysis, boosting user engagement and high-volume conversions."

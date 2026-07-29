@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adi Mizrahi — Product Designer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
   <style>
     /* ─────────────────────────────────────────
        TOKENS
@@ -80,27 +80,19 @@
       left: 50%; top: 50%;
       transform: translate(-50%, -50%);
       z-index: 20;
-      width: min(40vw, 400px);
-      background: #FFFFFF;
-      border-radius: 40px;
-      padding: 40px 44px 44px;
+      width: min(72vw, 760px);
       text-align: center;
-      box-shadow: 0 34px 64px -26px rgba(24,20,34,0.30), 0 10px 26px -14px rgba(24,20,34,0.16);
-    }
-    .hero-bubble h1 {
-      font-size: clamp(30px, 3.4vw, 46px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.0;
-      color: #101010;
-      margin-bottom: 16px;
     }
     .hero-bubble p {
-      font-size: clamp(16px, 1.55vw, 23px);
-      font-weight: 500;
-      line-height: 1.3;
-      color: #1D1D1D;
+      font-family: 'Fraunces', serif;
+      font-size: clamp(22px, 2.6vw, 36px);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.14;
+      color: #1A1A1A;
+      white-space: nowrap;
     }
+    .hero-bubble p .lead { font-weight: 700; }
 
     /* ── FLOATING VECTOR ELEMENTS ── */
     .float {
@@ -124,10 +116,33 @@
     .float:hover .fimg-wrap { transform: translateY(-10px) scale(1.06); }
     .float:hover img { filter: drop-shadow(0 34px 46px rgba(24,20,34,0.26)); }
 
-    .f-bouquet   { left: 36%; top: 31%; --w: 190px; --delay: -1.2s; --bob: 8s; }
-    .f-dashboard { left: 67%; top: 31%; --w: 240px; --delay: -3.0s; --bob: 9s; }
-    .f-phone     { left: 33%; top: 69%; --w: 282px; --delay: -2.1s; --bob: 7.5s; }
-    .f-backpack  { left: 64%; top: 69%; --w: 150px; --delay: -4.0s; --bob: 8.5s; }
+    /* ── PLUS BADGE (hover hint) ── */
+    .float .plus {
+      position: absolute;
+      top: -14px;
+      left: -14px;
+      z-index: 12;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      color: #3B6FF6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1;
+      pointer-events: none;
+      box-shadow: 0 6px 16px -6px rgba(24,20,34,0.3);
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), background 0.3s ease, color 0.3s ease;
+    }
+    .float:hover .plus { transform: rotate(90deg); background: #3B6FF6; color: #FFFFFF; }
+
+    .f-bouquet   { left: 29%; top: 24%; --w: 190px; --delay: -1.2s; --bob: 8s; }
+    .f-dashboard { left: 79%; top: 26%; --w: 240px; --delay: -3.0s; --bob: 9s; }
+    .f-phone     { left: 19%; top: 62%; --w: 282px; --delay: -2.1s; --bob: 7.5s; }
+    .f-backpack  { left: 74%; top: 78%; --w: 150px; --delay: -4.0s; --bob: 8.5s; }
 
     @keyframes floatBob {
       0%, 100% { translate: 0 0; }
@@ -1205,24 +1220,28 @@
 
       <!-- Flowers -->
       <div class="float f-bouquet">
+        <span class="plus">+</span>
         <div class="fimg-wrap"><img src="images and videos/flowe bouquet.svg" alt="Flower bouquet"></div>
         <span class="chip">Did you know? I started my design journey with flowers.</span>
       </div>
 
       <!-- Dashboard -->
       <div class="float f-dashboard">
+        <span class="plus">+</span>
         <div class="fimg-wrap"><img src="budget_dashboard 1.svg" alt="Profit dashboard"></div>
         <span class="chip">I'm a data-driven designer focused on impact.</span>
       </div>
 
       <!-- Phone card -->
       <div class="float f-phone">
+        <span class="plus">+</span>
         <div class="fimg-wrap"><img src="phone card.svg" alt="Smartphone rating card"></div>
         <span class="chip">E-commerce is my playground - designing for conversion.</span>
       </div>
 
       <!-- Backpack (opens video) -->
       <div class="float f-backpack" id="backpackTrigger" role="button" tabindex="0" aria-label="Play industrial design project video">
+        <span class="plus">+</span>
         <div class="fimg-wrap"><img src="images and videos/backpack.svg" alt="Backpack design"></div>
         <span class="chip">Bag design is my thing - tap to check out my final industrial design project ✨</span>
         <span class="backpack-tap">Tap to play ▸</span>
@@ -1230,8 +1249,7 @@
 
       <!-- Central bubble -->
       <div class="hero-bubble">
-        <h1>Hey, I'm Adi</h1>
-        <p>I'm a product designer<br>Problem solver,<br>Passionate creator.</p>
+        <p><span class="lead">Hey I'm Adi</span>, a product designer,<br>Problem solver, Passionate creator</p>
       </div>
 
       <span class="hero-sparkle">✦</span>

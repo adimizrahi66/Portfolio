@@ -65,7 +65,11 @@
     ───────────────────────────────────────── */
     .hero {
       position: relative;
-      background: var(--dark);
+      background:
+        radial-gradient(120% 130% at 12% 18%, #FBD9E4 0%, rgba(251,217,228,0) 50%),
+        radial-gradient(120% 130% at 90% 88%, #D5D3F8 0%, rgba(213,211,248,0) 52%),
+        radial-gradient(120% 130% at 78% 8%, #C7EBD6 0%, rgba(199,235,214,0) 48%),
+        #F1EFEA;
       border-radius: var(--radius-hero);
       overflow: hidden;
       min-height: calc(100vh - var(--pad) * 2 - 80px);
@@ -98,8 +102,8 @@
       min-height: 380px;
       border-radius: 28px;
       overflow: hidden;
-      background: rgba(245,243,239,0.05);
-      border: 1px solid rgba(245,243,239,0.1);
+      background: var(--dark);
+      border: 1px solid rgba(12,11,10,0.08);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -125,7 +129,7 @@
       font-weight: 600;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: rgba(245,243,239,0.55);
+      color: var(--text-soft);
     }
     .hero-brand .logo-dot {
       width: 18px; height: 18px;
@@ -138,18 +142,18 @@
       gap: 8px;
       font-size: 13px;
       font-weight: 600;
-      color: rgba(245,243,239,0.5);
+      color: var(--text-soft);
       text-decoration: none;
       transition: color 0.18s ease;
     }
-    .hero-back:hover { color: var(--hero-bg); }
+    .hero-back:hover { color: var(--text); }
     .hero-back svg { width: 16px; height: 16px; }
     .hero-meta-top { text-align: right; }
     .hero-meta-top .label { margin-bottom: 4px; }
     .hero-year {
       font-size: 13px;
       font-weight: 400;
-      color: rgba(245,243,239,0.35);
+      color: var(--text-subtle);
     }
 
     .hero-category {
@@ -164,17 +168,17 @@
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 0.98;
-      color: var(--hero-bg);
+      color: var(--text);
     }
     .hero-title .outline {
       display: block;
-      -webkit-text-stroke: 2px rgba(245,243,239,0.5);
+      -webkit-text-stroke: 2px rgba(12,11,10,0.32);
       color: transparent;
     }
     .hero-tagline {
       font-size: clamp(16px, 1.3vw, 19px);
       font-weight: 400;
-      color: rgba(245,243,239,0.75);
+      color: var(--text-muted);
       line-height: 1.65;
       max-width: 520px;
     }
@@ -186,8 +190,8 @@
       text-transform: uppercase;
       padding: 8px 16px;
       border-radius: var(--radius-pill);
-      border: 1px solid rgba(245,243,239,0.22);
-      color: rgba(245,243,239,0.78);
+      border: 1px solid rgba(12,11,10,0.18);
+      color: var(--text-muted);
     }
 
     /* ─────────────────────────────────────────

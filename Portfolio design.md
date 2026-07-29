@@ -745,3 +745,14 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Data-Driven image scaled up (`transform:scale(1.55)`, padding 0) since it's a tall phone mockup
 - Seller Platform title now one line; body copy → "Automating workflows and removing friction enabled a single-action seller migration, driving majority adoption in one week and boosting high-value upgrades."
 - Data-Driven body copy → "Introducing filter chips and mobile-optimized layouts reduced choice paralysis, boosting user engagement and high-volume conversions."
+
+## CS Hero — Brightened to Match Homepage (2026-07-29)
+- Diagnosed gaps vs homepage hero: flat `#0C0B0A` bg, pink `#FF628D` accent, light-on-dark text, no Fraunces, no soft shadow/inset hairline, `-webkit-text-stroke` outline only readable on dark
+- Reviewed 3 directions (A = full homepage 4-radial gradient, B = cream + one glow, C = bright card + dark visual panel)
+- Chose **C** + accent swap; applied to `seller-platform.html` as the reference implementation
+- `.hero` background → 3 pastel radials (`#FBD9E4` 12%/18%, `#D5D3F8` 90%/88%, `#C7EBD6` 78%/8%) over `#F1EFEA`
+- `.hero-visual` stays `var(--dark)` for screenshot contrast; border → `rgba(12,11,10,0.08)`
+- `--accent` → `#C4986A` (homepage warm gold, replacing `#FF628D`)
+- Text switched to dark tokens: `.hero-brand`/`.hero-back` → `--text-soft`, `.hero-year` → `--text-subtle`, `.hero-title` → `--text`, `.hero-tagline` → `--text-muted`
+- `.hero-title .outline` stroke → `rgba(12,11,10,0.32)`; `.hero-pill` border → `rgba(12,11,10,0.18)`, text → `--text-muted`
+- Pending: apply same treatment to `cs2-funnel.html`, `copycat.html`, `copycat-v2.html`, `unit-ep.html`

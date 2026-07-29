@@ -200,12 +200,9 @@
 
     /* ── VIEW MY WORK BUTTON ── */
     .hero-view-work {
-      position: absolute;
-      left: 50%;
-      bottom: 24px;
-      transform: translateX(-50%);
-      z-index: 30;
       display: inline-block;
+      margin-top: 40px;
+      z-index: 30;
       background: #101010;
       color: #FFFFFF;
       font-size: 15px;
@@ -217,7 +214,7 @@
       box-shadow: 0 16px 30px -12px rgba(24,20,34,0.4);
       transition: opacity 0.25s ease, transform 0.25s ease;
     }
-    .hero-view-work:hover { opacity: 0.88; transform: translateX(-50%) translateY(-2px); }
+    .hero-view-work:hover { opacity: 0.88; transform: translateY(-2px); }
 
     /* ── SPARKLE ── */
     .hero-sparkle {
@@ -610,7 +607,7 @@
     ───────────────────────────────────────── */
     .nav-bar {
       position: fixed;
-      top: 24px;
+      top: 40px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 200;
@@ -817,15 +814,19 @@
     .work-grid {
       display: flex;
       flex-direction: column;
-      gap: 72px;
+      gap: 194px;
     }
 
     /* ── Individual Card (text left · image right) ── */
     .work-card {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 56px;
+      gap: 64px;
       align-items: center;
+      justify-content: center;
+      max-width: 1040px;
+      margin: 0 auto;
+      width: 100%;
       text-decoration: none;
       color: inherit;
       cursor: pointer;
@@ -878,6 +879,7 @@
     }
 
     .card-title {
+      font-family: 'Fraunces', serif;
       font-size: 44px;
       font-weight: 600;
       letter-spacing: -0.03em;
@@ -939,47 +941,11 @@
     /* ── Right: image media ── */
     .card-media {
       position: relative;
-      border-radius: 36px;
-      overflow: hidden;
-      background: #2E2E2E;
+      background: transparent;
       aspect-ratio: 16 / 10;
     }
 
-    .card-media::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      background: url("images and videos/hover.svg") center / cover no-repeat;
-      opacity: 0;
-      transition: opacity 0.45s ease;
-      pointer-events: none;
-    }
-
-    .work-card:not(.is-soon):hover .card-media::before { opacity: 1; }
-
-    .card-media::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 36px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-      pointer-events: none;
-      z-index: 4;
-    }
-
-    .card-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 520px;
-      height: 520px;
-      transform: translate(-50%, -50%);
-      background: radial-gradient(circle, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 70%);
-      filter: blur(44px);
-      z-index: 0;
-      pointer-events: none;
-    }
+    .card-glow { display: none; }
 
     .card-img {
       position: absolute;
@@ -987,12 +953,12 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      padding: 72px;
+      padding: 0;
       z-index: 1;
       transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .card-img--lg { padding: 40px; }
+    .card-img--lg { padding: 0; }
 
     .work-card:not(.is-soon):hover .card-img { transform: scale(1.04); }
 
@@ -1056,7 +1022,7 @@
       .float.chip-open .chip { opacity: 1; translate: 0 0; }
 
       .hero-view-work {
-        bottom: 82px;
+        margin-top: 22px;
         font-size: 14px;
         padding: 13px 24px;
       }
@@ -1250,11 +1216,10 @@
       <!-- Central bubble -->
       <div class="hero-bubble">
         <p><span class="lead">Hey I'm Adi</span>, a product designer,<br>Problem solver, Passionate creator</p>
+        <a href="#work" class="hero-view-work">View my work</a>
       </div>
 
       <span class="hero-sparkle">✦</span>
-
-      <a href="#work" class="hero-view-work">View my work</a>
 
     </div>
   </section>
@@ -1283,8 +1248,8 @@
       <div class="card-text">
         <div class="card-labels"><span>SaaS</span><span>B2B</span></div>
         <span class="card-company"><img src="images and videos/black logo roundforest.svg" alt="Roundforest" style="height:14px;width:auto;display:block"></span>
-        <h3 class="card-title">Seller <br>Platform</h3>
-        <p class="card-description">Streamlining the interface to allow account syncing with a single ID and using contextual sidebar tooltips minimized user friction. This UX optimization successfully drove a 60% migration rate within the first week and motivated 5% of sellers to select higher commission tiers.</p>
+        <h3 class="card-title">Seller Platform</h3>
+        <p class="card-description">Automating workflows and removing friction enabled a single-action seller migration, driving majority adoption in one week and boosting high-value upgrades.</p>
         <span class="card-cta">Open case study <span class="arrow">↗</span></span>
       </div>
       <div class="card-media">
@@ -1299,12 +1264,12 @@
         <div class="card-labels"><span>Web</span><span>Mobile</span><span>B2C</span></div>
         <span class="card-company"><img src="images and videos/black logo roundforest.svg" alt="Roundforest" style="height:14px;width:auto;display:block"></span>
         <h3 class="card-title">Data Driven <br>UX Funnel</h3>
-        <p class="card-description">This case study shows how introducing filter chips and mobile-optimized layouts reduced choice paralysis, successfully boosting user engagement and high-volume conversions.</p>
+        <p class="card-description">Introducing filter chips and mobile-optimized layouts reduced choice paralysis, boosting user engagement and high-volume conversions.</p>
         <span class="card-cta">Open case study <span class="arrow">↗</span></span>
       </div>
       <div class="card-media">
         <div class="card-glow"></div>
-        <img class="card-img" src="images and videos/CS data driven homepage.svg" alt="Data Driven UX Funnel" style="object-fit:contain;padding:32px">
+        <img class="card-img" src="images and videos/CS data driven homepage.svg" alt="Data Driven UX Funnel" style="object-fit:contain;padding:0;transform:scale(1.55)">
       </div>
     </a>
 

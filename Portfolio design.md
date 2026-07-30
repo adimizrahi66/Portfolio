@@ -756,3 +756,14 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Text switched to dark tokens: `.hero-brand`/`.hero-back` → `--text-soft`, `.hero-year` → `--text-subtle`, `.hero-title` → `--text`, `.hero-tagline` → `--text-muted`
 - `.hero-title .outline` stroke → `rgba(12,11,10,0.32)`; `.hero-pill` border → `rgba(12,11,10,0.18)`, text → `--text-muted`
 - Pending: apply same treatment to `cs2-funnel.html`, `copycat.html`, `copycat-v2.html`, `unit-ep.html`
+
+## Mobile Version — Homepage + About (2026-07-30)
+- Mobile banner: leaner (padding 12/14px, gap 16px), left-aligned; icon span was inheriting `flex:1` from `span` rule (huge gap bug) → fixed with `flex:0 0 auto`; copy trimmed to "Best experienced on desktop."
+- Hero floats moved toward screen edges, then nudged down to center within section; final: bouquet 17%/20%, dashboard 82%/19%, phone 18%/80%, backpack 83%/81%
+- Left-side vectors (bouquet, phone): "+" badge moved to top-right corner
+- Hero title scaled up (`clamp(20px,6vw,26px)`, `white-space:normal` to wrap); "View my work" button scaled down (13px, 11/20px pad), top gap → 34px
+- Hero height reduced to `88svh` to trim empty bottom space
+- CS cards: removed stroke, bg → `#DDD5D1`, radius kept
+- Data-Driven card image overflowed card + covered tags → `.card-media{overflow:hidden}` + reset inline `scale(1.55)` to `none`, padding 24px
+- Nav (both pages): Contact + Resume hidden on mobile; Resume added as ghost button in About hero actions (`.btn-resume-mobile`)
+- Nav mobile: width = CS card width (`100vw - (pad+20)*2`), links `justify-content:space-around`, font 17px, min-height 48px

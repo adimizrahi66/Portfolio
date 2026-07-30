@@ -139,6 +139,10 @@
     }
     .float:hover .plus { transform: rotate(90deg); background: #3B6FF6; color: #FFFFFF; }
 
+    /* Left-side vectors: plus on top-right corner */
+    .f-bouquet .plus,
+    .f-phone .plus { left: auto; right: -14px; }
+
     .f-bouquet   { left: 29%; top: 24%; --w: 190px; --delay: -1.2s; --bob: 8s; }
     .f-dashboard { left: 79%; top: 26%; --w: 240px; --delay: -3.0s; --bob: 9s; }
     .f-phone     { left: 19%; top: 62%; --w: 282px; --delay: -2.1s; --bob: 7.5s; }
@@ -316,8 +320,10 @@
         z-index: 300;
         display: flex;
         align-items: center;
-        gap: 14px;
-        padding: 16px 18px;
+        justify-content: flex-start;
+        text-align: left;
+        gap: 16px;
+        padding: 12px 14px;
         background: #2E2B28;
         color: #F5F3EF;
         border-radius: 22px;
@@ -338,10 +344,10 @@
       .mobile-banner.hidden { display: none; }
       .mobile-banner .mb-icon {
         font-size: 22px;
-        flex-shrink: 0;
+        flex: 0 0 auto;
         line-height: 1;
       }
-      .mobile-banner span { flex: 1; }
+      .mobile-banner span { flex: 1; text-align: left; }
       .mobile-banner button {
         appearance: none;
         border: none;
@@ -997,7 +1003,7 @@
       .page-wrapper { min-height: auto; }
 
       /* ── Mobile hero ── */
-      .hero { min-height: calc(100svh - var(--pad) * 2); }
+      .hero { min-height: calc(88svh - var(--pad) * 2); }
 
       .hero-bubble {
         width: min(84vw, 340px);
@@ -1006,12 +1012,12 @@
         top: 44%;
       }
       .hero-bubble h1 { font-size: clamp(28px, 8vw, 36px); margin-bottom: 12px; }
-      .hero-bubble p { font-size: clamp(15px, 4.4vw, 18px); }
+      .hero-bubble p { font-size: clamp(20px, 6vw, 26px); white-space: normal; }
 
-      .f-bouquet   { left: 24%; top: 25%; --w: 106px; }
-      .f-dashboard { left: 73%; top: 24%; --w: 158px; }
-      .f-phone     { left: 26%; top: 67%; --w: 166px; }
-      .f-backpack  { left: 74%; top: 67%; --w: 104px; }
+      .f-bouquet   { left: 17%; top: 16%; --w: 106px; }
+      .f-dashboard { left: 82%; top: 15%; --w: 158px; }
+      .f-phone     { left: 18%; top: 76%; --w: 166px; }
+      .f-backpack  { left: 83%; top: 77%; --w: 104px; }
 
       .backpack-tap { display: none; }
 
@@ -1022,9 +1028,9 @@
       .float.chip-open .chip { opacity: 1; translate: 0 0; }
 
       .hero-view-work {
-        margin-top: 22px;
-        font-size: 14px;
-        padding: 13px 24px;
+        margin-top: 34px;
+        font-size: 13px;
+        padding: 11px 20px;
       }
 
       .hero-sparkle { display: none; }
@@ -1060,6 +1066,10 @@
 
       .nav-links a { padding: 9px 10px; }
 
+      .nav-resume,
+      .nav-divider,
+      .nav-contact-wrap { display: none; }
+
       .work-section { padding: 0 calc(var(--pad) + 20px) calc(var(--pad) + 80px); }
 
       .work-grid { gap: 48px; }
@@ -1067,7 +1077,7 @@
       .work-card {
         grid-template-columns: 1fr;
         gap: 24px;
-        border: 1px solid #9B9590;
+        background: #DDD5D1;
         border-radius: 28px;
         padding: 20px;
       }
@@ -1076,9 +1086,10 @@
 
       .card-title br { display: none; }
 
-      .card-media { border-radius: 24px; }
+      .card-media { border-radius: 24px; overflow: hidden; }
 
       .card-img { padding: 40px; }
+      #card-cs2-funnel .card-img { transform: none !important; padding: 24px; }
 
       .work-title { font-size: 28px; }
 
@@ -1103,9 +1114,10 @@
         bottom: var(--pad);
         left: 50%;
         transform: translateX(-50%);
-        max-width: calc(100vw - var(--pad) * 2);
+        width: calc(100vw - (var(--pad) + 20px) * 2);
+        max-width: none;
         gap: 0;
-        padding: 5px;
+        padding: 6px;
       }
       .contact-menu {
         top: auto;
@@ -1113,12 +1125,18 @@
         transform: translateY(6px);
       }
       .contact-menu.open { transform: translateY(0); }
-      .nav-links { padding: 0 2px; }
+      .nav-links {
+        width: 100%;
+        justify-content: space-around;
+        padding: 0;
+        gap: 0;
+      }
       .nav-links a {
         display: inline-flex;
         align-items: center;
-        min-height: 44px;
-        padding: 9px 11px;
+        min-height: 48px;
+        padding: 10px 18px;
+        font-size: 17px;
       }
       .nav-cta { min-height: 44px; display: inline-flex; align-items: center; }
       .contact-item { min-height: 44px; }
@@ -1161,7 +1179,7 @@
 <!-- ─── MOBILE BANNER ─── -->
 <div class="mobile-banner" id="mobileBanner">
   <span class="mb-icon">🖥️</span>
-  <span>Best experienced on desktop - grab a bigger screen for the full experience.</span>
+  <span>Best experienced on desktop.</span>
   <button type="button" id="mobileBannerClose" aria-label="Dismiss">✕</button>
 </div>
 <script>
@@ -1330,7 +1348,7 @@
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="#work">Work</a></li>
     <li><a href="about.html">About</a></li>
-    <li><a href="https://drive.google.com/file/d/1uRP53tAgmmI5lmz5DV1OdcEo4znaL47q/view" target="_blank" rel="noopener">Resume</a></li>
+    <li class="nav-resume"><a href="https://drive.google.com/file/d/1uRP53tAgmmI5lmz5DV1OdcEo4znaL47q/view" target="_blank" rel="noopener">Resume</a></li>
   </ul>
   <div class="nav-divider"></div>
   <div class="nav-contact-wrap">

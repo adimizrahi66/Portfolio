@@ -65,18 +65,14 @@
     ───────────────────────────────────────── */
     .hero {
       position: relative;
-      background:
-        radial-gradient(120% 130% at 12% 18%, #FBD9E4 0%, rgba(251,217,228,0) 50%),
-        radial-gradient(120% 130% at 90% 88%, #D5D3F8 0%, rgba(213,211,248,0) 52%),
-        radial-gradient(120% 130% at 78% 8%, #C7EBD6 0%, rgba(199,235,214,0) 48%),
-        #F1EFEA;
+      background: #F1EFEA;
       border-radius: var(--radius-hero);
       overflow: hidden;
       min-height: calc(100vh - var(--pad) * 2 - 80px);
       display: flex;
       flex-direction: column;
-      padding: 40px 48px 48px;
-      gap: 28px;
+      justify-content: space-between;
+      padding: 48px 56px;
     }
     .hero-top {
       display: flex;
@@ -156,12 +152,20 @@
       color: var(--text-subtle);
     }
 
+    .hero-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 96px 0 80px;
+    }
     .hero-category {
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--accent);
+      margin-bottom: 28px;
     }
     .hero-title {
       font-size: clamp(44px, 5.4vw, 80px);
@@ -169,29 +173,49 @@
       letter-spacing: -0.03em;
       line-height: 0.98;
       color: var(--text);
+      margin-bottom: 32px;
     }
     .hero-title .outline {
       display: block;
-      -webkit-text-stroke: 2px rgba(12,11,10,0.32);
-      color: transparent;
     }
     .hero-tagline {
       font-size: clamp(16px, 1.3vw, 19px);
       font-weight: 400;
       color: var(--text-muted);
-      line-height: 1.65;
+      line-height: 1.5;
       max-width: 520px;
     }
-    .hero-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-    .hero-pill {
+    .hero-bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      border-top: 1px solid rgba(12,11,10,0.1);
+      padding-top: 24px;
+    }
+    .hero-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 56px;
+    }
+    .hero-meta-cell .label {
+      display: block;
       font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      padding: 8px 16px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(12,11,10,0.18);
-      color: var(--text-muted);
+      color: rgba(12,11,10,0.4);
+      margin-bottom: 6px;
+    }
+    .hero-meta-cell .value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .hero-meta-cell .sub {
+      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 400;
+      color: rgba(12,11,10,0.45);
     }
 
     /* ─────────────────────────────────────────
@@ -1116,46 +1140,36 @@
       </div>
     </div>
 
-    <div class="hero-body">
-      <div class="hero-text">
-        <div class="hero-category">Product Design · SaaS · Internal Platform</div>
-        <h1 class="hero-title">
-          CopyCat
-          <span class="outline">Internal Platform</span>
-        </h1>
-        <p class="hero-tagline">
-          An integrated content and ad-generation platform that unifies a fragmented marketing workflow into one streamlined ecosystem — cutting content production time by 75%.
-        </p>
-        <div class="hero-pills">
-          <div class="hero-pill">UX Design</div>
-          <div class="hero-pill">Flow Mapping</div>
-          <div class="hero-pill">AI Workflow</div>
+    <div class="hero-center">
+      <div class="hero-category">Product Design · SaaS · Internal Platform</div>
+      <h1 class="hero-title">
+        CopyCat
+        <span class="outline">Internal Platform</span>
+      </h1>
+      <p class="hero-tagline">
+        An integrated content and ad-generation platform that unifies a fragmented marketing workflow into one streamlined ecosystem — cutting content production time by 75%.
+      </p>
+    </div>
+
+    <div class="hero-bottom">
+      <div class="hero-meta-row">
+        <div class="hero-meta-cell">
+          <span class="label">My role</span>
+          <div class="value">Senior Product Designer</div>
+          <div class="sub">Research · UX · UI · Prototyping</div>
+        </div>
+        <div class="hero-meta-cell">
+          <span class="label">Team</span>
+          <div class="value">1 PM · 1 Engineer</div>
+          <div class="sub">Growth squad</div>
+        </div>
+        <div class="hero-meta-cell">
+          <span class="label">Duration</span>
+          <div class="value">1 month</div>
         </div>
       </div>
-
     </div>
   </section>
-
-
-  <!-- ──────────────────────────────────────
-       02 · META — Role · Team · Duration
-  ─────────────────────────────────────────── -->
-  <div class="meta-row">
-    <div class="meta-card">
-      <span class="label">My role</span>
-      <div class="meta-value">Senior Product Designer</div>
-      <div class="meta-sub">Research · UX · UI · Prototyping</div>
-    </div>
-    <div class="meta-card">
-      <span class="label">Team</span>
-      <div class="meta-value">1 PM · 1 Engineer</div>
-      <div class="meta-sub">Growth squad</div>
-    </div>
-    <div class="meta-card">
-      <span class="label">Duration</span>
-      <div class="meta-value">1 month</div>
-    </div>
-  </div>
 
 
   <!-- ──────────────────────────────────────

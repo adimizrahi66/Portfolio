@@ -17,7 +17,7 @@
       --text:        #0C0B0A;
       --text-muted:  #9A9590;
       --text-subtle: #C0BCB5;
-      --accent:         #001B66;
+      --accent:         #3E81EA;
       --accent-on-dark: #4F7FE3;
       --font:           'Poppins', sans-serif;
       --pad:         20px;
@@ -71,11 +71,7 @@
     ───────────────────────────────────────── */
     .hero {
       position: relative;
-      background:
-        radial-gradient(120% 130% at 12% 18%, #FBD9E4 0%, rgba(251,217,228,0) 50%),
-        radial-gradient(120% 130% at 90% 88%, #D5D3F8 0%, rgba(213,211,248,0) 52%),
-        radial-gradient(120% 130% at 78% 8%, #C7EBD6 0%, rgba(199,235,214,0) 48%),
-        #F1EFEA;
+      background: var(--hero-bg);
       border-radius: var(--radius-hero);
       overflow: hidden;
       min-height: calc(100vh - var(--pad) * 2 - 80px);
@@ -119,16 +115,16 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 64px 0 48px;
+      padding: 96px 0 80px;
     }
 
     .hero-category {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 20px;
+      margin-bottom: 28px;
     }
 
     .hero-title {
@@ -143,54 +139,48 @@
     .hero-title span {
       display: block;
       white-space: nowrap;
-      -webkit-text-stroke: 2px rgba(12,11,10,0.32);
-      color: transparent;
     }
 
     .hero-tagline {
-      font-size: clamp(15px, 1.4vw, 18px);
+      font-size: clamp(16px, 1.4vw, 19px);
       font-weight: 400;
-      color: rgba(12,11,10,0.7);
-      line-height: 1.6;
-      max-width: 480px;
+      color: rgba(12,11,10,0.62);
+      line-height: 1.5;
+      max-width: 520px;
     }
 
     .hero-bottom {
       display: flex;
       align-items: flex-end;
-      justify-content: space-between;
+      justify-content: flex-start;
+      border-top: 1px solid rgba(12,11,10,0.1);
+      padding-top: 24px;
     }
 
-    .hero-pills {
+    .hero-meta-row {
       display: flex;
-      gap: 8px;
+      flex-wrap: wrap;
+      gap: 56px;
     }
-    .hero-pill {
+    .hero-meta-cell .label {
+      display: block;
       font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      padding: 8px 16px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(12,11,10,0.18);
-      color: rgba(12,11,10,0.6);
+      color: rgba(12,11,10,0.4);
+      margin-bottom: 6px;
     }
-
-    .hero-scroll {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 8px;
-      color: rgba(12,11,10,0.35);
-      font-size: 10px;
+    .hero-meta-cell .value {
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+      color: var(--text);
     }
-    .hero-scroll-line {
-      width: 1px;
-      height: 48px;
-      background: rgba(12,11,10,0.15);
+    .hero-meta-cell .sub {
+      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 400;
+      color: rgba(12,11,10,0.45);
     }
 
     /* ─────────────────────────────────────────
@@ -282,7 +272,7 @@
       font-weight: 600;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: #001C6A;
+      color: #3E81EA;
     }
 
     .problem-headline {
@@ -563,7 +553,7 @@
       overflow: hidden;
     }
 
-    .solution .section-num-label { color: #0053D4; }
+    .solution .section-num-label { color: #3E81EA; }
     .solution .section-title-large {
       font-size: clamp(24px, 3vw, 40px);
       font-weight: 800;
@@ -891,7 +881,7 @@
       padding: 64px 56px;
     }
 
-    .impact .section-num-label { color: #0053D4; }
+    .impact .section-num-label { color: #3E81EA; }
     .impact .section-title-large {
       font-size: clamp(24px, 3vw, 40px);
       font-weight: 800;
@@ -922,7 +912,7 @@
       font-size: clamp(32px, 3.5vw, 48px);
       font-weight: 800;
       letter-spacing: -0.03em;
-      color: #0053D4;
+      color: #3E81EA;
       line-height: 1;
       margin-bottom: 6px;
     }
@@ -938,7 +928,7 @@
       padding: 32px 36px;
       background: #ffffff;
       border-radius: 16px;
-      border-left: 4px solid #0053D4;
+      border-left: 4px solid #3E81EA;
     }
 
     .impact-quote-text {
@@ -1329,47 +1319,31 @@
         <span>UX Funnel</span>
       </h1>
       <p class="hero-tagline">
-        Transforming affiliate funnels through iterative performance optimization - replacing guesswork with fast A/B testing to drive confident purchasing decisions at scale.
+        Replacing guesswork with fast A/B testing to drive confident purchasing decisions at scale.
       </p>
     </div>
 
     <div class="hero-bottom">
-      <div class="hero-pills">
-        <div class="hero-pill">A/B Testing</div>
-        <div class="hero-pill">Mobile UX</div>
-        <div class="hero-pill">Optimization</div>
-      </div>
-      <div class="hero-scroll">
-        <div class="hero-scroll-line"></div>
-        Scroll
+      <div class="hero-meta-row">
+        <div class="hero-meta-cell">
+          <span class="label">Role</span>
+          <div class="value">Senior Product Designer</div>
+          <div class="sub">UX · Experimentation · Mobile</div>
+        </div>
+        <div class="hero-meta-cell">
+          <span class="label">Timeline</span>
+          <div class="value">Ongoing · 4 months</div>
+          <div class="sub">1 PM · 2 Data Analysts · 1 Engineer</div>
+        </div>
+        <div class="hero-meta-cell">
+          <span class="label">Platform</span>
+          <div class="value">Web · Mobile-first</div>
+          <div class="sub">Affiliate · BestReviews.Guide</div>
+        </div>
       </div>
     </div>
 
   </section>
-
-
-  <!-- ──────────────────────────────────────
-       02 · META
-  ─────────────────────────────────────────── -->
-  <div class="meta-block">
-    <div class="meta-item">
-      <span class="label">Role</span>
-      <div class="meta-value">Senior Product Designer</div>
-      <div class="meta-sub">UX · Experimentation · Mobile</div>
-    </div>
-    <div class="meta-divider-v"></div>
-    <div class="meta-item">
-      <span class="label">Timeline</span>
-      <div class="meta-value">Ongoing · 4 months</div>
-      <div class="meta-sub">1 PM · 2 Data Analysts · 1 Engineer</div>
-    </div>
-    <div class="meta-divider-v"></div>
-    <div class="meta-item">
-      <span class="label">Platform</span>
-      <div class="meta-value">Web · Mobile-first</div>
-      <div class="meta-sub">Affiliate · BestReviews.Guide</div>
-    </div>
-  </div>
 
 
   <!-- ──────────────────────────────────────
@@ -1454,14 +1428,14 @@
     <div class="solution-feature solution-feature--stacked">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-bottom:220px">
         <div class="feature-content">
-          <div class="section-num-label" style="color:#0053D4;margin-bottom:40px">Hands-On Design process</div>
+          <div class="section-num-label" style="color:#3E81EA;margin-bottom:40px">Hands-On Design process</div>
           <div class="section-title-large" style="font-size:clamp(28px,3.5vw,44px)">Narrow Down feature, Driving Engagement &amp; Conversions</div>
           <p class="section-sub" style="margin-bottom:16px;font-size:16px;line-height:1.7">We are introducing "narrow-down" filter chips to simplify the shopping experience.</p>
-          <div style="border:1px solid #0053D4;border-radius:12px;padding:16px 20px;font-size:16px;line-height:1.7;color:#5A5651"><strong style="color:#0053D4">Our hypothesis:</strong> Giving users quick, clickable filters will spark higher engagement and guide them to faster buying decisions - instantly hitting two of our core product goals.</div>
+          <div style="border:1px solid #3E81EA;border-radius:12px;padding:16px 20px;font-size:16px;line-height:1.7;color:#5A5651"><strong style="color:#3E81EA">Our hypothesis:</strong> Giving users quick, clickable filters will spark higher engagement and guide them to faster buying decisions - instantly hitting two of our core product goals.</div>
           <div style="margin-top:32px">
             <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:12px">1st A/B test results:</div>
             <ul style="list-style:none;margin:0;padding:0;font-size:17px;line-height:1.9;color:var(--text)">
-              <li style="display:flex;align-items:baseline;gap:12px"><span style="color:#3E81EA">•</span>Significant EPU (earn per user) uplift <span style="color:#0053D4">↑</span></li>
+              <li style="display:flex;align-items:baseline;gap:12px"><span style="color:#3E81EA">•</span>Significant EPU (earn per user) uplift <span style="color:#3E81EA">↑</span></li>
               <li style="display:flex;align-items:baseline;gap:12px"><span style="color:#3E81EA">•</span>Positive engagement trend (not significant)</li>
             </ul>
           </div>
@@ -1477,22 +1451,22 @@
         <p class="section-sub" style="margin-bottom:48px;font-size:16px;line-height:1.7;max-width:520px">Historical data and user testing showed that heavy, engaging elements easily distracted users from their primary goals.</p>
         <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:20px">Key Objectives &amp; Solutions</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px">
-          <div style="border:1px solid #0053D4;border-radius:16px;padding:36px 28px;text-align:center">
-            <div style="width:56px;height:56px;border-radius:16px;background:#EFE9DD;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;color:#0053D4">
+          <div style="border:1px solid #3E81EA;border-radius:16px;padding:36px 28px;text-align:center">
+            <div style="width:56px;height:56px;border-radius:16px;background:#EFE9DD;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;color:#3E81EA">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="2.5"/></svg>
             </div>
             <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:12px">Streamline &amp; Attract</div>
             <p style="margin:0;font-size:16px;line-height:1.7;color:#5A5651">Designed lean, minimalist filter chips that invite interaction without causing cognitive clutter.</p>
           </div>
-          <div style="border:1px solid #0053D4;border-radius:16px;padding:36px 28px;text-align:center">
-            <div style="width:56px;height:56px;border-radius:16px;background:#EFE9DD;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;color:#0053D4">
+          <div style="border:1px solid #3E81EA;border-radius:16px;padding:36px 28px;text-align:center">
+            <div style="width:56px;height:56px;border-radius:16px;background:#EFE9DD;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;color:#3E81EA">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
             </div>
             <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:12px">Optimize Placement</div>
             <p style="margin:0;font-size:16px;line-height:1.7;color:#5A5651">Initial testing revealed users were scrolling past the filters. I redesigned the layout to catch their eye while maintaining a seamless user experience</p>
           </div>
-          <div style="border:1px solid #0053D4;border-radius:16px;padding:36px 28px;text-align:center">
-            <div style="width:56px;height:56px;border-radius:16px;background:#EFE9DD;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;color:#0053D4">
+          <div style="border:1px solid #3E81EA;border-radius:16px;padding:36px 28px;text-align:center">
+            <div style="width:56px;height:56px;border-radius:16px;background:#EFE9DD;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;color:#3E81EA">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 15l2.5-6L14 15M10 13h3.5"/></svg>
             </div>
             <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:12px">Clarity over Content</div>

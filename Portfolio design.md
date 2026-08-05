@@ -767,3 +767,13 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Data-Driven card image overflowed card + covered tags → `.card-media{overflow:hidden}` + reset inline `scale(1.55)` to `none`, padding 24px
 - Nav (both pages): Contact + Resume hidden on mobile; Resume added as ghost button in About hero actions (`.btn-resume-mobile`)
 - Nav mobile: width = CS card width (`100vw - (pad+20)*2`), links `justify-content:space-around`, font 17px, min-height 48px
+- Hero text (`.hero-bubble`) nudged down on mobile: `top` 44% → 50%
+
+## Hero Redesign — Editorial Minimal + Accent Swaps (2026-07-30)
+- All 5 CS heroes converted to single-column "editorial minimal" (Option A): flat `#F1EFEA` bg (dropped 3-radial gradient), no pills, no scroll cue, tightened one-line tagline, `.hero-center` padding `96px 0 80px`
+- Meta (Role/Team/Duration) folded into hero as thin `.hero-bottom` row with top border; sub-lines preserved; redundant `.meta-block`/`.meta-row` removed
+- New classes: `.hero-center`, `.hero-bottom`, `.hero-meta-row` (flex, gap 56px), `.hero-meta-cell .label/.value/.sub`
+- `.hero-title .outline` stroke removed → solid text
+- Applied to `cs2-funnel.html`, `seller-platform.html`, `unit-ep.html`, `copycat.html`, `copycat-v2.html`
+- Accent swaps: seller-platform `--accent` → `#E86A9B` (pink); cs2-funnel `--accent` → `#3E81EA` (blue)
+- cs2-funnel default `.section-num-label` color `#001C6A` → `#3E81EA` (fixes "Design Process" + other non-inline labels)

@@ -936,17 +936,22 @@
         --radius-hero: 28px;
         --radius-card: 24px;
       }
-      .hero { padding: 28px 22px; min-height: auto; gap: 24px; }
-      .hero-title { font-size: clamp(30px, 9vw, 70px); }
+      .hero { padding: 28px 22px; min-height: auto; }
+      .hero-center { flex: none; justify-content: flex-start; padding: 28px 0 0; }
+      .hero-title { font-size: clamp(30px, 9vw, 70px); margin-bottom: 28px; }
       .hero-title .outline { white-space: normal; }
+      .hero-tagline { margin-bottom: 32px; }
+      .hero-meta-row { flex-direction: column; gap: 20px; }
       .hero-body { grid-template-columns: 1fr; gap: 28px; }
       .hero-visual { min-height: 260px; aspect-ratio: 4/3; }
       .meta-row { grid-template-columns: 1fr; }
       .meta-card + .meta-card::before { top: 0; bottom: auto; left: 20%; right: 20%; width: auto; height: 1px; }
       .intro-trio { grid-template-columns: 1fr; }
+      /* Body copy → 14px on mobile */
+      .section-body, .subsection-body { font-size: 14px !important; }
       .overview-grid { grid-template-columns: 1fr; }
       /* Scale the overview image up on mobile: bleed to the section edges */
-      .overview-image { margin: 0 -24px; width: calc(100% + 48px); max-width: none; }
+      .overview-image { margin: 0 -24px; width: calc(100% + 48px); max-width: none; aspect-ratio: 1/1; }
       .overview-image img { width: 100%; height: auto; object-fit: contain; }
       .section { padding: 40px 24px; }
       .options-grid { grid-template-columns: 1fr; }

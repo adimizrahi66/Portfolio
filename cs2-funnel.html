@@ -1220,7 +1220,18 @@
       }
 
       .hero { padding: 32px 28px; min-height: 85vh; }
-      .hero-title { font-size: clamp(38px, 13vw, 70px); }
+      .hero-center { flex: none; justify-content: flex-start; padding: 28px 0 0; }
+      .hero-title { font-size: clamp(38px, 13vw, 70px); margin-bottom: 28px; }
+      .hero-tagline { margin-bottom: 32px; }
+      .hero-meta-row { flex-direction: column; gap: 20px; }
+
+      /* Body copy → 14px on mobile (hero excluded) */
+      section:not(.hero) p:not(.problem-headline),
+      .overview-block p { font-size: 14px !important; }
+
+      /* Overview: stack image below text, larger */
+      .overview-block { grid-template-columns: 1fr; padding: 32px 28px; gap: 28px; }
+      .overview-block .overview-image { aspect-ratio: 1/1; width: 100%; }
 
       .meta-block { flex-direction: column; padding: 32px 28px; gap: 24px; align-items: flex-start; }
       .meta-divider-v { width: 100%; height: 1px; }
@@ -1228,6 +1239,10 @@
 
       .problem { padding: 40px 28px; }
       .problem-stats { grid-template-columns: 1fr 1fr; gap: 24px; }
+      /* Problem: stack image below text, larger */
+      .problem > div { grid-template-columns: 1fr !important; gap: 28px; }
+      .problem .overview-text { order: 1; }
+      .problem .overview-image { order: 2; aspect-ratio: 1/1; }
 
       .research-row { grid-template-columns: 1fr; }
 

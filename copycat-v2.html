@@ -974,6 +974,7 @@
       .office-mobile { display: block; }
       .office-desktop { display: none; }
       .overview-grid { grid-template-columns: 1fr; }
+      .overview-split { flex-direction: column; margin-top: 28px !important; }
       /* Scale the overview image up on mobile: bleed to the section edges */
       .overview-image { margin: 0 -24px; width: calc(100% + 48px); max-width: none; aspect-ratio: 1/1; }
       .overview-image img { width: 100%; height: auto; object-fit: contain; }
@@ -1040,7 +1041,7 @@
         Back to Work
       </a>
       <div class="hero-brand">
-        <img src="images and videos/white logo roundforest.svg" alt="Roundforest" style="height:20px;width:auto;display:block">
+        <img src="images and videos/blue logo roundforest.svg" alt="Roundforest" style="height:20px;width:auto;display:block">
       </div>
     </div>
 
@@ -1080,16 +1081,39 @@
        03 · OVERVIEW
   ─────────────────────────────────────────── -->
   <section class="section">
-    <span class="section-num-label">Context</span>
-    <h2 class="section-title-large">Scaling creative production for Meta acquisition</h2>
-    <p class="section-body" style="margin-top:28px">
-      At Roundforest, the Meta acquisition team operates in the upper funnel. Performance at this stage depends on scale &ndash; producing large volumes of ad creatives and running continuous tests. Creative production is a daily operation, and increasing output directly impacts growth and profitability.
-    </p>
+    <div class="overview-split" style="display:flex;gap:40px;align-items:center">
+      <div style="flex:1;min-width:0">
+        <span class="section-num-label">Overview</span>
+        <h2 class="section-title-large">Scaling creative production for Meta acquisition</h2>
+        <p class="section-body" style="margin:28px 0 0">
+          Profitable Meta acquisition at Roundforest relies on testing a massive daily volume of ad creatives. I led the UX/UI design for CopyCat &ndash; an internal, AI-driven platform &ndash; to solve a severe operational bottleneck. The team&rsquo;s fragmented, six-tool workflow capped output at just 100 creatives a day, well below the 300 needed to break even. The challenge was transforming this disconnected process into a single, automated ecosystem to drastically scale production.
+        </p>
+      </div>
 
-    <div class="media-slot" style="margin-top:32px;background:none;box-shadow:none;width:100%;aspect-ratio:auto;overflow:visible">
-      <img src="images and videos/Meta activity flow.svg" alt="User flow in Meta activity" style="width:100%;height:auto">
+      <div class="media-slot" style="flex:none;width:60%;background:none;box-shadow:none;aspect-ratio:auto;overflow:visible">
+        <img src="images and videos/Copycat overview image2.svg" alt="CopyCat overview" style="width:100%;height:auto">
+      </div>
     </div>
   </section>
+
+
+  <!-- ──────────────────────────────────────
+       CHALLENGE / STRATEGY / RESULTS
+  ─────────────────────────────────────────── -->
+  <div class="intro-trio">
+    <div class="intro-card">
+      <h3>Challenge <span class="arrow">&rarr;</span></h3>
+      <p>Manual creative production was capped at 100 daily creatives &mdash; far below the 300 needed to break even. Previous workarounds forced the team to juggle six disconnected tools, resulting in a fragmented, inefficient workflow that prevented profitable scaling.</p>
+    </div>
+    <div class="intro-card">
+      <h3>Strategy <span class="arrow">&rarr;</span></h3>
+      <p>Following a two-week immersive research phase with the Meta team, I designed a holistic platform to replace the disjointed workflow. The solution centered on unifying tools, automating data handling, and driving the entire process through a single, automated task list.</p>
+    </div>
+    <div class="intro-card">
+      <h3>Results <span class="arrow">&rarr;</span></h3>
+      <p>The new platform successfully consolidated six fragmented tools into one unified ecosystem. By eliminating manual bottlenecks, the system slashed creative production time by 75%, unlocking the massive daily output required for profitable Meta ad scaling.</p>
+    </div>
+  </div>
 
 
   <!-- ──────────────────────────────────────

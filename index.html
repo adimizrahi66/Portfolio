@@ -85,14 +85,15 @@
     }
     .hero-bubble p {
       font-family: 'Fraunces', serif;
-      font-size: clamp(22px, 2.6vw, 36px);
+      font-size: clamp(18px, 2.1vw, 28px);
       font-weight: 400;
       letter-spacing: -0.01em;
       line-height: 1.14;
       color: #1A1A1A;
       white-space: nowrap;
     }
-    .hero-bubble p .lead { font-weight: 700; }
+    .hero-bubble p .lead { display: block; font-weight: 700; }
+    .hero-bubble p .sub { display: block; font-weight: 400; font-size: calc(clamp(18px, 2.1vw, 28px) - 4px); white-space: normal; margin-top: 12px; }
 
     /* ── FLOATING VECTOR ELEMENTS ── */
     .float {
@@ -1013,7 +1014,8 @@
         top: 50%;
       }
       .hero-bubble h1 { font-size: clamp(28px, 8vw, 36px); margin-bottom: 12px; }
-      .hero-bubble p { font-size: clamp(20px, 6vw, 26px); white-space: normal; }
+      .hero-bubble p { font-size: clamp(17px, 5vw, 21px); white-space: normal; }
+      .hero-bubble p .sub { font-size: calc(clamp(17px, 5vw, 21px) - 4px); }
 
       .f-bouquet   { left: 17%; top: 20%; --w: 106px; }
       .f-dashboard { left: 82%; top: 19%; --w: 158px; }
@@ -1234,7 +1236,7 @@
 
       <!-- Central bubble -->
       <div class="hero-bubble">
-        <p><span class="lead">Hey I'm Adi</span>, a product designer,<br>Problem solver, Passionate creator</p>
+        <p><span class="lead">Hey I'm Adi, a Senior Product Designer.</span><span class="sub">Designing the intersection of data, AI workflows,<br>and seamless user experiences.</span></p>
         <a href="#work" class="hero-view-work">View my work</a>
       </div>
 

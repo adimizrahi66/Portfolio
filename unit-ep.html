@@ -618,6 +618,28 @@
     .media-slot:has(img, video, object) {
       box-shadow: 0 18px 45px rgba(12,11,10,0.14);
     }
+    /* ── Image lightbox ── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 9999;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(10,10,10,0.85); padding: 24px; cursor: zoom-out;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; background: #fff; }
+
+    /* ── Tablet mockup frame ── */
+    .overview-image.tablet-frame {
+      background: #0A0A0A;
+      border: none;
+      border-radius: 32px;
+      padding: 16px;
+      box-shadow: 0 18px 45px rgba(12,11,10,0.14), inset 0 0 0 2px #2A2A2A;
+    }
+    .overview-image.tablet-frame video {
+      height: auto;
+      border-radius: 14px;
+    }
+
     .overview-image:has(img, video, object) img,
     .overview-image:has(img, video, object) video,
     .overview-image:has(img, video, object) object,
@@ -935,6 +957,7 @@
       /* Scale the overview image up on mobile: bleed to the section edges */
       .overview-image { margin: 0 -24px; width: calc(100% + 48px); max-width: none; aspect-ratio: 1/1; }
       .overview-image img { width: 100%; height: auto; object-fit: contain; }
+      .overview-image.tablet-frame { margin: 0; width: 100%; aspect-ratio: auto; padding: 10px; border-radius: 22px; }
       .section { padding: 40px 24px; }
       .options-grid { grid-template-columns: 1fr; }
       .results-grid { grid-template-columns: 1fr; }
@@ -1053,12 +1076,8 @@
 
       <!-- ── OVERVIEW IMAGE PLACEHOLDER ────────────── -->
       <!-- SWAP: replace inner div with  <img src="overview.svg" alt="Overview image">  -->
-      <div class="overview-image">
-        <div class="media-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
-          <span class="media-name">Overview / Homepage</span>
-          <span class="media-hint">Add Unit.e.p-homepage.svg here</span>
-        </div>
+      <div class="overview-image tablet-frame">
+        <video src="images and videos/unit-ep-overview.mp4" autoplay muted loop playsinline></video>
       </div>
     </div>
   </section>
@@ -1133,11 +1152,7 @@
     <!-- ── USER FLOW DIAGRAM PLACEHOLDER ────────────── -->
     <!-- SWAP: replace inner div with  <img src="user-flow.svg" alt="User flow / information architecture">  -->
     <div class="media-slot">
-      <div class="media-empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
-        <span class="media-name">User Flow / IA Diagram</span>
-        <span class="media-hint">Add user-flow diagram here</span>
-      </div>
+      <img src="images and videos/user journy (1).avif" alt="User flow / information architecture diagram">
     </div>
 
     <div class="subsection">
@@ -1150,6 +1165,11 @@
         <div class="bullet-item">
           <div class="bullet-marker"></div>
           <div class="bullet-text"><strong>Before the redesign:</strong> Handwritten logs, manual paper drawings, and un-synced spreadsheets.</div>
+        </div>
+        <div style="display:flex; gap:16px; margin:16px 0; align-items:stretch">
+          <img class="zoomable" src="images and videos/image 41.png" alt="Before the redesign: handwritten logs" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:#fff; cursor:zoom-in">
+          <img class="zoomable" src="images and videos/image 43.png" alt="Before the redesign: manual paper drawings" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:#fff; cursor:zoom-in">
+          <img class="zoomable" src="images and videos/image 44.png" alt="Before the redesign: un-synced spreadsheets" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:#fff; cursor:zoom-in">
         </div>
         <div class="bullet-item">
           <div class="bullet-marker"></div>
@@ -1460,6 +1480,23 @@
       }
       lastY = y;
     }, { passive: true });
+  })();
+</script>
+<script>
+  (function () {
+    var lb = document.createElement('div');
+    lb.className = 'lightbox';
+    lb.innerHTML = '<img alt="">';
+    document.body.appendChild(lb);
+    var big = lb.querySelector('img');
+    document.querySelectorAll('img.zoomable').forEach(function (img) {
+      img.addEventListener('click', function () {
+        big.src = img.src; big.alt = img.alt;
+        lb.classList.add('open');
+      });
+    });
+    lb.addEventListener('click', function () { lb.classList.remove('open'); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') lb.classList.remove('open'); });
   })();
 </script>
 </body>

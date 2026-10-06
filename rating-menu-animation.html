@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rating menu animation</title>
+<style>
+  :root { --total: 4.5s; }
+  html, body { margin: 0; background: #F3F5F5; }
+  .anim { position: relative; width: 100%; max-width: 1194px; aspect-ratio: 1194 / 834; margin: 0 auto; }
+  .anim img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .anim img:not(:first-child) { opacity: 0; animation-duration: var(--total); animation-timing-function: step-end; animation-iteration-count: infinite; }
+  .anim .f1 { animation-name: f1; } .anim .f2 { animation-name: f2; } .anim .f3 { animation-name: f3; } .anim .f4 { animation-name: f4; }
+  @keyframes f1 { 0%, 13.32% { opacity: 0; } 13.33%, 100% { opacity: 1; } }
+  @keyframes f2 { 0%, 26.66% { opacity: 0; } 26.67%, 100% { opacity: 1; } }
+  @keyframes f3 { 0%, 39.99% { opacity: 0; } 40%, 100% { opacity: 1; } }
+  @keyframes f4 { 0%, 53.32% { opacity: 0; } 53.33%, 100% { opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="anim">
+  <img src="images and videos/rating-menu/frame-0.svg" alt="">
+  <img class="f1" src="images and videos/rating-menu/frame-1.svg" alt="">
+  <img class="f2" src="images and videos/rating-menu/frame-2.svg" alt="">
+  <img class="f3" src="images and videos/rating-menu/frame-3.svg" alt="">
+  <img class="f4" src="images and videos/rating-menu/frame-4.svg" alt="">
+</div>
+</body>
+</html>

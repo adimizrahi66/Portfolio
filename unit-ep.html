@@ -619,6 +619,14 @@
     .media-slot:has(img, video, object) {
       box-shadow: 0 18px 45px rgba(12,11,10,0.14);
     }
+    /* ── Transparent image placements ── */
+    .media-slot,
+    .media-slot.dark,
+    .media-slot:has(img, video, object) {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
     /* ── Image lightbox ── */
     .lightbox {
       position: fixed; inset: 0; z-index: 9999;
@@ -1004,6 +1012,20 @@
       .result-stat { padding: 14px 8px; }
       .nav-link { padding: 6px 8px; font-size: 9.5px; }
     }
+    /* ── Rating menu animation ── */
+    .media-slot.rating-slot { aspect-ratio: auto; padding: 8% 0; }
+    .media-slot .rating-tablet { width: 58%; background: #0c0b0a; padding: clamp(6px, 1.5vw, 18px); border-radius: clamp(10px, 2.4vw, 30px); box-shadow: 0 0 0 1px #2a2927 inset, 0 12px 32px rgba(12,11,10,0.18); }
+    .media-slot .rating-anim { position: relative; width: 100%; aspect-ratio: 1194 / 834; border-radius: clamp(3px, 0.7vw, 8px); overflow: hidden; }
+    .media-slot .rating-anim img { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .media-slot .rating-anim img:not(:first-child) { opacity: 0; animation-duration: 4.5s; animation-timing-function: step-end; animation-iteration-count: infinite; }
+    .media-slot .rating-anim .f1 { animation-name: rm-f1; }
+    .media-slot .rating-anim .f2 { animation-name: rm-f2; }
+    .media-slot .rating-anim .f3 { animation-name: rm-f3; }
+    .media-slot .rating-anim .f4 { animation-name: rm-f4; }
+    @keyframes rm-f1 { 0%, 13.32% { opacity: 0; } 13.33%, 100% { opacity: 1; } }
+    @keyframes rm-f2 { 0%, 26.66% { opacity: 0; } 26.67%, 100% { opacity: 1; } }
+    @keyframes rm-f3 { 0%, 39.99% { opacity: 0; } 40%, 100% { opacity: 1; } }
+    @keyframes rm-f4 { 0%, 53.32% { opacity: 0; } 53.33%, 100% { opacity: 1; } }
   </style>
 </head>
 <body>
@@ -1168,14 +1190,29 @@
           <div class="bullet-text"><strong>Before the redesign:</strong> Handwritten logs, manual paper drawings, and un-synced spreadsheets.</div>
         </div>
         <div style="display:flex; gap:16px; margin:16px 0; align-items:stretch">
-          <img class="zoomable" src="images and videos/image 41.png" alt="Before the redesign: handwritten logs" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:#fff; cursor:zoom-in">
-          <img class="zoomable" src="images and videos/image 43.png" alt="Before the redesign: manual paper drawings" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:#fff; cursor:zoom-in">
-          <img class="zoomable" src="images and videos/image 44.png" alt="Before the redesign: un-synced spreadsheets" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:#fff; cursor:zoom-in">
+          <img class="zoomable" src="images and videos/image 41.png" alt="Before the redesign: handwritten logs" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:transparent; cursor:zoom-in">
+          <img class="zoomable" src="images and videos/image 43.png" alt="Before the redesign: manual paper drawings" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:transparent; cursor:zoom-in">
+          <img class="zoomable" src="images and videos/image 44.png" alt="Before the redesign: un-synced spreadsheets" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:transparent; cursor:zoom-in">
         </div>
         <div class="bullet-item">
           <div class="bullet-marker"></div>
           <div class="bullet-text"><strong>After the redesign:</strong> A centralized digital dashboard with real-time field evaluation inputs.</div>
         </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div style="display:flex; flex-wrap:wrap; gap:32px; align-items:center">
+        <div style="flex:1 1 280px; min-width:0">
+          <h3 class="subsection-title">Sketching to Think</h3>
+          <p class="subsection-body">
+            I started with hand sketches to visualize the design. They let me get every idea from the research stage and the design process onto paper, so I could see what worked and what didn't.
+          </p>
+          <p class="subsection-body">
+            These wireframes show the evaluation page: how the candidate list is arranged, and what is determined by the configuration of other features and components.
+          </p>
+        </div>
+        <img class="zoomable" src="images and videos/evaluation page sketches.svg" alt="Evaluation page sketches" style="flex:1.4 1 360px; min-width:0; max-width:100%; border-radius:16px; background:transparent; cursor:zoom-in">
       </div>
     </div>
   </section>
@@ -1190,23 +1227,72 @@
     <p class="section-body" style="margin-top:28px">
       By anchoring the interface around the structural journey of the camp - Candidate → Group Assignment → Station Observations → Final Board Review - I turned complex data entries into simple, sequential workflows.
     </p>
+    <p class="section-body" style="margin-top:16px">
+      Here is the first iteration:
+    </p>
 
     <!-- ── 7a · Migrating the assessment tasks list ── -->
     <div class="subsection">
-      <h3 class="subsection-title">Migrating the assessment tasks list</h3>
-      <p class="subsection-body">
-        To minimize the cognitive load of assessors working under stress in the field, I mapped the traditional group candidate tracking lists directly into a clean, digital grid. Each row represents a candidate assigned to a group - mirroring the hierarchy they were familiar with while removing the mess of physical clipboards.
-      </p>
-
       <!-- ── TASKS LIST WIREFRAME PLACEHOLDER ── -->
       <!-- SWAP: replace inner div with  <img src="tasks-list.svg" alt="Group tracking list">  -->
       <div class="media-slot dark">
-        <div class="media-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
-          <span class="media-name">Group Tracking List</span>
-          <span class="media-hint">Add tasks-list wireframe here</span>
+        <img class="zoomable" src="images and videos/1st itaration HIFI.svg" alt="Group tracking list" style="width:80%; height:auto; max-height:100%; margin:0 auto">
+      </div>
+
+      <h3 class="subsection-title" style="margin-top:40px">First Iteration: Pros &amp; Cons</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:40px; margin-top:24px">
+        <div style="flex:1 1 280px; min-width:0">
+          <h4 class="subsection-h4">Pros</h4>
+          <div class="bullet-list" style="margin-top:0">
+            <div class="bullet-item">
+              <div class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg></div>
+              <div class="bullet-text">Similar to other products that are familiar to the user.</div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1 1 280px; min-width:0">
+          <h4 class="subsection-h4">Cons</h4>
+          <div class="bullet-list" style="margin-top:0">
+            <div class="bullet-item">
+              <div class="bullet-icon" style="color:#D64545"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+              <div class="bullet-text">Does not perfectly fit the activities in the field.</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-icon" style="color:#D64545"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+              <div class="bullet-text">Lacking navigation.</div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <h3 class="subsection-title" style="margin-top:40px">I went through a few more iterations until I arrived at this one</h3>
+      <div class="media-slot dark">
+        <img class="zoomable" src="images and videos/2nd itaration unitep.svg" alt="Second iteration" style="width:80%; height:auto; max-height:100%; margin:0 auto">
+      </div>
+      <h3 class="subsection-title" style="margin-top:40px;margin-bottom:0">Running station flow animation</h3>
+      <div class="media-slot dark rating-slot" style="margin-top:16px">
+        <div class="rating-tablet">
+        <div class="rating-anim">
+          <img src="images and videos/rating-menu/frame-0.svg" alt="Rating menu interaction">
+          <img class="f1" src="images and videos/rating-menu/frame-1.svg" alt="">
+          <img class="f2" src="images and videos/rating-menu/frame-2.svg" alt="">
+          <img class="f3" src="images and videos/rating-menu/frame-3.svg" alt="">
+          <img class="f4" src="images and videos/rating-menu/frame-4.svg" alt="">
+        </div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title" style="margin-top:40px">Designed for the Tablet and the Field</h3>
+      <p class="subsection-body">
+        I sized the buttons for the interface they live in, so they are easy to tap. A side navbar and a candidate list sized for finger interaction keep the screen comfortable to use in the field. The layout is adjusted to the tablet's width.
+      </p>
+      <p class="subsection-body">
+        To create a seamless experience, I kept the tabs of the running station and the assessment form on the same screen. Selecting a candidate from the list on the left opens their evaluation page. The button at the top right lets the user move between the stations scheduled for that day.
+      </p>
+    </div>
+
+    <div class="media-slot dark">
+      <img class="zoomable" src="images and videos/dashboard view.svg" alt="Dashboard view">
     </div>
 
     <!-- ── 7b · Connecting Assessment and Evaluation creation flow ── -->
@@ -1218,112 +1304,6 @@
       <p class="subsection-body">
         The final candidate summary score remains inactive until granular task parameters are entered. Once those field trials are populated, the system automatically aggregates the analytics - unlocking the macro review pipeline in a single view.
       </p>
-
-      <!-- ── TASK ROW DEPENDENCY PLACEHOLDER ── -->
-      <!-- SWAP: replace inner div with  <img src="task-dependency.svg" alt="Task row dependency">  -->
-      <div class="media-slot dark">
-        <div class="media-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
-          <span class="media-name">Task Row Dependency</span>
-          <span class="media-hint">Add task-row dependency schematic here</span>
-        </div>
-      </div>
-
-      <h4 class="subsection-h4">Connecting Data to Actions</h4>
-      <p class="subsection-body">
-        The redesigned candidate row introduces explicit contextual triggers for "Input Station Data" and "View Final Evaluation." To enforce operational accuracy, the comprehensive evaluation overview remains locked until specific station observations are live. Once filled, the system activates the evaluation suite, passing metrics directly into the cross-department analysis portal.
-      </p>
-
-      <h4 class="subsection-h4">UX Impact: Eliminating the Copy-Paste Tax</h4>
-      <div class="bullet-list" style="margin-top:0">
-        <div class="bullet-item">
-          <div class="bullet-marker"></div>
-          <div class="bullet-text"><strong>The Friction:</strong> Assessors spent hours cross-referencing handwriting, copying scores into separate trackers, and syncing metrics verbally during cross-department alignment meetings.</div>
-        </div>
-        <div class="bullet-item">
-          <div class="bullet-marker"></div>
-          <div class="bullet-text"><strong>The Solution:</strong> Field entries now sync natively across the database - removing transcription error risks and ensuring data continuity between field lines and command rooms.</div>
-        </div>
-      </div>
-
-      <div class="quote-callout">
-        Automating this data aggregation removed the operational bottleneck, eliminating the manual duplication of field inputs.
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ──────────────────────────────────────
-       08 · STREAMLINING THE WORKFLOW
-  ─────────────────────────────────────────── -->
-  <section class="section">
-    <span class="section-num-label">Streamlining the Workflow</span>
-    <h2 class="section-title-large">Optimizing Test Setup</h2>
-    <p class="section-body" style="margin-top:28px">
-      When an assessor triggers an active evaluation modal, it instantly pre-populates candidate metadata and assigned group metrics. The interface isolates high-sensitivity variables, allowing the user to rapidly input observed metrics with minimal interaction overhead.
-    </p>
-
-    <!-- ── STATION INPUT WIZARD PLACEHOLDER ── -->
-    <!-- SWAP: replace inner div with  <img src="station-wizard.svg" alt="Station input wizard flow">  -->
-    <div class="media-slot">
-      <div class="media-empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
-        <span class="media-name">Station Input Wizard</span>
-        <span class="media-hint">Add station input wizard flow here</span>
-      </div>
-    </div>
-
-    <div class="subsection">
-      <h4 class="subsection-h4">UX Impact: Intelligent Automation</h4>
-      <div class="bullet-list" style="margin-top:0">
-        <div class="bullet-item">
-          <div class="bullet-marker"></div>
-          <div class="bullet-text"><strong>The Friction:</strong> In complex testing blocks like the sprint station, assessors struggled to observe candidate behavior while simultaneously drawing maps and recording race orders on paper.</div>
-        </div>
-        <div class="bullet-item">
-          <div class="bullet-marker"></div>
-          <div class="bullet-text"><strong>The Solution:</strong> The structured UI provides rapid selection buttons and auto-sorting entry fields - removing extra administrative interactions and freeing the assessor to focus purely on behavioral observations.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="subsection">
-      <h3 class="subsection-title">Next Step: Running the Evaluation</h3>
-      <p class="subsection-body">
-        As soon as localized station trials are marked complete, the macro Evaluation module goes live. Reviewers and command staff can click through instantly to analyze the data - maintaining absolute momentum without waiting for papers to be collected and sorted at the end of the day.
-      </p>
-
-      <!-- ── ACTIVE TASK GRID PLACEHOLDER ── -->
-      <!-- SWAP: replace inner div with  <img src="active-grid.svg" alt="Active task grid after station completion">  -->
-      <div class="media-slot">
-        <div class="media-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
-          <span class="media-name">Active Task Grid</span>
-          <span class="media-hint">Add active grid after station completion here</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ──────────────────────────────────────
-       09 · THE MULTI-STEP EVALUATION FLOW
-  ─────────────────────────────────────────── -->
-  <section class="section dark">
-    <span class="section-num-label">The Multi-Step Evaluation Flow</span>
-    <h2 class="section-title-large">Balancing swift automation with crucial human verification</h2>
-    <p class="section-body" style="margin-top:28px">
-      Clicking the comprehensive review action opens a guided, step-by-step diagnostic wizard. To ensure error-free candidate shortlists, each step isolates a crucial military evaluation criterion. The backend compiles performance logs and generates data visualizations, while the interface highlights only the critical candidate exceptions that require human consensus.
-    </p>
-
-    <!-- ── REVIEW WIZARD PLACEHOLDER ── -->
-    <!-- SWAP: replace inner div with  <img src="review-wizard.svg" alt="Step-by-step review interface">  -->
-    <div class="media-slot dark">
-      <div class="media-empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
-        <span class="media-name">Step-by-Step Review</span>
-        <span class="media-hint">Add review interface wireframe here</span>
-      </div>
     </div>
 
     <div class="subsection">
@@ -1334,16 +1314,6 @@
       <p class="subsection-body">
         Because these evaluations determine a candidate's military placement and future trajectory, a fully automated decision engine would introduce user anxiety and operational distrust. Giving commanders final approval authority maintains psychological safety and human oversight.
       </p>
-
-      <!-- ── SIGNED-OFF STATE PLACEHOLDER ── -->
-      <!-- SWAP: replace inner div with  <img src="signed-off.svg" alt="Final signed-off green task state">  -->
-      <div class="media-slot dark">
-        <div class="media-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
-          <span class="media-name">Signed-Off Task State</span>
-          <span class="media-hint">Add final green task-state diagram here</span>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1373,23 +1343,6 @@
       </div>
     </div>
   </section>
-
-
-  <!-- ──────────────────────────────────────
-       11 · INTERACTIVE PROTOTYPE
-  ─────────────────────────────────────────── -->
-  <section class="section">
-    <span class="section-num-label">Interactive Prototype</span>
-    <h2 class="section-title-large">Tested in the field before engineering kickoff</h2>
-    <p class="section-body" style="margin-top:28px">
-      The design was tested using a functional Figma prototype with a dedicated focus group to refine mobile field interactions prior to engineering kickoff.
-    </p>
-    <a href="#" class="ext-link">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      View Figma Prototype
-    </a>
-  </section>
-
 
   <!-- ──────────────────────────────────────
        PROJECT NAV

@@ -777,3 +777,18 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Applied to `cs2-funnel.html`, `seller-platform.html`, `unit-ep.html`, `copycat.html`, `copycat-v2.html`
 - Accent swaps: seller-platform `--accent` → `#E86A9B` (pink); cs2-funnel `--accent` → `#3E81EA` (blue)
 - cs2-funnel default `.section-num-label` color `#001C6A` → `#3E81EA` (fixes "Design Process" + other non-inline labels)
+
+## Unit.e.p CS — Strategy & Design Solutions (2026-10-06)
+- Strategy & Exploration: added "Sketching to Think" beside `evaluation page sketches.svg` (flex, stacks on mobile)
+- Design Solutions: removed "Migrating the assessment tasks list" text; `1st itaration HIFI.svg` in slot (80% width), arrow added between screens inside SVG
+- Intro para: appended "Here is the first iteration:" on own line
+- Added "First Iteration: Pros & Cons" title + two-column Pros/Cons (check icons; cons icons red `#D64545`)
+- Added title "I went through a few more iterations until I arrived at this one" + `2nd itaration unitep.svg` + "Designed for the Tablet and the Field" text (`subsection-title`)
+- Added `dashboard view.svg` above "Connecting Assessment & Evaluation creation flow"
+- All `.media-slot` / inline images: transparent bg, no border/shadow (lightbox stays white)
+
+## Unit.e.p CS — Animation & Homepage (2026-10-06)
+- Built "Rating menu" HTML/CSS animation from 5 SVG frames (`images and videos/rating-menu/frame-0..4.svg`); 0.6s/frame, 2.1s hold on last, 4.5s loop; standalone `rating-menu-animation.html`
+- Added to `unit-ep.html` below `2nd itaration unitep.svg` under title "Running station flow animation" (tight spacing), inside black tablet bezel, 58% slot width
+- Removed from unit-ep: Connecting section content below intro paras (task-dependency, Connecting Data to Actions, step-by-step review), "Signed-Off Task State" placeholder, "Interactive Prototype" section
+- index.html: Unit.e.p card published (links `unit-ep.html`, chip/overlay removed); "Questionnaire Engagement Strategy" card hidden (`hidden`, `display:none`)

@@ -1583,12 +1583,12 @@ function updateTplCount(){const n=tplSel.filter(Boolean).length;document.getElem
 function previewTpl(i){const g=tplGrads[i%tplGrads.length];document.getElementById('tpl-title').textContent='Template #'+(i+1)+' · '+tplCats[i%tplCats.length];document.getElementById('tpl-preview-img').style.background='linear-gradient(135deg,'+g+','+g+'CC)';document.getElementById('tpl-preview-img').textContent=tplCats[i%tplCats.length];document.getElementById('tplOverlay').classList.add('open');}
 function closeTpl(){document.getElementById('tplOverlay').classList.remove('open');}
 /* generation */
-function startGeneration(){gotoStep(3);const steps=document.querySelectorAll('#gen-steps .gs');steps.forEach(s=>s.classList.remove('done','cur'));let i=0;const bar=document.getElementById('gen-bar');
-  (function tick(){if(i>0)steps[i-1].classList.add('done');if(i<steps.length){steps[i].classList.add('cur');bar.style.width=((i+1)/steps.length*100)+'%';i++;setTimeout(tick,1050);}else{
+function startGeneration(){gotoStep(3);const _tok=window._genTok=(window._genTok||0)+1;const steps=document.querySelectorAll('#gen-steps .gs');steps.forEach(s=>s.classList.remove('done','cur'));let i=0;const bar=document.getElementById('gen-bar');
+  (function tick(){if(_tok!==window._genTok||curStep!==3)return;if(i>0)steps[i-1].classList.add('done');if(i<steps.length){steps[i].classList.add('cur');bar.style.width=((i+1)/steps.length*100)+'%';i++;setTimeout(tick,1050);}else{
     // show top success banner instead of overlapping center message
     const banner=document.getElementById('gen-top-banner');
     banner.classList.add('show');
-    setTimeout(()=>{window._crRendered=false;gotoStep(4);},700);
+    setTimeout(()=>{if(_tok===window._genTok&&curStep===3){window._crRendered=false;gotoStep(4);}},700);
     setTimeout(()=>{banner.classList.remove('show');},3800);
   }})();
 }
@@ -1734,6 +1734,51 @@ function syncTplFloat(){const bar=document.getElementById('tpl-floatbar');if(bar
 renderStepper();
 /* embed bootstrap: auto-launch the creative flow when loaded as ?flow=creative (used by the case-study preview iframe) */
 (function(){try{var p=new URLSearchParams(location.search);if(p.get('flow')==='creative'){document.documentElement.classList.add('embed-creative');openCreative();}}catch(e){}})();
+/* fit mode: used when the case study embeds the wizard inline (?fit=1).
+   The frame grows to the content height (no inner scroll), overlays follow the
+   visible part of the frame, and the parent page can drive and follow the steps. */
+(function(){try{
+  var q=new URLSearchParams(location.search); if(q.get('fit')!=='1') return;
+  var de=document.documentElement; de.classList.add('fit');
+  var css=document.createElement('style');
+  css.textContent=[
+    'html.fit,html.fit body{overflow:hidden!important}',
+    'html.fit .app{min-height:0}',
+    'html.fit .sidebar{position:relative;top:auto;height:auto}',
+    'html.fit #tpl-floatbar{display:none!important}',
+    'html.fit .toast,html.fit .bulkbar,html.fit .floatbar{bottom:calc(100vh - var(--vt,0px) - var(--vh,100vh) + 24px)}',
+    'html.fit .gen-top-banner.show{top:calc(var(--vt,0px) + 20px)}',
+    'html.fit .gallery-overlay,html.fit .side-overlay,html.fit .overlay{top:var(--vt,0px);bottom:auto;height:var(--vh,100vh)}',
+    'html.fit .side{top:var(--vt,0px);height:var(--vh,100vh)}',
+    'html.fit .g-panel{height:var(--vh,100vh)}',
+    'html.fit .m-body{max-height:calc(var(--vh,100vh) - 210px)}',
+    'html.fit .pref-layout{height:auto}'
+  ].join('\n');
+  document.head.appendChild(css);
+  function post(m){ try{ parent.postMessage(m,'*'); }catch(e){} }
+  var app=document.querySelector('.app'), lastH=0;
+  function sendH(){ var h=Math.ceil(app.getBoundingClientRect().height); if(h!==lastH){ lastH=h; post({type:'cc-height',h:h}); } }
+  function curScreen(){ var a=document.querySelector('.screen.active'); return a?a.id.replace('screen-',''):''; }
+  function sendState(){ post({type:'cc-state',screen:curScreen(),step:(typeof curStep!=='undefined'?curStep:0)}); }
+  var _goto=window.gotoStep, _show=window.showScreen;
+  window.gotoStep=function(n){ var r=_goto.apply(this,arguments); sendState(); requestAnimationFrame(sendH); return r; };
+  window.showScreen=function(n){ var r=_show.apply(this,arguments); sendState(); requestAnimationFrame(sendH); return r; };
+  if('ResizeObserver' in window) new ResizeObserver(sendH).observe(app); else setInterval(sendH,500);
+  window.addEventListener('message',function(e){
+    var d=e.data||{};
+    if(d.type==='cc-vis'){ de.style.setProperty('--vt',d.vt+'px'); de.style.setProperty('--vh',d.vh+'px'); }
+    if(d.type==='cc-goto'){
+      var n=d.step;
+      if(curScreen()!=='creative') openCreative();
+      if(n===3){ startGeneration(); return; }
+      if(n===5){ if(maxStep<4||!creatives.length) gotoStep(4); if(!creatives.some(function(c){return c.sel;})){ var _t=window.toast; window.toast=function(){}; try{ autoPickBest(); } finally { window.toast=_t; } } }
+      if(n>maxStep) maxStep=n;
+      gotoStep(n);
+    }
+  });
+  sendH(); sendState(); window.addEventListener('load',sendH);
+}catch(e){}})();
+
 </script>
 </body>
 </html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Analytics — Adi Mizrahi</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────
+       TOKENS
+    ───────────────────────────────────────── */
+    :root {
+      --page-bg:    #EDEAE6;
+      --card:       #FFFFFF;
+      --card-soft:  #F5F3EF;
+      --text:       #0C0B0A;
+      --text-2:     #5E5953;
+      --text-muted: #9A9590;
+      --line:       #E4E0DA;
+      --grid:       #EFECE7;
+      --accent:     #C4986A;
+      --mark:       #A86522;
+      --mark-soft:  rgba(168,101,34,0.10);
+      --good:       #2E7D4F;
+      --bad:        #B3402E;
+      --font:       'Poppins', sans-serif;
+      --serif:      'Fraunces', serif;
+      --radius:     28px;
+      --pad:        24px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--page-bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    button, input { font: inherit; color: inherit; }
+    .wrap { max-width: 1240px; margin: 0 auto; padding: 32px var(--pad) 64px; }
+
+    /* ── HEADER ── */
+    .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+    .back { font-size: 13px; color: var(--text-2); text-decoration: none; display: inline-flex; gap: 6px; align-items: center; }
+    .back:hover { color: var(--text); }
+    .status { font-size: 12px; color: var(--text-2); display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.6); padding: 6px 12px; border-radius: 99px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); }
+    .status.live .dot { background: var(--good); }
+    .status.sample .dot { background: var(--accent); }
+
+    .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(32px, 4.4vw, 52px); letter-spacing: -0.02em; line-height: 1.05; }
+    .sub { color: var(--text-2); font-size: 15px; margin-top: 10px; max-width: 560px; line-height: 1.5; }
+
+    /* ── FILTER ROW ── */
+    .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 28px 0 20px; }
+    .seg { display: inline-flex; background: rgba(255,255,255,0.65); border-radius: 99px; padding: 4px; }
+    .seg button { border: 0; background: transparent; padding: 8px 16px; border-radius: 99px; font-size: 13px; font-weight: 500; color: var(--text-2); cursor: pointer; transition: background .2s, color .2s; }
+    .seg button:hover { color: var(--text); }
+    .seg button[aria-pressed="true"] { background: var(--text); color: #fff; }
+    .ghost { border: 1px solid rgba(12,11,10,0.12); background: transparent; padding: 8px 16px; border-radius: 99px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background .2s; }
+    .ghost:hover { background: rgba(255,255,255,0.7); }
+    .spacer { flex: 1; }
+    .updated { font-size: 12px; color: var(--text-muted); }
+
+    /* ── GRID ── */
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; transition: opacity .25s; }
+    .grid.loading { opacity: .45; pointer-events: none; }
+    .card { background: var(--card); border-radius: var(--radius); padding: 24px 26px; min-width: 0; }
+    .span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; }
+    .span-6 { grid-column: span 6; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+    .card-h { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+    .card-h h2 { font-size: 15px; font-weight: 600; }
+    .card-h .hint { font-size: 12px; color: var(--text-muted); }
+
+    /* ── KPI ── */
+    .kpis { grid-column: span 12; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+    .kpi { background: var(--card); border-radius: 24px; padding: 20px 22px; }
+    .kpi .label { font-size: 12px; color: var(--text-2); font-weight: 500; }
+    .kpi .value { font-family: var(--serif); font-size: 40px; font-weight: 600; letter-spacing: -0.02em; margin-top: 6px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .kpi .delta { font-size: 12px; margin-top: 10px; color: var(--text-muted); }
+    .kpi .delta b { font-weight: 600; }
+    .kpi .delta.up b { color: var(--good); } .kpi .delta.down b { color: var(--bad); }
+
+    /* ── LINE CHART ── */
+    .chart { position: relative; width: 100%; height: 260px; }
+    .chart svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .axis-t { font-size: 11px; fill: var(--text-muted); font-family: var(--font); }
+    .tip { position: absolute; pointer-events: none; background: var(--text); color: #fff; padding: 8px 12px; border-radius: 12px; font-size: 12px; white-space: nowrap; transform: translate(-50%, calc(-100% - 12px)); opacity: 0; transition: opacity .12s; z-index: 5; }
+    .tip b { font-size: 15px; font-weight: 600; display: block; }
+    .tip span { color: rgba(255,255,255,0.7); }
+    details.tbl { margin-top: 14px; font-size: 12px; color: var(--text-2); }
+    details.tbl summary { cursor: pointer; }
+    details.tbl table { margin-top: 10px; }
+
+    /* ── BAR LIST ── */
+    .bars { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .bars li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; font-size: 13px; }
+    .bars .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+    .bars .val { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .bars .track { grid-column: 1 / -1; height: 8px; border-radius: 4px; background: var(--grid); overflow: hidden; }
+    .bars .fill { height: 100%; border-radius: 4px; background: var(--mark); transition: width .5s cubic-bezier(.22,1,.36,1); }
+    .bars li:hover .fill { filter: brightness(1.12); }
+    .empty { font-size: 13px; color: var(--text-muted); padding: 12px 0; }
+
+    /* ── FUNNEL ── */
+    .funnel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .step { background: var(--card-soft); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+    .step .n { font-size: 11px; font-weight: 700; letter-spacing: .18em; color: var(--accent); }
+    .step .t { font-size: 13px; color: var(--text-2); min-height: 36px; line-height: 1.4; }
+    .step .v { font-family: var(--serif); font-size: 32px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+    .step .meter { height: 8px; border-radius: 4px; background: var(--grid); overflow: hidden; }
+    .step .meter i { display: block; height: 100%; border-radius: 4px; background: var(--mark); }
+    .step .c { font-size: 12px; color: var(--text-muted); }
+
+    /* ── TABLE ── */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); padding: 0 8px 10px; border-bottom: 1px solid var(--line); }
+    td { padding: 14px 8px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+    tr:last-child td { border-bottom: 0; }
+    th.num, td.num { text-align: right; }
+    td .cs-name { font-weight: 600; }
+    .rate { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; }
+    .rate .mini { width: 56px; height: 6px; border-radius: 3px; background: var(--grid); overflow: hidden; }
+    .rate .mini i { display: block; height: 100%; background: var(--mark); border-radius: 3px; }
+    .table-scroll { overflow-x: auto; }
+
+    /* ── CONNECT PANEL ── */
+    .connect { background: var(--card); border-radius: var(--radius); padding: 32px; margin-bottom: 20px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; }
+    .connect[hidden] { display: none; }
+    .connect h2 { font-family: var(--serif); font-size: 26px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 10px; }
+    .connect p, .connect li { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+    .connect ol { padding-left: 18px; margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .connect a { color: var(--mark); }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .field label { font-size: 12px; font-weight: 600; color: var(--text-2); }
+    .field input { border: 1px solid var(--line); background: var(--card-soft); border-radius: 14px; padding: 12px 14px; font-size: 14px; outline: none; }
+    .field input:focus { border-color: var(--mark); }
+    .field .inline { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text-2); }
+    .field .inline input { flex: 1; min-width: 0; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+    .primary { border: 0; background: var(--text); color: #fff; padding: 12px 22px; border-radius: 99px; font-size: 14px; font-weight: 500; cursor: pointer; }
+    .primary:hover { background: #2a2826; }
+    .note { font-size: 12px; color: var(--text-muted); margin-top: 14px; line-height: 1.5; }
+    .err { font-size: 13px; color: var(--bad); margin-top: 10px; min-height: 18px; }
+    .connect, .banner { margin-top: 24px; }
+    #csTable { min-width: 540px; }
+    .banner { background: rgba(196,152,106,0.16); color: #6E4A22; font-size: 13px; padding: 12px 18px; border-radius: 16px; margin-bottom: 16px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+    .banner[hidden] { display: none; }
+    .banner button { border: 0; background: transparent; text-decoration: underline; cursor: pointer; font-size: 13px; color: inherit; }
+
+    .foot { font-size: 12px; color: var(--text-muted); margin-top: 24px; line-height: 1.6; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .kpis { grid-template-columns: repeat(3, 1fr); }
+      .span-8, .span-7, .span-5, .span-4 { grid-column: span 12; }
+      .span-6 { grid-column: span 6; }
+    }
+    @media (max-width: 720px) {
+      :root { --pad: 16px; --radius: 22px; }
+      .wrap { padding-top: 20px; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .kpi .value { font-size: 32px; }
+      .span-6 { grid-column: span 12; }
+      .funnel { grid-template-columns: repeat(2, 1fr); }
+      .connect { grid-template-columns: 1fr; padding: 24px; gap: 20px; }
+      .card { padding: 20px; }
+      .chart { height: 220px; }
+      .updated { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="index.html">← adimiz.com</a>
+    <span class="status" id="status"><span class="dot"></span><span id="statusText">Not connected</span></span>
+  </div>
+
+  <div class="eyebrow">Private · Portfolio analytics</div>
+  <h1>Who's looking at my work</h1>
+  <p class="sub">Visitors, case study reads and recruiter actions across adimiz.com.</p>
+
+  <!-- CONNECT -->
+  <section class="connect" id="connect" hidden>
+    <div>
+      <h2>Connect GoatCounter</h2>
+      <p>This page reads your stats straight from GoatCounter. Your token is saved only in this browser and is never part of the site's code.</p>
+      <ol>
+        <li>Open <a href="https://www.goatcounter.com" target="_blank" rel="noopener">goatcounter.com</a> → sign in to site <b>adimiz</b>.</li>
+        <li>Go to <b>User → API</b> and create a token with <b>Read statistics</b>.</li>
+        <li>Paste it here.</li>
+      </ol>
+    </div>
+    <form id="connectForm" autocomplete="off">
+      <div class="field">
+        <label for="code">Site code</label>
+        <div class="inline"><input id="code" value="adimiz" required spellcheck="false"><span>.goatcounter.com</span></div>
+      </div>
+      <div class="field">
+        <label for="token">API token</label>
+        <input id="token" type="password" placeholder="Paste your token" required spellcheck="false">
+      </div>
+      <div class="actions">
+        <button class="primary" type="submit">Connect</button>
+        <button class="ghost" type="button" id="sampleBtn">Preview with sample data</button>
+      </div>
+      <div class="err" id="err" role="alert"></div>
+      <p class="note">Connecting also stops this browser from being counted, so your own visits don't skew the numbers.</p>
+    </form>
+  </section>
+
+  <div class="banner" id="sampleBanner" hidden>
+    <span>You're looking at sample data. Connect GoatCounter to see real visits.</span>
+    <button type="button" id="openConnect">Connect</button>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters" id="filters">
+    <div class="seg" role="group" aria-label="Date range">
+      <button type="button" data-range="7" aria-pressed="false">7 days</button>
+      <button type="button" data-range="30" aria-pressed="true">30 days</button>
+      <button type="button" data-range="90" aria-pressed="false">90 days</button>
+      <button type="button" data-range="365" aria-pressed="false">12 months</button>
+    </div>
+    <button class="ghost" type="button" id="refresh">Refresh</button>
+    <span class="spacer"></span>
+    <span class="updated" id="updated"></span>
+    <button class="ghost" type="button" id="settings">Settings</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <main class="grid" id="grid">
+    <div class="kpis" id="kpis"></div>
+
+    <section class="card span-12">
+      <div class="card-h"><h2>Daily visitors</h2><span class="hint" id="trendHint"></span></div>
+      <div class="chart" id="trend"><div class="tip" id="tip"></div></div>
+      <details class="tbl"><summary>View as table</summary><div class="table-scroll"><table id="trendTable"></table></div></details>
+    </section>
+
+    <section class="card span-12">
+      <div class="card-h"><h2>Recruiter journey</h2><span class="hint">Visitors at each step, % of the step before</span></div>
+      <div class="funnel" id="funnel"></div>
+    </section>
+
+    <section class="card span-12">
+      <div class="card-h"><h2>Case studies</h2><span class="hint">Read = 60s+ on page · Finished = scrolled 90%</span></div>
+      <div class="table-scroll"><table id="csTable"></table></div>
+    </section>
+
+    <section class="card span-4">
+      <div class="card-h"><h2>Where they came from</h2></div>
+      <ul class="bars" id="refs"></ul>
+    </section>
+    <section class="card span-4">
+      <div class="card-h"><h2>Countries</h2></div>
+      <ul class="bars" id="locs"></ul>
+    </section>
+    <section class="card span-4">
+      <div class="card-h"><h2>Devices</h2></div>
+      <ul class="bars" id="sizes"></ul>
+    </section>
+
+    <section class="card span-6">
+      <div class="card-h"><h2>All pages</h2></div>
+      <ul class="bars" id="pages"></ul>
+    </section>
+    <section class="card span-6">
+      <div class="card-h"><h2>Actions</h2></div>
+      <ul class="bars" id="events"></ul>
+    </section>
+  </main>
+
+  <p class="foot">Counts are unique visitors per page or action from GoatCounter, so one person reading two case studies counts on both. Your own browser is excluded after connecting.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ─────────────────────────────────────────
+     CONFIG
+  ───────────────────────────────────────── */
+  var CASE_STUDIES = [
+    { slug: 'copycat-v2',      name: 'Copycat Internal Platform' },
+    { slug: 'cs2-funnel',      name: 'Data Driven UX Funnel' },
+    { slug: 'seller-platform', name: 'Seller Platform' },
+    { slug: 'unit-ep',         name: 'Unit.e.p App' }
+  ];
+  var PAGE_NAMES = { home: 'Home', about: 'About' };
+  CASE_STUDIES.forEach(function (c) { PAGE_NAMES[c.slug] = c.name; });
+  var EVENT_NAMES = {
+    'resume-open': 'Opened resume',
+    'contact-linkedin': 'Clicked LinkedIn',
+    'contact-email': 'Copied email',
+    'contact-phone': 'Copied phone',
+    'video-backpack': 'Played backpack video'
+  };
+  var SIZE_NAMES = { phone: 'Phone', largephone: 'Large phone', tablet: 'Tablet', desktop: 'Desktop', desktophd: 'Desktop HD', unknown: 'Unknown' };
+
+  var LS = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+    del: function (k) { try { localStorage.removeItem(k); } catch (e) {} }
+  };
+
+  var state = {
+    range: parseInt(LS.get('an-range') || '30', 10),
+    mode: null, // 'live' | 'sample'
+    code: LS.get('an-code') || 'adimiz',
+    token: LS.get('an-token') || ''
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = new Intl.NumberFormat('en-US');
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  /* ─────────────────────────────────────────
+     DATA: GoatCounter API
+  ───────────────────────────────────────── */
+  function iso(d) { d = new Date(d); d.setUTCMinutes(0, 0, 0); return d.toISOString().slice(0, 19) + 'Z'; }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  function api(path, params) {
+    var q = Object.keys(params || {}).map(function (k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
+    var url = 'https://' + state.code + '.goatcounter.com/api/v0' + path + (q ? '?' + q : '');
+    return fetch(url, { headers: { 'Authorization': 'Bearer ' + state.token, 'Content-Type': 'application/json' } })
+      .then(function (r) {
+        if (r.status === 401 || r.status === 403) throw new Error('auth');
+        if (r.status === 429) throw new Error('rate');
+        if (!r.ok) throw new Error('http ' + r.status);
+        return r.json();
+      });
+  }
+
+  async function loadLive(days) {
+    var end = new Date(Date.now() + 3600e3);
+    var start = new Date(end - days * 864e5);
+    var prevStart = new Date(start - days * 864e5);
+    var p = { start: iso(start), end: iso(end) };
+    var calls = [
+      ['total', '/stats/total', p],
+      ['prev', '/stats/total', { start: iso(prevStart), end: iso(start) }],
+      ['hits', '/stats/hits', Object.assign({ limit: 100 }, p)],
+      ['refs', '/stats/toprefs', Object.assign({ limit: 8 }, p)],
+      ['locs', '/stats/locations', Object.assign({ limit: 8 }, p)],
+      ['sizes', '/stats/sizes', Object.assign({ limit: 8 }, p)]
+    ];
+    var out = {};
+    // GoatCounter allows 4 requests/second
+    for (var i = 0; i < calls.length; i++) {
+      out[calls[i][0]] = await api(calls[i][1], calls[i][2]);
+      if (i < calls.length - 1) await sleep(280);
+    }
+    return normalize(out);
+  }
+
+  function normalize(raw) {
+    var pages = {}, events = {};
+    (raw.hits.hits || []).forEach(function (h) {
+      var path = String(h.path || '');
+      if (h.event) {
+        var key = path.replace(/^\//, '');
+        events[key] = (events[key] || 0) + (h.count || 0);
+      } else {
+        var slug = path.replace(/\/+$/, '').split('/').pop() || 'index';
+        slug = slug.replace(/\.html$/, '');
+        if (slug === 'index') slug = 'home';
+        pages[slug] = (pages[slug] || 0) + (h.count || 0);
+      }
+    });
+    var daily = (raw.total.stats || []).map(function (s) { return { day: s.day, n: s.daily || 0 }; });
+    return {
+      visitors: Math.max(0, (raw.total.total || 0) - (raw.total.total_events || 0)),
+      prevVisitors: Math.max(0, (raw.prev.total || 0) - (raw.prev.total_events || 0)),
+      daily: daily,
+      pages: pages,
+      events: events,
+      refs: (raw.refs.stats || []).map(function (s) { return { name: s.name || '(direct)', n: s.count }; }),
+      locs: (raw.locs.stats || []).map(function (s) { return { name: s.name || 'Unknown', n: s.count }; }),
+      sizes: (raw.sizes.stats || []).map(function (s) { return { name: SIZE_NAMES[s.name] || s.name || 'Unknown', n: s.count }; })
+    };
+  }
+
+  /* ─────────────────────────────────────────
+     DATA: sample (deterministic)
+  ───────────────────────────────────────── */
+  function rng(seed) { return function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+  function sample(days) {
+    var r = rng(days * 97 + 11), daily = [], total = 0;
+    for (var i = days - 1; i >= 0; i--) {
+      var d = new Date(Date.now() - i * 864e5);
+      var wk = d.getDay() === 5 || d.getDay() === 6 ? 0.55 : 1;
+      var n = Math.round((6 + r() * 14 + (r() > 0.93 ? 22 : 0)) * wk);
+      daily.push({ day: d.toISOString().slice(0, 10), n: n }); total += n;
+    }
+    var f = total / 100;
+    var cs = { 'copycat-v2': 26, 'cs2-funnel': 21, 'seller-platform': 17, 'unit-ep': 9 };
+    var pages = { home: Math.round(86 * f), about: Math.round(22 * f) }, events = {};
+    Object.keys(cs).forEach(function (k, i) {
+      pages[k] = Math.round(cs[k] * f);
+      events['read-60s/' + k] = Math.round(pages[k] * (0.62 - i * 0.07));
+      events['scroll-90/' + k] = Math.round(pages[k] * (0.41 - i * 0.05));
+    });
+    events['resume-open'] = Math.round(11 * f);
+    events['contact-linkedin'] = Math.round(6 * f);
+    events['contact-email'] = Math.round(3 * f);
+    events['contact-phone'] = Math.round(1 * f);
+    events['video-backpack'] = Math.round(5 * f);
+    var dist = function (list) { return list.map(function (x) { return { name: x[0], n: Math.max(1, Math.round(x[1] * f)) }; }); };
+    return {
+      visitors: total, prevVisitors: Math.round(total * 0.82), daily: daily, pages: pages, events: events,
+      refs: dist([['linkedin.com', 38], ['(direct)', 27], ['google.com', 12], ['comeet.com', 7], ['dribbble.com', 5], ['wellfound.com', 3]]),
+      locs: dist([['Israel', 61], ['United States', 18], ['United Kingdom', 7], ['Germany', 5], ['Netherlands', 3]]),
+      sizes: dist([['Desktop', 52], ['Desktop HD', 19], ['Phone', 21], ['Large phone', 5], ['Tablet', 3]])
+    };
+  }
+
+  /* ─────────────────────────────────────────
+     RENDER
+  ───────────────────────────────────────── */
+  function sumEvents(ev, prefix) { return Object.keys(ev).filter(function (k) { return k.indexOf(prefix) === 0; }).reduce(function (a, k) { return a + ev[k]; }, 0); }
+  function pct(a, b) { return b ? Math.round((a / b) * 100) : 0; }
+
+  function render(d) {
+    var csViews = CASE_STUDIES.reduce(function (a, c) { return a + (d.pages[c.slug] || 0); }, 0);
+    var reads = sumEvents(d.events, 'read-60s/');
+    var resume = d.events['resume-open'] || 0;
+    var contact = (d.events['contact-linkedin'] || 0) + (d.events['contact-email'] || 0) + (d.events['contact-phone'] || 0);
+
+    // KPIs
+    var k = $('kpis'); k.textContent = '';
+    var delta = d.prevVisitors ? Math.round(((d.visitors - d.prevVisitors) / d.prevVisitors) * 100) : null;
+    [
+      { l: 'Visitors', v: d.visitors, delta: delta },
+      { l: 'Case study views', v: csViews, sub: 'across ' + CASE_STUDIES.length + ' case studies' },
+      { l: 'Deep reads', v: reads, sub: pct(reads, csViews) + '% of case study views' },
+      { l: 'Resume opens', v: resume, sub: pct(resume, d.visitors) + '% of visitors' },
+      { l: 'Contact clicks', v: contact, sub: 'LinkedIn, email, phone' }
+    ].forEach(function (x) {
+      var c = el('div', 'kpi');
+      c.appendChild(el('div', 'label', x.l));
+      c.appendChild(el('div', 'value', fmt.format(x.v)));
+      var s = el('div', 'delta');
+      if (x.delta != null) {
+        s.className += x.delta >= 0 ? ' up' : ' down';
+        s.appendChild(el('b', null, (x.delta >= 0 ? '↑ ' : '↓ ') + Math.abs(x.delta) + '%'));
+        s.appendChild(document.createTextNode(' vs previous ' + state.range + ' days'));
+      } else { s.textContent = x.sub || 'No earlier data'; }
+      c.appendChild(s);
+      k.appendChild(c);
+    });
+
+    renderTrend(d.daily);
+
+    // Funnel
+    var steps = [
+      { t: 'Landed on the homepage', v: d.pages.home || 0 },
+      { t: 'Opened a case study', v: csViews },
+      { t: 'Read for 60s or more', v: reads },
+      { t: 'Opened resume or reached out', v: resume + contact }
+    ];
+    var fu = $('funnel'); fu.textContent = '';
+    var top = Math.max.apply(null, steps.map(function (s) { return s.v; })) || 1;
+    steps.forEach(function (s, i) {
+      var c = el('div', 'step');
+      c.appendChild(el('div', 'n', '0' + (i + 1)));
+      c.appendChild(el('div', 't', s.t));
+      c.appendChild(el('div', 'v', fmt.format(s.v)));
+      var m = el('div', 'meter'), bar = el('i'); bar.style.width = Math.max(2, Math.min(100, (s.v / top) * 100)) + '%'; m.appendChild(bar); c.appendChild(m);
+      c.appendChild(el('div', 'c', i === 0 ? 'Starting point' : Math.min(100, pct(s.v, steps[i - 1].v)) + '% of previous step'));
+      fu.appendChild(c);
+    });
+
+    // Case study table
+    var t = $('csTable'); t.textContent = '';
+    var hr = el('tr');
+    [['Case study', ''], ['Views', 'num'], ['Read 60s+', 'num'], ['Finished', 'num'], ['Read rate', 'num']].forEach(function (h) { hr.appendChild(el('th', h[1], h[0])); });
+    var thead = el('thead'); thead.appendChild(hr); t.appendChild(thead);
+    var tb = el('tbody');
+    CASE_STUDIES.slice().sort(function (a, b) { return (d.pages[b.slug] || 0) - (d.pages[a.slug] || 0); }).forEach(function (c) {
+      var v = d.pages[c.slug] || 0, r = d.events['read-60s/' + c.slug] || 0, f = d.events['scroll-90/' + c.slug] || 0;
+      var tr = el('tr');
+      var n = el('td'); n.appendChild(el('span', 'cs-name', c.name)); tr.appendChild(n);
+      tr.appendChild(el('td', 'num', fmt.format(v)));
+      tr.appendChild(el('td', 'num', fmt.format(r)));
+      tr.appendChild(el('td', 'num', fmt.format(f)));
+      var rt = el('td', 'num'), wrap = el('span', 'rate'), mini = el('span', 'mini'), mi = el('i');
+      mi.style.width = Math.min(100, pct(r, v)) + '%'; mini.appendChild(mi);
+      wrap.appendChild(mini); wrap.appendChild(el('span', null, pct(r, v) + '%')); rt.appendChild(wrap); tr.appendChild(rt);
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+
+    barList($('refs'), d.refs);
+    barList($('locs'), d.locs);
+    barList($('sizes'), d.sizes);
+    barList($('pages'), Object.keys(d.pages).map(function (s) { return { name: PAGE_NAMES[s] || s, n: d.pages[s] }; }).sort(function (a, b) { return b.n - a.n; }).slice(0, 10));
+    barList($('events'), Object.keys(EVENT_NAMES).map(function (e) { return { name: EVENT_NAMES[e], n: d.events[e] || 0 }; }).sort(function (a, b) { return b.n - a.n; }));
+  }
+
+  function barList(ul, items) {
+    ul.textContent = '';
+    items = (items || []).filter(function (x) { return x.n > 0; });
+    if (!items.length) { ul.appendChild(el('li', 'empty', 'Nothing yet for this period')); return; }
+    var max = Math.max.apply(null, items.map(function (x) { return x.n; }));
+    items.forEach(function (x) {
+      var li = el('li'); li.title = x.name + ': ' + fmt.format(x.n);
+      li.appendChild(el('span', 'name', x.name));
+      li.appendChild(el('span', 'val', fmt.format(x.n)));
+      var tr = el('span', 'track'), fi = el('span', 'fill'); fi.style.width = Math.max(2, (x.n / max) * 100) + '%';
+      tr.appendChild(fi); li.appendChild(tr); ul.appendChild(li);
+    });
+  }
+
+  /* ── Line chart (SVG) ── */
+  var trendData = [];
+  function renderTrend(daily) {
+    trendData = daily;
+    var box = $('trend'), tip = $('tip');
+    var old = box.querySelector('svg'); if (old) old.remove();
+    var W = box.clientWidth, H = box.clientHeight, L = 34, R = 8, T = 10, B = 26;
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Daily visitors over the last ' + state.range + ' days');
+    function n(tag, attrs) { var e = document.createElementNS(ns, tag); for (var a in attrs) e.setAttribute(a, attrs[a]); svg.appendChild(e); return e; }
+
+    var max = Math.max(4, Math.max.apply(null, daily.map(function (d) { return d.n; }).concat([0])));
+    var step = Math.pow(10, Math.floor(Math.log10(max))); var nice = Math.ceil(max / step) * step; if (nice / step > 5 && step > 1) nice = Math.ceil(max / (step / 2)) * (step / 2);
+    var x = function (i) { return L + (daily.length < 2 ? 0 : (i / (daily.length - 1)) * (W - L - R)); };
+    var y = function (v) { return T + (1 - v / nice) * (H - T - B); };
+
+    for (var g = 0; g <= 4; g++) {
+      var gv = (nice / 4) * g, gy = y(gv);
+      n('line', { x1: L, x2: W - R, y1: gy, y2: gy, stroke: g === 0 ? '#D9D4CD' : '#EFECE7', 'stroke-width': 1 });
+      var lt = n('text', { x: L - 8, y: gy + 4, 'text-anchor': 'end', class: 'axis-t' }); lt.textContent = Math.round(gv);
+    }
+    var ticks = Math.min(W < 520 ? 3 : 6, daily.length);
+    for (var t = 0; t < ticks; t++) {
+      var i = Math.round((t / Math.max(1, ticks - 1)) * (daily.length - 1));
+      var tx = n('text', { x: x(i), y: H - 6, 'text-anchor': t === 0 ? 'start' : t === ticks - 1 ? 'end' : 'middle', class: 'axis-t' });
+      tx.textContent = fmtDay(daily[i] && daily[i].day, true);
+    }
+    if (!daily.length) { box.appendChild(svg); return; }
+
+    var pts = daily.map(function (d, i) { return x(i) + ',' + y(d.n); });
+    n('path', { d: 'M' + x(0) + ',' + y(0) + ' L' + pts.join(' L') + ' L' + x(daily.length - 1) + ',' + y(0) + ' Z', fill: 'rgba(168,101,34,0.10)' });
+    n('path', { d: 'M' + pts.join(' L'), fill: 'none', stroke: '#A86522', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+
+    var hair = n('line', { y1: T, y2: H - B, stroke: '#0C0B0A', 'stroke-width': 1, 'stroke-dasharray': '2 3', opacity: 0 });
+    var dot = n('circle', { r: 5, fill: '#A86522', stroke: '#fff', 'stroke-width': 2, opacity: 0 });
+    var hit = n('rect', { x: L, y: 0, width: W - L - R, height: H, fill: 'transparent', tabindex: 0 });
+
+    function show(i) {
+      var d = daily[i]; if (!d) return;
+      var px = x(i), py = y(d.n);
+      hair.setAttribute('x1', px); hair.setAttribute('x2', px); hair.setAttribute('opacity', 0.35);
+      dot.setAttribute('cx', px); dot.setAttribute('cy', py); dot.setAttribute('opacity', 1);
+      tip.textContent = '';
+      tip.appendChild(el('b', null, fmt.format(d.n) + ' visitors'));
+      tip.appendChild(el('span', null, fmtDay(d.day)));
+      var sx = box.clientWidth / W;
+      tip.style.left = Math.min(Math.max(px * sx, 70), box.clientWidth - 70) + 'px';
+      tip.style.top = (py * (box.clientHeight / H)) + 'px';
+      tip.style.opacity = 1;
+    }
+    function hide() { hair.setAttribute('opacity', 0); dot.setAttribute('opacity', 0); tip.style.opacity = 0; }
+    var cur = daily.length - 1;
+    hit.addEventListener('pointermove', function (e) {
+      var r = svg.getBoundingClientRect(); var mx = (e.clientX - r.left) * (W / r.width);
+      cur = Math.round(((mx - L) / (W - L - R)) * (daily.length - 1)); cur = Math.max(0, Math.min(daily.length - 1, cur)); show(cur);
+    });
+    hit.addEventListener('pointerleave', hide);
+    hit.addEventListener('focus', function () { show(cur); });
+    hit.addEventListener('blur', hide);
+    hit.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { cur = Math.max(0, cur - 1); show(cur); e.preventDefault(); }
+      if (e.key === 'ArrowRight') { cur = Math.min(daily.length - 1, cur + 1); show(cur); e.preventDefault(); }
+    });
+    box.appendChild(svg);
+
+    var peak = daily.reduce(function (a, d) { return d.n > a.n ? d : a; }, daily[0]);
+    $('trendHint').textContent = 'Peak ' + fmt.format(peak.n) + ' on ' + fmtDay(peak.day);
+
+    var tb = $('trendTable'); tb.textContent = '';
+    var h = el('tr'); h.appendChild(el('th', null, 'Day')); h.appendChild(el('th', 'num', 'Visitors')); tb.appendChild(h);
+    daily.slice().reverse().forEach(function (d) { var r = el('tr'); r.appendChild(el('td', null, fmtDay(d.day))); r.appendChild(el('td', 'num', fmt.format(d.n))); tb.appendChild(r); });
+  }
+
+  function fmtDay(s, short) {
+    if (!s) return '';
+    var d = new Date(s + 'T00:00:00');
+    return d.toLocaleDateString('en-US', short ? { month: 'short', day: 'numeric' } : { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+
+  /* ─────────────────────────────────────────
+     FLOW
+  ───────────────────────────────────────── */
+  var lastData = null;
+  function setStatus(mode, text) { var s = $('status'); s.className = 'status ' + (mode || ''); $('statusText').textContent = text; }
+
+  async function load() {
+    $('grid').classList.add('loading');
+    $('err').textContent = '';
+    try {
+      var data = state.mode === 'live' ? await loadLive(state.range) : sample(state.range);
+      lastData = data;
+      render(data);
+      $('updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      if (state.mode === 'live') { setStatus('live', 'Live · ' + state.code); $('connect').hidden = true; $('sampleBanner').hidden = true; }
+      else { setStatus('sample', 'Sample data'); $('sampleBanner').hidden = false; }
+    } catch (e) {
+      var msg = e.message === 'auth' ? 'GoatCounter rejected that token. Check it has "Read statistics" permission.'
+              : e.message === 'rate' ? 'Too many requests. Wait a few seconds and refresh.'
+              : 'Couldn\'t reach GoatCounter. Check the site code and your connection.';
+      $('err').textContent = msg;
+      $('connect').hidden = false;
+      setStatus('', 'Not connected');
+      if (!lastData) { state.mode = 'sample'; render(sample(state.range)); $('sampleBanner').hidden = false; setStatus('sample', 'Sample data'); }
+    } finally {
+      $('grid').classList.remove('loading');
+    }
+  }
+
+  // Range
+  document.querySelectorAll('.seg button').forEach(function (b) {
+    b.setAttribute('aria-pressed', String(parseInt(b.dataset.range, 10) === state.range));
+    b.addEventListener('click', function () {
+      state.range = parseInt(b.dataset.range, 10); LS.set('an-range', state.range);
+      document.querySelectorAll('.seg button').forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+      load();
+    });
+  });
+  $('refresh').addEventListener('click', load);
+  $('settings').addEventListener('click', function () { $('connect').hidden = !$('connect').hidden; });
+  $('openConnect').addEventListener('click', function () { $('connect').hidden = false; $('token').focus(); });
+  $('sampleBtn').addEventListener('click', function () { state.mode = 'sample'; $('connect').hidden = true; load(); });
+
+  $('connectForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    state.code = $('code').value.trim().toLowerCase().replace(/\.goatcounter\.com.*$/, '').replace(/^https?:\/\//, '');
+    state.token = $('token').value.trim();
+    if (!state.code || !state.token) return;
+    LS.set('an-code', state.code); LS.set('an-token', state.token);
+    LS.set('skipgc', 't'); // tells GoatCounter's count.js to ignore this browser
+    state.mode = 'live';
+    load();
+  });
+
+  var resizeT;
+  window.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(function () { if (trendData.length) renderTrend(trendData); }, 150); });
+
+  // Boot
+  $('code').value = state.code;
+  if (state.token) { state.mode = 'live'; $('token').value = state.token; }
+  else { state.mode = 'sample'; $('connect').hidden = false; }
+  load();
+})();
+</script>
+</body>
+</html>

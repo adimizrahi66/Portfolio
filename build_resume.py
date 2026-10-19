@@ -33,6 +33,7 @@ def inline(s):
 
 # ---------------------------------------------------------------- parse markdown
 def parse_md(text):
+    text = text.replace("\u2028", " ").replace("\u2029", " ")  # stray Unicode line breaks split bullets
     lines = text.splitlines()
 
     # 1. name = first H1

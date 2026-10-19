@@ -326,7 +326,14 @@
   function iso(d) { d = new Date(d); d.setUTCMinutes(0, 0, 0); return d.toISOString().slice(0, 19) + 'Z'; }
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
-  function api(path, params) {
+  function api(path, params, retried) {
+    return apiOnce(path, params).catch(function (e) {
+      if (retried || e.message === 'auth') throw e;
+      return sleep(1200).then(function () { return api(path, params, true); });
+    });
+  }
+
+  function apiOnce(path, params) {
     var q = Object.keys(params || {}).map(function (k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
     var url = 'https://' + state.code + '.goatcounter.com/api/v0' + path + (q ? '?' + q : '');
     return fetch(url, { headers: { 'Authorization': 'Bearer ' + state.token, 'Content-Type': 'application/json' } })

@@ -2,7 +2,7 @@
    Portfolio analytics tracker (GoatCounter)
    - Pageviews: automatic
    - Events: resume opens, contact clicks, video plays,
-     60s deep reads, 90% scroll depth
+     active-time milestones, scroll depth
    - Your own browser is skipped once you connect on analytics.html
 ───────────────────────────────────────── */
 (function () {
@@ -45,26 +45,48 @@
     else if (el.id === 'backpackTrigger')     send('video-backpack', 'Backpack video · ' + slug);
   }, true);
 
-  /* ── Deep read: 60s of visible time on a page ── */
-  var visibleMs = 0, last = document.hidden ? null : Date.now(), readSent = false;
-  function tick() {
-    if (last !== null) { visibleMs += Date.now() - last; last = document.hidden ? null : Date.now(); }
-    if (!readSent && visibleMs >= 60000) { readSent = true; send('read-60s/' + slug, '60s read · ' + slug); }
-  }
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) { tick(); last = null; } else { last = Date.now(); }
-  });
-  var timer = setInterval(function () { tick(); if (readSent) clearInterval(timer); }, 5000);
+  /* ── Active time ──
+     Counts only while the tab is visible AND the visitor interacted
+     (scroll, mouse, key, touch) within the last 45s.
+     Background tabs and idle open tabs add no time.
+     One event per milestone: time-10s, time-30s, time-60s, time-3m, time-5m ── */
+  var IDLE_MS = 45000;
+  var MILESTONES = [[10, '10s'], [30, '30s'], [60, '60s'], [180, '3m'], [300, '5m']];
+  var activeMs = 0, lastInput = Date.now(), lastTick = Date.now(), next = 0;
 
-  /* ── Scroll depth: 90% of the page ── */
-  var scrollSent = false;
+  function markActive() { lastInput = Date.now(); }
+  ['scroll', 'wheel', 'mousemove', 'mousedown', 'keydown', 'touchstart', 'pointerdown'].forEach(function (ev) {
+    window.addEventListener(ev, markActive, { passive: true, capture: true });
+  });
+  document.addEventListener('visibilitychange', function () {
+    lastTick = Date.now();
+    if (!document.hidden) markActive();
+  });
+
+  var timer = setInterval(function () {
+    var now = Date.now();
+    var gap = Math.min(now - lastTick, 2000); // ignore sleep / throttled timers
+    lastTick = now;
+    if (!document.hidden && now - lastInput < IDLE_MS) activeMs += gap;
+    while (next < MILESTONES.length && activeMs >= MILESTONES[next][0] * 1000) {
+      var m = MILESTONES[next][1];
+      send('time-' + m + '/' + slug, 'Active ' + m + ' · ' + slug);
+      next++;
+    }
+    if (next >= MILESTONES.length) clearInterval(timer);
+  }, 1000);
+
+  /* ── Scroll depth: 25 / 50 / 75 / 90% ── */
+  var DEPTHS = [25, 50, 75, 90], depthNext = 0;
   window.addEventListener('scroll', function () {
-    if (scrollSent) return;
+    if (depthNext >= DEPTHS.length) return;
     var doc = document.documentElement;
     var max = doc.scrollHeight - window.innerHeight;
-    if (max > 400 && (window.scrollY / max) >= 0.9) {
-      scrollSent = true;
-      send('scroll-90/' + slug, 'Scrolled 90% · ' + slug);
+    if (max < 200) return;
+    var pct = (window.scrollY / max) * 100;
+    while (depthNext < DEPTHS.length && pct >= DEPTHS[depthNext]) {
+      send('scroll-' + DEPTHS[depthNext] + '/' + slug, 'Scrolled ' + DEPTHS[depthNext] + '% · ' + slug);
+      depthNext++;
     }
   }, { passive: true });
 })();

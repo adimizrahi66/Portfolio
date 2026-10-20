@@ -101,7 +101,7 @@
     .bars .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
     .bars .val { font-weight: 600; font-variant-numeric: tabular-nums; }
     .bars .track { grid-column: 1 / -1; height: 8px; border-radius: 4px; background: var(--grid); overflow: hidden; }
-    .bars .fill { height: 100%; border-radius: 4px; background: var(--mark); transition: width .5s cubic-bezier(.22,1,.36,1); }
+    .bars .fill { display: block; height: 100%; border-radius: 4px; background: var(--mark); transition: width .5s cubic-bezier(.22,1,.36,1); }
     .bars li:hover .fill { filter: brightness(1.12); }
     .empty { font-size: 13px; color: var(--text-muted); padding: 12px 0; }
 
@@ -114,6 +114,18 @@
     .step .meter { height: 8px; border-radius: 4px; background: var(--grid); overflow: hidden; }
     .step .meter i { display: block; height: 100%; border-radius: 4px; background: var(--mark); }
     .step .c { font-size: 12px; color: var(--text-muted); }
+
+    /* ── TIME ON PAGE ── */
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+    .chips button { border: 1px solid var(--line); background: transparent; padding: 7px 14px; border-radius: 99px; font-size: 12px; font-weight: 500; color: var(--text-2); cursor: pointer; }
+    .chips button:hover { color: var(--text); background: var(--card-soft); }
+    .chips button[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: #fff; }
+    .attn { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .attn-col { background: var(--card-soft); border-radius: 20px; padding: 20px; min-width: 0; }
+    .attn-col h3 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .attn-col .big { font-family: var(--serif); font-size: 30px; font-weight: 600; line-height: 1.1; margin: 8px 0 4px; }
+    .attn-col .cap { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5; }
+    .bars .val small { font-weight: 400; color: var(--text-muted); margin-left: 6px; }
 
     /* ── TABLE ── */
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -166,6 +178,7 @@
       .kpi .value { font-size: 32px; }
       .span-6 { grid-column: span 12; }
       .funnel { grid-template-columns: repeat(2, 1fr); }
+      .attn { grid-template-columns: 1fr; }
       .connect { grid-template-columns: 1fr; padding: 24px; gap: 20px; }
       .card { padding: 20px; }
       .chart { height: 220px; }
@@ -249,7 +262,26 @@
     </section>
 
     <section class="card span-12">
-      <div class="card-h"><h2>Case studies</h2><span class="hint">Read = 60s+ on page · Finished = scrolled 90%</span></div>
+      <div class="card-h"><h2>Time on page</h2><span class="hint">Active time only: tab on screen and visitor interacting</span></div>
+      <div class="chips" id="attnChips" role="group" aria-label="Page"></div>
+      <div class="attn">
+        <div class="attn-col">
+          <h3>How long they stayed</h3>
+          <div class="big" id="attnTime">–</div>
+          <div class="cap" id="attnTimeCap"></div>
+          <ul class="bars" id="attnTimeBars"></ul>
+        </div>
+        <div class="attn-col">
+          <h3>How far they scrolled</h3>
+          <div class="big" id="attnScroll">–</div>
+          <div class="cap" id="attnScrollCap"></div>
+          <ul class="bars" id="attnScrollBars"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card span-12">
+      <div class="card-h"><h2>Case studies</h2><span class="hint">Read = 60s+ active · Finished = scrolled 90% · Typical time = median active time</span></div>
       <div class="table-scroll"><table id="csTable"></table></div>
     </section>
 
@@ -301,6 +333,16 @@
     'contact-phone': 'Copied phone',
     'video-backpack': 'Played backpack video'
   };
+  var TIME_STEPS = [
+    { key: '10s', sec: 10, label: '10 seconds or more' },
+    { key: '30s', sec: 30, label: '30 seconds or more' },
+    { key: '60s', sec: 60, label: '1 minute or more' },
+    { key: '3m', sec: 180, label: '3 minutes or more' },
+    { key: '5m', sec: 300, label: '5 minutes or more' }
+  ];
+  var TIME_RANGES = ['Under 10s', '10–30s', '30s–1m', '1–3m', '3–5m', '5m+'];
+  var SCROLL_STEPS = [25, 50, 75, 90];
+  var attnPage = 'home';
   var SIZE_NAMES = { phone: 'Phone', largephone: 'Large phone', tablet: 'Tablet', desktop: 'Desktop', desktophd: 'Desktop HD', unknown: 'Unknown' };
 
   var LS = {
@@ -381,6 +423,9 @@
         pages[slug] = (pages[slug] || 0) + (h.count || 0);
       }
     });
+    Object.keys(events).forEach(function (k) {
+      if (k.indexOf('read-60s/') === 0) { var t = 'time-60s/' + k.slice(9); events[t] = (events[t] || 0) + events[k]; }
+    });
     var daily = (raw.total.stats || []).map(function (s) { return { day: s.day, n: s.daily || 0 }; });
     return {
       visitors: Math.max(0, (raw.total.total || 0) - (raw.total.total_events || 0)),
@@ -411,8 +456,17 @@
     var pages = { home: Math.round(86 * f), about: Math.round(22 * f) }, events = {};
     Object.keys(cs).forEach(function (k, i) {
       pages[k] = Math.round(cs[k] * f);
-      events['read-60s/' + k] = Math.round(pages[k] * (0.62 - i * 0.07));
-      events['scroll-90/' + k] = Math.round(pages[k] * (0.41 - i * 0.05));
+    });
+    var TS = { home: [0.78, 0.52, 0.30, 0.11, 0.04], about: [0.80, 0.55, 0.33, 0.08, 0.02] };
+    var SS = { home: [0.74, 0.55, 0.38, 0.24], about: [0.70, 0.52, 0.36, 0.27] };
+    Object.keys(cs).forEach(function (k, i) {
+      var m = 1 - i * 0.09;
+      TS[k] = [0.86 * m, 0.74 * m, 0.62 * m, 0.33 * m, 0.17 * m];
+      SS[k] = [0.81 * m, 0.66 * m, 0.52 * m, 0.41 * m];
+    });
+    Object.keys(TS).forEach(function (k) {
+      TIME_STEPS.forEach(function (t, j) { events['time-' + t.key + '/' + k] = Math.round(pages[k] * TS[k][j]); });
+      SCROLL_STEPS.forEach(function (sd, j) { events['scroll-' + sd + '/' + k] = Math.round(pages[k] * SS[k][j]); });
     });
     events['resume-open'] = Math.round(11 * f);
     events['contact-linkedin'] = Math.round(6 * f);
@@ -436,7 +490,7 @@
 
   function render(d) {
     var csViews = CASE_STUDIES.reduce(function (a, c) { return a + (d.pages[c.slug] || 0); }, 0);
-    var reads = sumEvents(d.events, 'read-60s/');
+    var reads = CASE_STUDIES.reduce(function (a, c) { return a + (d.events['time-60s/' + c.slug] || 0); }, 0);
     var resume = d.events['resume-open'] || 0;
     var contact = (d.events['contact-linkedin'] || 0) + (d.events['contact-email'] || 0) + (d.events['contact-phone'] || 0);
 
@@ -487,14 +541,15 @@
     // Case study table
     var t = $('csTable'); t.textContent = '';
     var hr = el('tr');
-    [['Case study', ''], ['Views', 'num'], ['Read 60s+', 'num'], ['Finished', 'num'], ['Read rate', 'num']].forEach(function (h) { hr.appendChild(el('th', h[1], h[0])); });
+    [['Case study', ''], ['Views', 'num'], ['Typical time', 'num'], ['Read 60s+', 'num'], ['Finished', 'num'], ['Read rate', 'num']].forEach(function (h) { hr.appendChild(el('th', h[1], h[0])); });
     var thead = el('thead'); thead.appendChild(hr); t.appendChild(thead);
     var tb = el('tbody');
     CASE_STUDIES.slice().sort(function (a, b) { return (d.pages[b.slug] || 0) - (d.pages[a.slug] || 0); }).forEach(function (c) {
-      var v = d.pages[c.slug] || 0, r = d.events['read-60s/' + c.slug] || 0, f = d.events['scroll-90/' + c.slug] || 0;
+      var v = d.pages[c.slug] || 0, r = d.events['time-60s/' + c.slug] || 0, f = d.events['scroll-90/' + c.slug] || 0;
       var tr = el('tr');
       var n = el('td'); n.appendChild(el('span', 'cs-name', c.name)); tr.appendChild(n);
       tr.appendChild(el('td', 'num', fmt.format(v)));
+      tr.appendChild(el('td', 'num', medianTime(d, c.slug)));
       tr.appendChild(el('td', 'num', fmt.format(r)));
       tr.appendChild(el('td', 'num', fmt.format(f)));
       var rt = el('td', 'num'), wrap = el('span', 'rate'), mini = el('span', 'mini'), mi = el('i');
@@ -504,11 +559,58 @@
     });
     t.appendChild(tb);
 
+    renderAttention(d);
+
     barList($('refs'), d.refs);
     barList($('locs'), d.locs);
     barList($('sizes'), d.sizes);
     barList($('pages'), Object.keys(d.pages).map(function (s) { return { name: PAGE_NAMES[s] || s, n: d.pages[s] }; }).sort(function (a, b) { return b.n - a.n; }).slice(0, 10));
     barList($('events'), Object.keys(EVENT_NAMES).map(function (e) { return { name: EVENT_NAMES[e], n: d.events[e] || 0 }; }).sort(function (a, b) { return b.n - a.n; }));
+  }
+
+  /* ── Time on page ── */
+  function medianTime(d, slug) {
+    var v = d.pages[slug] || 0;
+    if (!v) return '–';
+    var idx = 0;
+    TIME_STEPS.forEach(function (t, j) { if ((d.events['time-' + t.key + '/' + slug] || 0) / v >= 0.5) idx = j + 1; });
+    return TIME_RANGES[idx];
+  }
+
+  function pctList(ul, items, base) {
+    ul.textContent = '';
+    if (!base) { ul.appendChild(el('li', 'empty', 'No visits to this page yet')); return; }
+    items.forEach(function (x) {
+      var p = Math.min(100, pct(x.n, base));
+      var li = el('li'); li.title = x.name + ': ' + fmt.format(x.n) + ' of ' + fmt.format(base) + ' visitors';
+      li.appendChild(el('span', 'name', x.name));
+      var val = el('span', 'val', p + '%'); val.appendChild(el('small', null, fmt.format(x.n))); li.appendChild(val);
+      var tr = el('span', 'track'), fi = el('span', 'fill'); fi.style.width = Math.max(p ? 2 : 0, p) + '%';
+      tr.appendChild(fi); li.appendChild(tr); ul.appendChild(li);
+    });
+  }
+
+  function renderAttention(d) {
+    var pagesList = [{ slug: 'home', name: 'Home' }].concat(CASE_STUDIES, [{ slug: 'about', name: 'About' }]);
+    var chips = $('attnChips'); chips.textContent = '';
+    pagesList.forEach(function (pg) {
+      var b = el('button', null, pg.name); b.type = 'button';
+      b.setAttribute('aria-pressed', String(pg.slug === attnPage));
+      b.addEventListener('click', function () { attnPage = pg.slug; renderAttention(d); });
+      chips.appendChild(b);
+    });
+    var slug = attnPage, v = d.pages[slug] || 0;
+    var ev = function (k) { return d.events[k + '/' + slug] || 0; };
+
+    $('attnTime').textContent = v ? medianTime(d, slug) : '–';
+    $('attnTimeCap').textContent = v ? 'Typical active time (median) · ' + fmt.format(v) + ' visitors' : 'No visits to this page yet';
+    pctList($('attnTimeBars'), TIME_STEPS.map(function (t) { return { name: t.label, n: ev('time-' + t.key) }; }), v);
+
+    var deepest = 0;
+    SCROLL_STEPS.forEach(function (sd) { if (v && ev('scroll-' + sd) / v >= 0.5) deepest = sd; });
+    $('attnScroll').textContent = v ? (deepest ? deepest + '% of the page' : 'Under 25%') : '–';
+    $('attnScrollCap').textContent = v ? 'How far at least half of visitors scrolled' : 'No visits to this page yet';
+    pctList($('attnScrollBars'), SCROLL_STEPS.map(function (sd) { return { name: 'Reached ' + sd + '%', n: ev('scroll-' + sd) }; }), v);
   }
 
   function barList(ul, items) {

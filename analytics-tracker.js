@@ -3,6 +3,7 @@
    - Pageviews: automatic
    - Events: resume opens, contact clicks, video plays,
      active-time milestones, scroll depth
+   - Session recordings: Microsoft Clarity
    - Your own browser is skipped once you connect on analytics.html
 ───────────────────────────────────────── */
 (function () {
@@ -30,6 +31,19 @@
   s.setAttribute('data-goatcounter', 'https://' + GC_CODE + '.goatcounter.com/count');
   s.onload = function () { while (queue.length) { var q = queue.shift(); send(q[0], q[1]); } };
   document.head.appendChild(s);
+
+  /* ── Microsoft Clarity: session recordings & per-visitor journeys ──
+     Skipped in your own browser (same flag GoatCounter uses) ── */
+  var CLARITY_ID = 'z0m2rctvyp';
+  var skipSelf = false;
+  try { skipSelf = localStorage.getItem('skipgc') === 't'; } catch (e) {}
+  if (!skipSelf && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && location.protocol !== 'file:') {
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', CLARITY_ID);
+  }
 
   /* ── Clicks ── */
   document.addEventListener('click', function (e) {

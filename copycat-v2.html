@@ -1025,7 +1025,21 @@
       .nav-link { padding: 6px 8px; font-size: 9.5px; }
     }
   </style>
+  <link rel="stylesheet" href="mobile-polish.css">
+  <style>
+    .proto-mobile{display:none}
+    @media (max-width:768px){
+      .journey-wrap{padding:20px 16px!important;overflow:visible!important}
+      .journey-chips{flex-direction:column;align-items:stretch!important;min-width:0!important;gap:6px!important}
+      .journey-chips>span{transform:rotate(90deg);align-self:center;line-height:1}
+      .proto-embed.proto-desktop{display:none}
+      .proto-mobile{display:block;margin-top:20px}
+      .proto-mobile .media-slot{margin-top:0}
+      .proto-mobile p{margin-top:10px;font-size:13px;line-height:1.5;color:var(--text-soft)}
+    }
+  </style>
   <script src="analytics-tracker.js" defer></script>
+  <script src="mobile-zoom.js" defer></script>
 </head>
 <body>
 
@@ -1339,8 +1353,8 @@
     </div>
 
     <!-- ── JOURNEY MAP VISUAL ── -->
-    <div style="margin-top:44px;padding:34px 30px;border-radius:24px;border:1px solid rgba(12,11,10,0.10);background:#F5F3F0;overflow-x:auto">
-      <div style="display:flex;align-items:center;gap:10px;min-width:640px">
+    <div class="journey-wrap" style="margin-top:44px;padding:34px 30px;border-radius:24px;border:1px solid rgba(12,11,10,0.10);background:#F5F3F0;overflow-x:auto">
+      <div class="journey-chips" style="display:flex;align-items:center;gap:10px;min-width:640px">
         <div style="flex:1;text-align:center;padding:16px 12px;border-radius:14px;background:#fff;border:1px solid rgba(12,11,10,0.12);font-size:13px;font-weight:600;color:var(--text)">Ideation</div>
         <span style="color:var(--accent);font-weight:700">&rarr;</span>
         <div style="flex:1;text-align:center;padding:16px 12px;border-radius:14px;background:#fff;border:1px solid rgba(12,11,10,0.12);font-size:13px;font-weight:600;color:var(--text)">Article</div>
@@ -1744,8 +1758,14 @@
     <h4 class="subsection-h4" style="margin-top:44px">Interactive Prototype</h4>
     <p class="section-body" style="margin-top:8px">Generate an article to unlock the creative builder and test the automated flow firsthand.</p>
 
-    <div class="proto-embed" style="margin-top:24px">
+    <div class="proto-embed proto-desktop" style="margin-top:24px">
       <iframe id="protoFull" class="proto-frame" src="CopyCat/copycat-crm.html" title="CopyCat full platform prototype" loading="lazy"></iframe>
+    </div>
+    <div class="proto-mobile">
+      <div class="media-slot" style="background:none;box-shadow:0 20px 50px -28px rgba(12,11,10,0.35)">
+        <img src="images and videos/copycat-platform-tasks.webp" alt="CopyCat task list: each task row tracks article and creative status for the Facebook creative pipeline" loading="lazy">
+      </div>
+      <p>The interactive prototype is built for larger screens. Open this page on a computer to click through it.</p>
     </div>
 
     <!-- ── LIVE PROTOTYPE EMBED ── -->

@@ -1177,30 +1177,24 @@
     }
   </style>
   <script>document.documentElement.classList.add('js');</script>
+  <style>
+    /* ── Mobile polish ── */
+    @media (max-width: 768px) {
+      .nav-resume, .nav-divider { display: block; }
+      .nav-contact-wrap { display: block; position: relative; }
+      .nav-links a { padding: 9px 8px; font-size: 12px; }
+      .nav-cta { font-size: 12.5px; padding-left: 14px; padding-right: 14px; }
+      .hero .sub br { display: none; }
+      .card-labels span, .hero-tag { font-size: 11px; }
+    }
+    @media (max-width: 400px) {
+      .nav-links a { padding: 9px 6px; font-size: 11.5px; }
+      .nav-cta { padding-left: 12px; padding-right: 12px; }
+    }
+  </style>
   <script src="analytics-tracker.js" defer></script>
 </head>
 <body>
-
-<!-- ─── MOBILE BANNER ─── -->
-<div class="mobile-banner" id="mobileBanner">
-  <span class="mb-icon">🖥️</span>
-  <span>Best experienced on desktop.</span>
-  <button type="button" id="mobileBannerClose" aria-label="Dismiss">✕</button>
-</div>
-<script>
-  (function () {
-    const b = document.getElementById('mobileBanner');
-    if (sessionStorage.getItem('bannerClosed')) { b.classList.add('hidden'); return; }
-    window.addEventListener('load', () => {
-      setTimeout(() => b.classList.add('show'), 2000);
-    });
-    document.getElementById('mobileBannerClose').addEventListener('click', () => {
-      b.classList.remove('show');
-      sessionStorage.setItem('bannerClosed', '1');
-      setTimeout(() => b.classList.add('hidden'), 500);
-    });
-  })();
-</script>
 
 <!-- ─── PAGE ─── -->
 <div class="page-wrapper">
@@ -1238,7 +1232,7 @@
 
       <!-- Central bubble -->
       <div class="hero-bubble">
-        <p><span class="lead">Hey I'm Adi, a Senior Product Designer.</span><span class="sub">Designing the intersection of data, AI workflows,<br>and seamless user experiences.</span></p>
+        <p><span class="lead">Hey I'm Adi, a Senior Product Designer.</span><span class="sub">Designing the intersection of data, AI workflows, <br>and seamless user experiences.</span></p>
         <a href="#work" class="hero-view-work">View my work</a>
       </div>
 

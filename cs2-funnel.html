@@ -1306,7 +1306,20 @@
       .nav-link { padding: 6px 8px; font-size: 9.5px; }
     }
   </style>
+  <link rel="stylesheet" href="mobile-polish.css">
+  <style>
+    @media (max-width:768px){
+      .solution-feature--stacked > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;gap:28px!important;margin-bottom:72px!important}
+      .solution-feature--stacked > div[style*="margin-bottom:220px"]{margin-bottom:72px!important}
+      .solution-feature--stacked div[style*="repeat(3,1fr)"]{grid-template-columns:1fr!important;gap:14px!important}
+      .solution-feature--stacked div[style*="padding:36px 28px"]{padding:24px 20px!important}
+      .solution-feature--stacked .overview-image{aspect-ratio:auto!important}
+      .solution-feature--stacked .overview-image img{transform:none!important;height:auto!important}
+      .impact-grid{grid-template-columns:1fr!important}
+    }
+  </style>
   <script src="analytics-tracker.js" defer></script>
+  <script src="mobile-zoom.js" defer></script>
 </head>
 <body>
 
@@ -1325,7 +1338,7 @@
         Back to Work
       </a>
       <div class="hero-meta-top">
-        <div class="label label-light"><img src="images and videos/white logo roundforest.svg" alt="Roundforest" style="height:18px;width:auto;display:block"></div>
+        <div class="label label-light"><img src="images and videos/blue logo roundforest.svg" alt="Roundforest" style="height:18px;width:auto;display:block"></div>
       </div>
     </div>
 

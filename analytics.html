@@ -127,6 +127,31 @@
     .attn-col .cap { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5; }
     .bars .val small { font-weight: 400; color: var(--text-muted); margin-left: 6px; }
 
+    /* ── VISIT LOG ── */
+    .vl-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+    .vl-tools input { border: 1px solid var(--line); background: var(--card-soft); border-radius: 99px; padding: 8px 14px; font-size: 13px; outline: none; min-width: 0; flex: 1 1 200px; max-width: 280px; }
+    .vl-tools input:focus { border-color: var(--mark); }
+    .vl-note { font-size: 12px; color: var(--text-muted); }
+    .vl-list { list-style: none; display: flex; flex-direction: column; }
+    .visit { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 6px 20px; padding: 16px 0; border-top: 1px solid var(--grid); }
+    .visit:first-child { border-top: 0; padding-top: 4px; }
+    .v-when b { display: block; font-size: 13px; font-weight: 600; }
+    .v-when span { font-size: 12px; color: var(--text-muted); }
+    .v-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .tag { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 99px; background: var(--card-soft); color: var(--text-2); }
+    .tag.src { background: rgba(168,101,34,0.12); color: #7A4A17; }
+    .v-path { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .v-step { border: 1px solid var(--line); border-radius: 12px; padding: 7px 11px; font-size: 12px; line-height: 1.35; }
+    .v-step b { font-weight: 600; display: block; }
+    .v-step span { color: var(--text-muted); }
+    .v-arrow { color: var(--text-subtle, #C0BCB5); font-size: 12px; }
+    .v-act { font-size: 12px; font-weight: 600; color: var(--good); }
+    .vl-more { margin-top: 12px; }
+    @media (max-width: 720px) {
+      .visit { grid-template-columns: 1fr; }
+      .vl-tools input { max-width: none; }
+    }
+
     /* ── TABLE ── */
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); padding: 0 8px 10px; border-bottom: 1px solid var(--line); }
@@ -255,6 +280,17 @@
       <div class="card-h"><h2>Daily visitors</h2><span class="hint" id="trendHint"></span></div>
       <div class="chart" id="trend"><div class="tip" id="tip"></div></div>
       <details class="tbl"><summary>View as table</summary><div class="table-scroll"><table id="trendTable"></table></div></details>
+    </section>
+
+    <section class="card span-12" id="visitLog">
+      <div class="card-h"><h2>Visit log</h2><span class="hint">Each row is one visit · times in your local time</span></div>
+      <div class="vl-tools">
+        <input id="vlFilter" type="search" placeholder="Filter by source, country, page…" aria-label="Filter visits">
+        <button class="ghost" type="button" id="vlUpdate">Update log</button>
+        <span class="vl-note" id="vlNote"></span>
+      </div>
+      <ul class="vl-list" id="vlList"></ul>
+      <button class="ghost vl-more" type="button" id="vlMore" hidden>Show more</button>
     </section>
 
     <section class="card span-12">
@@ -561,6 +597,7 @@
     t.appendChild(tb);
 
     renderAttention(d);
+    renderVisits();
 
     barList($('refs'), d.refs);
     barList($('locs'), d.locs);
@@ -711,6 +748,200 @@
   }
 
   /* ─────────────────────────────────────────
+     VISIT LOG (GoatCounter export → one row per session)
+  ───────────────────────────────────────── */
+  var VL_KEY = 'an-visits', EXPORT_GAP = 60 * 60 * 1000, vlShown = 25;
+  function vlStore() { try { return JSON.parse(LS.get(VL_KEY) || 'null') || { hits: [], lastHitId: 0, at: 0, tried: 0 }; } catch (e) { return { hits: [], lastHitId: 0, at: 0, tried: 0 }; } }
+  function vlSave(st) { if (st.hits.length > 3000) st.hits = st.hits.slice(-3000); LS.set(VL_KEY, JSON.stringify(st)); }
+
+  function parseCSV(text) {
+    var rows = [], row = [], f = '', q = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (q) { if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+      else if (c === '"') q = true;
+      else if (c === ',') { row.push(f); f = ''; }
+      else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }
+      else f += c;
+    }
+    if (f || row.length) { row.push(f); rows.push(row); }
+    return rows.filter(function (r) { return r.length > 1; });
+  }
+
+  function csvToHits(text) {
+    var rows = parseCSV(text); if (!rows.length) return [];
+    var head = rows[0].map(function (h) { return h.toLowerCase().replace(/^\d+/, '').replace(/[^a-z]/g, ''); });
+    var col = function (n) { return head.indexOf(n); };
+    var C = { path: col('path'), event: col('event'), session: col('session'), bot: col('bot'), ref: col('referrer'), size: col('screensize'), loc: col('location'), date: col('date'), first: col('firstvisit'), browser: col('browser'), system: col('system') };
+    return rows.slice(1).map(function (r) {
+      var g = function (k) { return C[k] > -1 ? (r[C[k]] || '') : ''; };
+      return { p: g('path'), e: /^(true|1)$/i.test(g('event')), s: g('session'), b: parseInt(g('bot') || '0', 10) || 0, r: g('ref'), z: g('size'), l: g('loc'), d: g('date'), f: /^(true|1)$/i.test(g('first')), br: g('browser'), sy: g('system') };
+    }).filter(function (h) { return h.d && !h.b; });
+  }
+
+  async function gcExport(startFrom) {
+    var base = 'https://' + state.code + '.goatcounter.com/api/v0/export';
+    var H = { 'Authorization': 'Bearer ' + state.token, 'Content-Type': 'application/json' };
+    var r;
+    try { r = await fetch(base, { method: 'POST', headers: H, body: JSON.stringify(startFrom ? { start_from_hit_id: startFrom } : {}) }); }
+    catch (e) { throw new Error('limit'); } // GoatCounter answers 429 without CORS headers → looks like a network error
+    if (r.status === 401 || r.status === 403) throw new Error('perm');
+    if (r.status === 429) throw new Error('limit');
+    var ex = {}; try { ex = await r.json(); } catch (e) {}
+    if (!r.ok || !ex.id) {
+      var msg = ex.error || (ex.errors && JSON.stringify(ex.errors)) || ('HTTP ' + r.status);
+      if (/individual|pageview/i.test(msg)) throw new Error('pageviews');
+      throw new Error('GoatCounter: ' + msg);
+    }
+    for (var i = 0; i < 40 && !ex.finished_at; i++) {
+      await sleep(1500);
+      ex = await (await fetch(base + '/' + ex.id, { headers: H })).json();
+    }
+    if (ex.error) throw new Error('export: ' + ex.error);
+    if (!ex.finished_at) throw new Error('slow');
+    var d = await fetch(base + '/' + ex.id + '/download', { headers: H });
+    if (!d.ok) throw new Error('http');
+    return { text: await d.text(), lastHitId: ex.last_hit_id || startFrom || 0 };
+  }
+
+  async function updateVisits() {
+    if (state.mode !== 'live') return;
+    var st = vlStore();
+    var wait = st.tried + EXPORT_GAP - Date.now();
+    if (wait > 0) { vlNoteSet('GoatCounter allows one log update per hour · next in ' + Math.ceil(wait / 60000) + ' min'); return; }
+    $('vlUpdate').disabled = true; vlNoteSet('Updating…');
+    st.tried = Date.now(); vlSave(st);
+    try {
+      var res = await gcExport(st.lastHitId);
+      var fresh = csvToHits(res.text);
+      st.hits = st.hits.concat(fresh); st.lastHitId = res.lastHitId || st.lastHitId; st.at = Date.now();
+      vlSave(st);
+      renderVisits();
+    } catch (e) {
+      vlNoteSet(e.message === 'perm' ? 'Your token needs the "Export" permission.'
+              : e.message === 'limit' ? 'GoatCounter allows one log update per hour. Try again later.'
+              : e.message === 'pageviews' ? 'Turn on "Individual pageviews" in GoatCounter Settings first.'
+              : e.message === 'slow' ? 'GoatCounter is still preparing the log. Try again in a few minutes.'
+              : 'Couldn\'t update the log (' + e.message + ').');
+      if (e.message === 'slow') { st.tried = 0; vlSave(st); }
+    } finally { $('vlUpdate').disabled = false; }
+  }
+
+  function vlNoteSet(t) { $('vlNote').textContent = t; }
+
+  var regionNames = null;
+  try { regionNames = new Intl.DisplayNames(['en'], { type: 'region' }); } catch (e) {}
+  function countryName(l) { var c = (l || '').split('-')[0].toUpperCase(); if (!c) return ''; try { return regionNames ? regionNames.of(c) : c; } catch (e) { return c; } }
+  function deviceName(z) { var w = parseInt((z || '').split(',')[0], 10); if (!w) return ''; return w < 600 ? 'Phone' : w < 1024 ? 'Tablet' : 'Desktop'; }
+  function pageSlug(p) { var x = p.replace(/\/+$/, '').split('/').pop() || 'index'; x = x.replace(/\.html$/, ''); return x === 'index' ? 'home' : x; }
+  function cleanRef(r) {
+    r = (r || '').replace(/^https?:\/\//, '').replace(/^www\./, '');
+    if (!r || /^adimiz\.com/i.test(r)) return '';
+    if (/greenhouse/i.test(r)) return 'Greenhouse';
+    if (/linkedin/i.test(r)) return 'LinkedIn';
+    if (/google\./i.test(r)) return 'Google';
+    return r.split('/')[0];
+  }
+
+  function buildSessions(hits) {
+    var bySes = {};
+    hits.forEach(function (h, i) {
+      var key = h.s || ('x' + i);
+      (bySes[key] = bySes[key] || []).push(h);
+    });
+    return Object.keys(bySes).map(function (k) {
+      var hs = bySes[k].sort(function (a, b) { return a.d < b.d ? -1 : 1; });
+      var steps = [], bySlug = {}, actions = [], ref = '', loc = '', dev = '', returning = false;
+      hs.forEach(function (h) {
+        if (!loc && h.l) loc = countryName(h.l);
+        if (!dev && h.z) dev = deviceName(h.z);
+        if (h.e) {
+          var m = h.p.replace(/^\//, '').match(/^(time|scroll|read)-([^/]+)\/(.+)$/);
+          if (m) {
+            var st = bySlug[m[3]]; if (!st) return;
+            if (m[1] === 'scroll') st.scroll = Math.max(st.scroll, parseInt(m[2], 10) || 0);
+            else { var sec = { '10s': 10, '30s': 30, '60s': 60, '3m': 180, '5m': 300 }[m[2]] || 0; st.time = Math.max(st.time, sec); }
+          } else if (EVENT_NAMES[h.p.replace(/^\//, '')]) actions.push(EVENT_NAMES[h.p.replace(/^\//, '')]);
+          return;
+        }
+        if (!ref) ref = cleanRef(h.r) || '';
+        if (h.f === false && steps.length === 0) returning = true;
+        var slug = pageSlug(h.p);
+        var last = steps[steps.length - 1];
+        if (last && last.slug === slug) return;
+        var stp = { slug: slug, name: PAGE_NAMES[slug] || slug, time: 0, scroll: 0, at: h.d };
+        steps.push(stp); bySlug[slug] = stp;
+      });
+      return { start: hs[0].d, steps: steps, actions: actions, ref: ref, loc: loc, dev: dev, returning: returning };
+    }).filter(function (v) { return v.steps.length; })
+      .sort(function (a, b) { return a.start < b.start ? 1 : -1; });
+  }
+
+  function timeLabel(sec) { return sec >= 300 ? '5m+' : sec >= 180 ? '3–5m' : sec >= 60 ? '1–3m' : sec >= 30 ? '30s–1m' : sec >= 10 ? '10–30s' : '<10s'; }
+
+  function sampleVisits() {
+    var now = Date.now(), H = 3600e3, mk = function (ago, ref, loc, dev, steps, acts) {
+      return { start: new Date(now - ago * H).toISOString(), ref: ref, loc: loc, dev: dev, actions: acts || [], steps: steps.map(function (x) { return { slug: x[0], name: PAGE_NAMES[x[0]], time: x[1], scroll: x[2] }; }) };
+    };
+    return [
+      mk(2, 'Greenhouse', 'Israel', 'Desktop', [['home', 30, 75], ['copycat-v2', 180, 90], ['cs2-funnel', 60, 50]], ['Opened resume']),
+      mk(5, 'LinkedIn', 'Israel', 'Phone', [['home', 10, 25], ['seller-platform', 30, 50]]),
+      mk(26, '', 'United States', 'Desktop', [['home', 10, 50], ['about', 30, 90]], ['Clicked LinkedIn']),
+      mk(30, 'Google', 'Israel', 'Desktop', [['home', 0, 0]]),
+      mk(52, 'Greenhouse', 'Germany', 'Desktop', [['home', 60, 90], ['unit-ep', 60, 75], ['copycat-v2', 30, 50]])
+    ];
+  }
+
+  function renderVisits() {
+    var list = $('vlList'); list.textContent = '';
+    var visits, st = vlStore();
+    if (state.mode !== 'live') { visits = sampleVisits(); vlNoteSet('Sample visits'); }
+    else {
+      visits = buildSessions(st.hits);
+      var since = Date.now() - state.range * 864e5;
+      visits = visits.filter(function (v) { return new Date(v.start).getTime() >= since; });
+      vlNoteSet(st.at ? 'Updated ' + new Date(st.at).toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '');
+    }
+    var q = ($('vlFilter').value || '').trim().toLowerCase();
+    if (q) visits = visits.filter(function (v) {
+      return [v.ref || 'direct', v.loc, v.dev].concat(v.steps.map(function (s) { return s.name; }), v.actions).join(' ').toLowerCase().indexOf(q) > -1;
+    });
+    if (!visits.length) {
+      list.appendChild(el('li', 'empty', state.mode === 'live' && !st.at
+        ? 'No log yet. Click "Update log". Visits are recorded from the day "Individual pageviews" was turned on.'
+        : 'No visits match this period or filter.'));
+      $('vlMore').hidden = true; return;
+    }
+    visits.slice(0, vlShown).forEach(function (v) {
+      var li = el('li', 'visit'), d = new Date(v.start);
+      var when = el('div', 'v-when');
+      when.appendChild(el('b', null, d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })));
+      when.appendChild(el('span', null, d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })));
+      li.appendChild(when);
+      var body = el('div'), meta = el('div', 'v-meta');
+      meta.appendChild(el('span', 'tag src', v.ref ? 'From ' + v.ref : 'Direct'));
+      if (v.loc) meta.appendChild(el('span', 'tag', v.loc));
+      if (v.dev) meta.appendChild(el('span', 'tag', v.dev));
+      if (v.returning) meta.appendChild(el('span', 'tag', 'Returning'));
+      body.appendChild(meta);
+      var path = el('div', 'v-path');
+      v.steps.forEach(function (s, i) {
+        if (i) path.appendChild(el('span', 'v-arrow', '→'));
+        var b = el('div', 'v-step'); b.appendChild(el('b', null, s.name));
+        b.appendChild(el('span', null, timeLabel(s.time) + (s.scroll ? ' · scrolled ' + s.scroll + '%' : '')));
+        path.appendChild(b);
+      });
+      v.actions.forEach(function (a) { path.appendChild(el('span', 'v-arrow', '→')); path.appendChild(el('span', 'v-act', a)); });
+      body.appendChild(path); li.appendChild(body); list.appendChild(li);
+    });
+    $('vlMore').hidden = visits.length <= vlShown;
+  }
+
+  $('vlUpdate').addEventListener('click', updateVisits);
+  $('vlFilter').addEventListener('input', renderVisits);
+  $('vlMore').addEventListener('click', function () { vlShown += 25; renderVisits(); });
+
+  /* ─────────────────────────────────────────
      FLOW
   ───────────────────────────────────────── */
   var lastData = null;
@@ -724,7 +955,7 @@
       lastData = data;
       render(data);
       $('updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-      if (state.mode === 'live') { setStatus('live', 'Live · ' + state.code); $('connect').hidden = true; $('sampleBanner').hidden = true; }
+      if (state.mode === 'live') { setStatus('live', 'Live · ' + state.code); $('connect').hidden = true; $('sampleBanner').hidden = true; if (Date.now() - vlStore().tried > EXPORT_GAP) updateVisits(); }
       else { setStatus('sample', 'Sample data'); $('sampleBanner').hidden = false; }
     } catch (e) {
       var msg = e.message === 'auth' ? 'GoatCounter rejected that token. Check it has "Read statistics" permission.'

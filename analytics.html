@@ -152,6 +152,18 @@
       .vl-tools input { max-width: none; }
     }
 
+    /* ── A/B TEST ── */
+    .ab-verdict { background: var(--card-soft); border-radius: 20px; padding: 18px 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .ab-verdict b { font-family: var(--serif); font-size: 22px; font-weight: 600; line-height: 1.2; }
+    .ab-verdict span { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+    .ab-verdict.early b { color: var(--text-2); }
+    .ab-sub { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; margin: 22px 0 8px; }
+    .ab-ver { display: inline-flex; align-items: center; gap: 8px; }
+    .ab-ver i { width: 22px; height: 22px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-size: 11px; font-weight: 700; color: #fff; }
+    .ab-ver i.a { background: #8A847C; } .ab-ver i.b { background: var(--mark); }
+    .ab-ver small { color: var(--text-muted); font-size: 12px; }
+    .ab-lead { font-size: 11px; font-weight: 600; color: var(--good); margin-left: 6px; }
+
     /* ── TABLE ── */
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); padding: 0 8px 10px; border-bottom: 1px solid var(--line); }
@@ -276,6 +288,16 @@
   <main class="grid" id="grid">
     <div class="kpis" id="kpis"></div>
 
+    <section class="card span-12" id="abCard">
+      <div class="card-h"><h2>Homepage A/B test</h2><span class="hint">A = current homepage · B = new homepage (home-b) · random 50/50 split</span></div>
+      <div class="ab-verdict" id="abVerdict"></div>
+      <div class="table-scroll"><table id="abTable"></table></div>
+      <div class="ab-sub">Which case study they opened · random split only</div>
+      <div class="table-scroll"><table id="abCsTable"></table></div>
+      <div class="ab-sub" id="abAssignedH" hidden>Visitors from your test links · not part of the comparison</div>
+      <div class="table-scroll"><table id="abAssigned"></table></div>
+    </section>
+
     <section class="card span-12">
       <div class="card-h"><h2>Daily visitors</h2><span class="hint" id="trendHint"></span></div>
       <div class="chart" id="trend"><div class="tip" id="tip"></div></div>
@@ -361,7 +383,7 @@
     { slug: 'seller-platform', name: 'Seller Platform' },
     { slug: 'unit-ep',         name: 'Unit.e.p App' }
   ];
-  var PAGE_NAMES = { home: 'Home', about: 'About' };
+  var PAGE_NAMES = { home: 'Home', 'home-b': 'Home · version B', about: 'About' };
   CASE_STUDIES.forEach(function (c) { PAGE_NAMES[c.slug] = c.name; });
   var EVENT_NAMES = {
     'resume-open': 'Opened resume',
@@ -443,6 +465,20 @@
       out[calls[i][0]] = await api(calls[i][1], calls[i][2]);
       if (i < calls.length - 1) await sleep(280);
     }
+    // More than 100 paths (A/B events add a few): fetch the next pages
+    var seen = {}, all = (out.hits.hits || []).slice(), more = out.hits.more;
+    all.forEach(function (h) { seen[h.path_id] = 1; });
+    for (var pg = 0; more && pg < 3; pg++) {
+      await sleep(280);
+      try {
+        var next = await api('/stats/hits', Object.assign({ limit: 100, exclude_paths: Object.keys(seen).join(',') }, p));
+        var fresh = (next.hits || []).filter(function (h) { return !seen[h.path_id]; });
+        if (!fresh.length) break;
+        fresh.forEach(function (h) { seen[h.path_id] = 1; all.push(h); });
+        more = next.more;
+      } catch (e) { break; }
+    }
+    out.hits.hits = all;
     return normalize(out);
   }
 
@@ -510,6 +546,15 @@
     events['contact-email'] = Math.round(3 * f);
     events['contact-phone'] = Math.round(1 * f);
     events['video-backpack'] = Math.round(5 * f);
+    pages['home-b'] = Math.round(pages.home * 0.5); pages.home -= pages['home-b'];
+    [['A', 0.5, 0.31, 0.10, 0.06], ['B', 0.5, 0.38, 0.12, 0.08], ['B-assigned', 0.06, 0.55, 0.2, 0.15]].forEach(function (x) {
+      var hv = Math.round((pages.home + pages['home-b']) * x[1]);
+      events['ab/' + x[0] + '/home-view'] = hv;
+      var o = Math.round(hv * x[2]);
+      [0.36, 0.28, 0.24, 0.12].forEach(function (w, i) { events['ab/' + x[0] + '/cs-open-' + CASE_STUDIES[i].slug] = Math.round(o * w); });
+      events['ab/' + x[0] + '/resume-open'] = Math.round(hv * x[3]);
+      events['ab/' + x[0] + '/contact-linkedin'] = Math.round(hv * x[4]);
+    });
     var dist = function (list) { return list.map(function (x) { return { name: x[0], n: Math.max(1, Math.round(x[1] * f)) }; }); };
     return {
       visitors: total, prevVisitors: Math.round(total * 0.82), daily: daily, pages: pages, events: events,
@@ -558,7 +603,7 @@
 
     // Funnel
     var steps = [
-      { t: 'Landed on the homepage', v: d.pages.home || 0 },
+      { t: 'Landed on the homepage', v: (d.pages.home || 0) + (d.pages['home-b'] || 0) },
       { t: 'Opened a case study', v: csViews },
       { t: 'Read for 60s or more', v: reads },
       { t: 'Opened resume or reached out', v: resume + contact }
@@ -596,6 +641,7 @@
     });
     t.appendChild(tb);
 
+    renderAB(d);
     renderAttention(d);
     renderVisits();
 
@@ -604,6 +650,104 @@
     barList($('sizes'), d.sizes);
     barList($('pages'), Object.keys(d.pages).map(function (s) { return { name: PAGE_NAMES[s] || s, n: d.pages[s] }; }).sort(function (a, b) { return b.n - a.n; }).slice(0, 10));
     barList($('events'), Object.keys(EVENT_NAMES).map(function (e) { return { name: EVENT_NAMES[e], n: d.events[e] || 0 }; }).sort(function (a, b) { return b.n - a.n; }));
+  }
+
+  /* ── Homepage A/B test ── */
+  function abStats(ev, tag) {
+    var g = function (k) { return ev['ab/' + tag + '/' + k] || 0; };
+    var cs = {}; CASE_STUDIES.forEach(function (c) { cs[c.slug] = g('cs-open-' + c.slug); });
+    return {
+      views: g('home-view'),
+      opens: sumEvents(ev, 'ab/' + tag + '/cs-open-'),
+      resume: g('resume-open'),
+      contact: sumEvents(ev, 'ab/' + tag + '/contact-'),
+      cs: cs
+    };
+  }
+  function abVer(letter, sub) {
+    var w = el('span', 'ab-ver'), i = el('i', letter.toLowerCase(), letter);
+    w.appendChild(i); w.appendChild(el('span', null, letter === 'A' ? 'Current homepage' : 'New homepage'));
+    if (sub) w.appendChild(el('small', null, sub));
+    return w;
+  }
+  function rateCell(n, base, lead) {
+    var td = el('td', 'num'), wrap = el('span', 'rate'), mini = el('span', 'mini'), mi = el('i');
+    var r = pct(n, base);
+    mi.style.width = Math.min(100, r) + '%'; mini.appendChild(mi);
+    wrap.appendChild(mini); wrap.appendChild(el('span', null, base ? r + '%' : '–'));
+    td.appendChild(wrap);
+    if (lead) td.appendChild(el('span', 'ab-lead', 'leads'));
+    return td;
+  }
+  function abTable(t, rows) {
+    t.textContent = '';
+    var hr = el('tr');
+    [['Version', ''], ['Homepage visitors', 'num'], ['Case study opens', 'num'], ['Open rate', 'num'], ['Resume opens', 'num'], ['Contact clicks', 'num'], ['Reach-out rate', 'num']].forEach(function (h) { hr.appendChild(el('th', h[1], h[0])); });
+    var th = el('thead'); th.appendChild(hr); t.appendChild(th);
+    var tb = el('tbody');
+    rows.forEach(function (r) {
+      var tr = el('tr'), n = el('td'); n.appendChild(abVer(r.letter, r.sub)); tr.appendChild(n);
+      tr.appendChild(el('td', 'num', fmt.format(r.s.views)));
+      tr.appendChild(el('td', 'num', fmt.format(r.s.opens)));
+      tr.appendChild(rateCell(r.s.opens, r.s.views, r.leadOpen));
+      tr.appendChild(el('td', 'num', fmt.format(r.s.resume)));
+      tr.appendChild(el('td', 'num', fmt.format(r.s.contact)));
+      tr.appendChild(rateCell(r.s.resume + r.s.contact, r.s.views, r.leadReach));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+  }
+  function renderAB(d) {
+    var A = abStats(d.events, 'A'), B = abStats(d.events, 'B');
+    var rA = A.views ? A.opens / A.views : 0, rB = B.views ? B.opens / B.views : 0;
+    var cA = A.views ? (A.resume + A.contact) / A.views : 0, cB = B.views ? (B.resume + B.contact) / B.views : 0;
+    var MIN = 100;
+
+    var v = $('abVerdict'); v.textContent = ''; v.className = 'ab-verdict';
+    if (!A.views && !B.views) {
+      v.className += ' early';
+      v.appendChild(el('b', null, 'No test data yet'));
+      v.appendChild(el('span', null, 'Results show up here once the A/B test is live and visitors land on the homepage.'));
+    } else {
+      var leader = rA === rB ? null : (rB > rA ? 'B' : 'A');
+      var diff = Math.abs(Math.round(rB * 100) - Math.round(rA * 100));
+      var lead = leader ? 'Version ' + leader + ' (' + (leader === 'B' ? 'new' : 'current') + ' homepage) leads on case study opens by ' + diff + ' points' : 'Both versions are tied on case study opens';
+      if (A.views < MIN || B.views < MIN) {
+        v.className += ' early';
+        v.appendChild(el('b', null, 'Too early to call'));
+        v.appendChild(el('span', null, 'So far: ' + lead.charAt(0).toLowerCase() + lead.slice(1) + '. A has ' + fmt.format(A.views) + ' and B has ' + fmt.format(B.views) + ' homepage visitors. Aim for about ' + MIN + ' each before deciding.'));
+      } else {
+        v.appendChild(el('b', null, lead));
+        v.appendChild(el('span', null, 'Open rate ' + pct(A.opens, A.views) + '% (A) vs ' + pct(B.opens, B.views) + '% (B) · reach-out rate ' + pct(A.resume + A.contact, A.views) + '% vs ' + pct(B.resume + B.contact, B.views) + '%. Small differences can still be noise, so check the Clarity recordings too.'));
+      }
+    }
+
+    abTable($('abTable'), [
+      { letter: 'A', s: A, leadOpen: rA > rB, leadReach: cA > cB },
+      { letter: 'B', s: B, leadOpen: rB > rA, leadReach: cB > cA }
+    ]);
+
+    var t = $('abCsTable'); t.textContent = '';
+    var hr = el('tr');
+    [['Case study', ''], ['A · opens', 'num'], ['A · % of visitors', 'num'], ['B · opens', 'num'], ['B · % of visitors', 'num']].forEach(function (h) { hr.appendChild(el('th', h[1], h[0])); });
+    var th = el('thead'); th.appendChild(hr); t.appendChild(th);
+    var tb = el('tbody');
+    CASE_STUDIES.forEach(function (c) {
+      var tr = el('tr'), n = el('td'); n.appendChild(el('span', 'cs-name', c.name)); tr.appendChild(n);
+      tr.appendChild(el('td', 'num', fmt.format(A.cs[c.slug])));
+      tr.appendChild(rateCell(A.cs[c.slug], A.views, false));
+      tr.appendChild(el('td', 'num', fmt.format(B.cs[c.slug])));
+      tr.appendChild(rateCell(B.cs[c.slug], B.views, false));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+
+    var Aa = abStats(d.events, 'A-assigned'), Ba = abStats(d.events, 'B-assigned');
+    var rows = [];
+    if (Aa.views || Aa.opens) rows.push({ letter: 'A', sub: 'test link', s: Aa });
+    if (Ba.views || Ba.opens) rows.push({ letter: 'B', sub: 'test link', s: Ba });
+    $('abAssignedH').hidden = !rows.length;
+    if (rows.length) abTable($('abAssigned'), rows); else $('abAssigned').textContent = '';
   }
 
   /* ── Time on page ── */
@@ -629,7 +773,7 @@
   }
 
   function renderAttention(d) {
-    var pagesList = [{ slug: 'home', name: 'Home' }].concat(CASE_STUDIES, [{ slug: 'about', name: 'About' }]);
+    var pagesList = [{ slug: 'home', name: 'Home · A' }, { slug: 'home-b', name: 'Home · B' }].concat(CASE_STUDIES, [{ slug: 'about', name: 'About' }]);
     var chips = $('attnChips'); chips.textContent = '';
     pagesList.forEach(function (pg) {
       var b = el('button', null, pg.name); b.type = 'button';

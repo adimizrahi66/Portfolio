@@ -16,7 +16,18 @@
     return p === 'index' ? 'home' : p;
   })();
 
+  /* ── A/B test: homepage version (set by index.html / home-b.html) ── */
+  var abV = null, abSrc = null;
+  try { abV = localStorage.getItem('abHome'); abSrc = localStorage.getItem('abHomeSrc'); } catch (e) {}
+  var abTag = (abV === 'a' || abV === 'b') ? abV.toUpperCase() + (abSrc === 'assigned' ? '-assigned' : '') : null;
+  var AB_EVENTS = /^(resume-open|contact-|cs-open|home-view)/;
+
   function send(name, title) {
+    sendRaw(name, title);
+    if (abTag && AB_EVENTS.test(name)) sendRaw('ab/' + abTag + '/' + name, '[' + abTag + '] ' + (title || name));
+  }
+
+  function sendRaw(name, title) {
     var gc = window.goatcounter;
     if (gc && typeof gc.count === 'function') {
       try { gc.count({ path: name, title: title || name, event: true }); } catch (e) {}
@@ -29,7 +40,7 @@
   s.async = true;
   s.src = 'https://gc.zgo.at/count.js';
   s.setAttribute('data-goatcounter', 'https://' + GC_CODE + '.goatcounter.com/count');
-  s.onload = function () { while (queue.length) { var q = queue.shift(); send(q[0], q[1]); } };
+  s.onload = function () { while (queue.length) { var q = queue.shift(); sendRaw(q[0], q[1]); } };
   document.head.appendChild(s);
 
   /* ── Microsoft Clarity: session recordings & per-visitor journeys ──
@@ -43,7 +54,11 @@
       t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, 'clarity', 'script', CLARITY_ID);
+    if (abTag) { try { window.clarity('set', 'home_variant', abV.toUpperCase()); window.clarity('set', 'variant_source', abSrc || 'unknown'); } catch (e) {} }
   }
+
+  /* ── Homepage view, tagged by version ── */
+  if (slug === 'home' || slug === 'home-b') send('home-view', 'Homepage view · ' + slug);
 
   /* ── Clicks ── */
   document.addEventListener('click', function (e) {
@@ -57,6 +72,8 @@
     else if (/^mailto:/i.test(href) || copy.indexOf('@') > -1) send('contact-email', 'Email · ' + slug);
     else if (/^tel:/i.test(href) || /^\+?\d[\d\s-]{6,}$/.test(copy)) send('contact-phone', 'Phone · ' + slug);
     else if (el.id === 'backpackTrigger')     send('video-backpack', 'Backpack video · ' + slug);
+    var cs = href.match(/(copycat-v2|cs2-funnel|seller-platform|unit-ep)\.html/);
+    if (cs && (slug === 'home' || slug === 'home-b')) send('cs-open-' + cs[1], 'Case study opened · ' + cs[1] + ' · ' + slug);
   }, true);
 
   /* ── Active time ──

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ─── A/B TEST: homepage version B ───
+       ?v=a → send to version A · direct visit → remember B -->
+  <script>
+    (function () {
+      var q = null;
+      try { q = new URLSearchParams(location.search).get('v'); } catch (e) {}
+      try {
+        if (q === 'a') {
+          localStorage.setItem('abHome', 'a'); localStorage.setItem('abHomeSrc', 'assigned');
+          location.replace('index.html' + location.search + location.hash); return;
+        }
+        if (q === 'b') { localStorage.setItem('abHome', 'b'); localStorage.setItem('abHomeSrc', 'assigned'); }
+        else if (localStorage.getItem('abHome') !== 'b') { localStorage.setItem('abHome', 'b'); localStorage.setItem('abHomeSrc', 'direct'); }
+      } catch (e) {}
+    })();
+  </script>
+  <title>Adi Mizrahi — Senior Product Designer</title>
+  <meta name="description" content="Adi Mizrahi, Senior Product Designer. Design that moves the needle across B2C, SaaS and AI products.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://adimiz.com/">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Poppins:wght@400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1E1E1E;
+      --ink-soft: #4A463F;
+      --ink-muted: #5F5A53;
+      --accent: #2F5FE0;
+      --tape: rgba(214, 196, 160, .8);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: 'Poppins', system-ui, sans-serif;
+      color: var(--ink);
+      background: #EEEBF2;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: var(--ink); }
+    img { display: block; }
+
+    /* ─── Notebook grid over the hero pastels ─── */
+    .sky-desk {
+      background-color: #EEEBF2;
+      background-image:
+        linear-gradient(rgba(30,30,60,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,30,60,.06) 1px, transparent 1px),
+        radial-gradient(42% 52% at 14% 12%, #F9D6E2 0%, rgba(249,214,226,0) 100%),
+        radial-gradient(40% 55% at 88% 30%, #DCD7F5 0%, rgba(220,215,245,0) 100%),
+        radial-gradient(45% 50% at 22% 92%, #CDEBDA 0%, rgba(205,235,218,0) 100%),
+        radial-gradient(35% 40% at 80% 95%, #FBE3CC 0%, rgba(251,227,204,0) 100%);
+      background-size: calc(30px * var(--s, 1)) calc(30px * var(--s, 1)), calc(30px * var(--s, 1)) calc(30px * var(--s, 1)), 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    }
+    .sky-mob {
+      background-color: #EEEBF2;
+      background-image:
+        linear-gradient(rgba(30,30,60,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,30,60,.06) 1px, transparent 1px),
+        radial-gradient(90% 14% at 10% 6%, #F9D6E2 0%, rgba(249,214,226,0) 100%),
+        radial-gradient(90% 16% at 80% 36%, #DCD7F5 0%, rgba(220,215,245,0) 100%),
+        radial-gradient(90% 16% at 15% 54%, #CDEBDA 0%, rgba(205,235,218,0) 100%),
+        radial-gradient(90% 16% at 85% 72%, #F9D6E2 0%, rgba(249,214,226,0) 100%),
+        radial-gradient(90% 16% at 85% 92%, #FBE3CC 0%, rgba(251,227,204,0) 100%);
+      background-size: 26px 26px, 26px 26px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    }
+
+    /* ─── Nav ─── */
+    .nav {
+      display: flex; align-items: center; gap: 4px; padding: 6px;
+      background: rgba(255,255,255,.8);
+      border: 1px solid rgba(30,30,30,.06);
+      border-radius: 999px;
+      box-shadow: 0 6px 20px -10px rgba(30,25,40,.25);
+      font-size: 14px; white-space: nowrap;
+    }
+    .nav-link {
+      font: inherit; padding: 10px 16px; border-radius: 999px; border: 0; background: none;
+      text-decoration: none; color: var(--ink-soft); cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .nav-link:hover { background: rgba(30,30,30,.06); color: var(--ink); }
+    .nav-link.active { color: var(--ink); font-weight: 500; }
+
+    /* ─── Contact popover ─── */
+    .contact-wrap { position: relative; }
+    .contact-menu {
+      position: absolute; top: calc(100% + 10px); right: 0; z-index: 30;
+      min-width: 210px; display: flex; flex-direction: column; gap: 2px; padding: 6px;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(0,0,0,.08); border-radius: 16px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.16);
+      opacity: 0; visibility: hidden; transform: translateY(-6px);
+      transition: opacity .16s ease, transform .16s ease, visibility .16s;
+      text-align: left;
+    }
+    .contact-menu.center { right: auto; left: 50%; transform: translate(-50%, -6px); }
+    .contact-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
+    .contact-menu.center.open { transform: translate(-50%, 0); }
+    .contact-item {
+      font-family: inherit; font-size: 13px; font-weight: 500; text-align: left;
+      color: rgba(12,11,10,.85); background: none; border: none; border-radius: 10px;
+      padding: 10px 12px; min-height: 44px; cursor: pointer; text-decoration: none;
+      display: flex; flex-direction: column; justify-content: center; gap: 2px;
+      transition: background .16s;
+    }
+    .contact-item:hover { background: rgba(12,11,10,.06); }
+    .contact-hint { font-size: 11px; font-weight: 400; color: rgba(12,11,10,.5); }
+    .contact-item.copied .contact-hint::after { content: " — copied"; color: #B8865A; }
+
+    /* ─── Buttons ─── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 48px; padding: 0 24px; border-radius: 999px;
+      font: 500 15px/1 'Poppins', sans-serif; text-decoration: none; cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-primary { background: var(--ink); color: #FFFFFF; border: 0; }
+    .btn-primary:hover { background: #000; color: #FFFFFF; }
+    .btn-ghost { background: rgba(255,255,255,.35); border: 1px solid rgba(30,30,30,.22); color: var(--ink); }
+    .btn-ghost:hover { background: rgba(255,255,255,.6); }
+
+    /* ─── Cards ─── */
+    .card {
+      display: block; padding: 10px; background: #FFFFFF; border-radius: 12px;
+      color: var(--ink); text-decoration: none;
+      box-shadow: 0 1px 2px rgba(30,25,40,.08), 0 12px 26px -10px rgba(30,25,40,.25);
+      transform: rotate(var(--r, 0deg));
+      transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s cubic-bezier(.2,.8,.2,1);
+    }
+    .card:hover, .card:focus-visible {
+      transform: rotate(0deg) translateY(-6px);
+      box-shadow: 0 2px 4px rgba(30,25,40,.08), 0 22px 40px -14px rgba(30,25,40,.35);
+      z-index: 5;
+    }
+    .card-tape {
+      position: absolute; top: -10px; left: 50%; width: 60px; height: 20px; margin-left: -30px;
+      background: var(--tape); transform: rotate(var(--t, -3deg));
+    }
+    .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; }
+    .card-text { display: flex; flex-direction: column; gap: 4px; padding: 10px 4px 2px; }
+    .card-tag { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); }
+    .card-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; line-height: 1.2; }
+    .arrow-btn {
+      position: absolute; top: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--ink); color: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 14px -6px rgba(0,0,0,.45);
+      transition: transform .35s cubic-bezier(.2,.8,.2,1), background .3s;
+    }
+    .card:hover .arrow-btn, .card:focus-visible .arrow-btn { transform: rotate(-45deg) scale(1.08); background: var(--accent); }
+
+    .note { display: flex; gap: 8px; align-items: flex-start; }
+    .note svg { flex-shrink: 0; }
+    .note p { margin: 6px 0 0; font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.1; color: var(--accent); }
+
+    /* ─── Desktop: one 1440×900 board, scaled to fit the window ─── */
+    .desk { position: relative; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; }
+    .stage {
+      position: absolute; left: 50%; top: 50%; width: 1440px; height: 900px;
+      transform: translate(-50%, -50%) scale(var(--s, 1)); transform-origin: center;
+    }
+    .stage .card, .stage .note, .stage .hero { position: absolute; }
+    .stage .card { width: 290px; }
+    .stage .note { width: 290px; }
+    .stage .nav-pos { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); z-index: 20; }
+    .hero {
+      left: 50%; top: 276px; width: 600px; margin-left: -300px; z-index: 3;
+      display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center;
+    }
+    .eyebrow { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: #514C5E; }
+    .hero h1 {
+      margin: 0; font-family: 'Fraunces', serif; font-weight: 600;
+      font-size: 92px; line-height: .98; letter-spacing: -0.03em;
+    }
+    .hero-actions { display: flex; gap: 10px; margin-top: 16px; }
+
+    /* ─── Mobile ─── */
+    .mob { display: none; }
+    @media (max-width: 899px) {
+      .desk { display: none; }
+      .mob { display: block; min-height: 100vh; padding: 0 20px 56px; }
+      .mob .nav { position: sticky; top: 12px; z-index: 20; margin: 12px auto 0; justify-content: space-between; padding: 4px; }
+      .mob .nav > a, .mob .nav .contact-wrap { flex: 1; text-align: center; }
+      .mob .nav-link { display: block; width: 100%; padding: 12px 0; }
+      .mob-hero { padding: 72px 0 64px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+      .mob-hero .eyebrow { font-size: 12px; }
+      .mob-hero h1 { margin: 0; font-family: 'Fraunces', serif; font-weight: 600; font-size: 50px; line-height: 1; letter-spacing: -0.03em; }
+      .mob-hero .btn { margin-top: 12px; padding: 0 28px; }
+      .mob-list { display: flex; flex-direction: column; gap: 40px; max-width: 480px; margin: 0 auto; scroll-margin-top: 80px; }
+      .mob-item { display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 90px; }
+      .mob .card { position: relative; --r: var(--rm, 0deg); }
+      .mob .card:hover { transform: rotate(var(--r)); }
+      .mob .card:active { transform: rotate(0deg) scale(.98); }
+      .mob .card img { height: auto; aspect-ratio: 1100 / 648; }
+      .mob .card-title { font-size: 20px; }
+      .mob .note { padding-left: 12px; }
+      .mob .note p { font-size: 21px; margin-top: 4px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card, .arrow-btn, .contact-menu { transition: none; }
+    }
+  </style>
+  <script src="analytics-tracker.js" defer></script>
+</head>
+<body>
+
+<!-- ═════════════ DESKTOP ═════════════ -->
+<div class="desk sky-desk">
+  <div class="stage">
+
+    <div class="nav-pos">
+      <nav class="nav" aria-label="Main navigation">
+        <a class="nav-link active" href="home-b.html">Work</a>
+        <a class="nav-link" href="about.html">About</a>
+        <a class="nav-link" href="Adi_Mizrahi_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+        <div class="contact-wrap">
+          <button class="nav-link" type="button" data-contact-trigger aria-haspopup="true" aria-expanded="false">Contact</button>
+          <div class="contact-menu" role="menu" aria-hidden="true">
+            <a class="contact-item" href="https://www.linkedin.com/in/adi-mizrahi/" target="_blank" rel="noopener" role="menuitem">LinkedIn</a>
+            <button class="contact-item" type="button" role="menuitem" data-copy="adimizrahi66@gmail.com">Email<span class="contact-hint">adimizrahi66@gmail.com</span></button>
+            <button class="contact-item" type="button" role="menuitem" data-copy="+972 544304626">Phone<span class="contact-hint">+972 54-430-4626</span></button>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="hero">
+      <div class="eyebrow">Adi Mizrahi · Senior Product Designer</div>
+      <h1>Design that moves the needle.</h1>
+      <div class="hero-actions">
+        <div class="contact-wrap">
+          <button class="btn btn-primary" type="button" data-contact-trigger aria-haspopup="true" aria-expanded="false">Let’s talk</button>
+          <div class="contact-menu center" role="menu" aria-hidden="true">
+            <a class="contact-item" href="https://www.linkedin.com/in/adi-mizrahi/" target="_blank" rel="noopener" role="menuitem">LinkedIn</a>
+            <button class="contact-item" type="button" role="menuitem" data-copy="adimizrahi66@gmail.com">Email<span class="contact-hint">adimizrahi66@gmail.com</span></button>
+            <button class="contact-item" type="button" role="menuitem" data-copy="+972 544304626">Phone<span class="contact-hint">+972 54-430-4626</span></button>
+          </div>
+        </div>
+        <a class="btn btn-ghost" href="Adi_Mizrahi_Resume.pdf" target="_blank" rel="noopener">Download CV</a>
+      </div>
+    </div>
+
+    <!-- Top-left · pink -->
+    <a class="card" href="seller-platform.html" style="--r: -2.5deg; left: 64px; top: 104px;">
+      <span class="card-tape" aria-hidden="true" style="--t: -3deg;"></span>
+      <img src="images%20and%20videos/home-b-seller.webp" alt="Seller Platform overview screen on a laptop" width="1100" height="648">
+      <span class="card-text">
+        <span class="card-tag">Seller Platform · SaaS</span>
+        <span class="card-title">Moving Amazon sellers to a new platform in one step</span>
+      </span>
+      <span class="arrow-btn" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+    <div class="note" style="left: 76px; top: 372px;">
+      <svg aria-hidden="true" width="34" height="40" viewBox="0 0 34 40" fill="none"><path d="M20 38 C 8 30, 6 16, 14 4 M14 4 L 7 10 M14 4 L 19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--accent);"/></svg>
+      <p>a required move, made effortless → 60% migrated in week one</p>
+    </div>
+
+    <!-- Top-right · lavender -->
+    <a class="card" href="copycat-v2.html" style="--r: 2.5deg; right: 64px; top: 104px;">
+      <span class="card-tape" aria-hidden="true" style="--t: 4deg;"></span>
+      <img src="images%20and%20videos/home-b-copycat.webp" alt="CopyCat dashboard on a laptop" width="1100" height="648">
+      <span class="card-text">
+        <span class="card-tag">CopyCat · AI · B2B</span>
+        <span class="card-title">Six ad tools, one AI production platform</span>
+      </span>
+      <span class="arrow-btn" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+    <div class="note" style="right: 52px; top: 372px;">
+      <svg aria-hidden="true" width="34" height="40" viewBox="0 0 34 40" fill="none"><path d="M20 38 C 8 30, 6 16, 14 4 M14 4 L 7 10 M14 4 L 19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--accent);"/></svg>
+      <p>built for the Meta ads team → 75% less production time</p>
+    </div>
+
+    <!-- Bottom-left · mint -->
+    <a class="card" href="cs2-funnel.html" style="--r: 2deg; left: 84px; top: 504px;">
+      <span class="card-tape" aria-hidden="true" style="--t: -4deg;"></span>
+      <img src="images%20and%20videos/home-b-funnel.webp" alt="Mobile comparison funnel screen on a phone" width="1100" height="648">
+      <span class="card-text">
+        <span class="card-tag">Review funnel · E-commerce · B2C</span>
+        <span class="card-title">Helping millions of shoppers choose faster</span>
+      </span>
+      <span class="arrow-btn" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+    <div class="note" style="left: 96px; top: 772px;">
+      <svg aria-hidden="true" width="34" height="40" viewBox="0 0 34 40" fill="none"><path d="M20 38 C 8 30, 6 16, 14 4 M14 4 L 7 10 M14 4 L 19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--accent);"/></svg>
+      <p>filter chips + mobile layouts → +2–5% conversion at millions of users</p>
+    </div>
+
+    <!-- Bottom-right · peach -->
+    <a class="card" href="unit-ep.html" style="--r: -2deg; right: 84px; top: 504px;">
+      <span class="card-tape" aria-hidden="true" style="--t: 3deg;"></span>
+      <img src="images%20and%20videos/home-b-unitep.webp" alt="Unit.e.p tablet scoring screen" width="1100" height="648">
+      <span class="card-text">
+        <span class="card-tag">Unit.e.p · Tablet</span>
+        <span class="card-title">From paper scoring to live field data</span>
+      </span>
+      <span class="arrow-btn" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+    <div class="note" style="right: 72px; top: 772px;">
+      <svg aria-hidden="true" width="34" height="40" viewBox="0 0 34 40" fill="none"><path d="M20 38 C 8 30, 6 16, 14 4 M14 4 L 7 10 M14 4 L 19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--accent);"/></svg>
+      <p>real-time candidate scoring for the IDF’s Oketz unit</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═════════════ MOBILE ═════════════ -->
+<div class="mob sky-mob">
+  <nav class="nav" aria-label="Main navigation">
+    <a class="nav-link active" href="#work">Work</a>
+    <a class="nav-link" href="about.html">About</a>
+    <a class="nav-link" href="Adi_Mizrahi_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <div class="contact-wrap">
+      <button class="nav-link" type="button" data-contact-trigger aria-haspopup="true" aria-expanded="false">Contact</button>
+      <div class="contact-menu" role="menu" aria-hidden="true">
+        <a class="contact-item" href="https://www.linkedin.com/in/adi-mizrahi/" target="_blank" rel="noopener" role="menuitem">LinkedIn</a>
+        <button class="contact-item" type="button" role="menuitem" data-copy="adimizrahi66@gmail.com">Email<span class="contact-hint">adimizrahi66@gmail.com</span></button>
+        <button class="contact-item" type="button" role="menuitem" data-copy="+972 544304626">Phone<span class="contact-hint">+972 54-430-4626</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mob-hero">
+    <div class="eyebrow">Adi Mizrahi · Senior Product Designer</div>
+    <h1>Design that moves the needle.</h1>
+    <a class="btn btn-primary" href="#work">View my work</a>
+  </div>
+
+  <div class="mob-list" id="work">
+    <div class="mob-item" id="card-copycat">
+      <a class="card" href="copycat-v2.html" style="--rm: -1.5deg;">
+        <span class="card-tape" aria-hidden="true" style="--t: 4deg;"></span>
+        <img src="images%20and%20videos/home-b-copycat.webp" alt="CopyCat dashboard on a laptop" width="1100" height="648" loading="lazy">
+        <span class="card-text">
+          <span class="card-tag">CopyCat · AI · B2B</span>
+          <span class="card-title">Six ad tools, one AI production platform</span>
+        </span>
+        <span class="arrow-btn" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <div class="note">
+        <svg aria-hidden="true" width="28" height="34" viewBox="0 0 34 40" fill="none"><path d="M20 38 C 8 30, 6 16, 14 4 M14 4 L 7 10 M14 4 L 19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--accent);"/></svg>
+        <p>built for the Meta ads team → 75% less production time</p>
+      </div>
+    </div>
+
+    <div class="mob-item" id="card-cs2-funnel">
+      <a class="card" href="cs2-funnel.html" style="--rm: 1.5deg;">
+        <span class="card-tape" aria-hidden="true" style="--t: -4deg;"></span>
+        <img src="images%20and%20videos/home-b-funnel.webp" alt="Mobile comparison funnel screen on a phone" width="1100" height="648" loading="lazy">
+        <span class="card-text">
+          <span class="card-tag">Review funnel · E-commerce · B2C</span>
+          <span class="card-title">Helping millions of shoppers choose faster</span>
+        </span>
+        <span class="arrow-btn" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <div class="note">
+        <svg aria-hidden="true" width="28" height="34" viewBox="0 0 34 40" fill="none"><path d="M20 38 C 8 30, 6 16, 14 4 M14 4 L 7 10 M14 4 L 19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--accent);"/></svg>
+        <p>filter chips + mobile layouts → +2–5% conversion at millions of users</p>
+      </div>
+    </div>
+
+    <div class="mob-item" id="card-seller-platform">
+      <a class="card" href="seller-platform.html" style="--rm: -1.5deg;">
+        <span class="card-tape" aria-hidden="true" style="--t: -3deg;"></span>
+        <img src="images%20and%20videos/home-b-seller.webp" alt="Seller Platform overview screen on a laptop" width="1100" height="648" loading="lazy">
+        <span class="card-text">
+          <span class="card-tag">Seller Platform · SaaS</span>
+          <span class="card-title">Moving Amazon sellers to a new platform in one step</span>
+        </span>
+        <span class="arrow-btn" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <div class="note">
+        <svg aria-hidden="true" width="28" height="34" viewBox="0 0 34 40" fill="none"><path d="M20 38 C 8 30, 6 16, 14 4 M14 4 L 7 10 M14 4 L 19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--accent);"/></svg>
+        <p>a required move, made effortless → 60% migrated in week one</p>
+      </div>
+    </div>
+
+    <div class="mob-item" id="card-unit-ep">
+      <a class="card" href="unit-ep.html" style="--rm: 1.5deg;">
+        <span class="card-tape" aria-hidden="true" style="--t: 3deg;"></span>
+        <img src="images%20and%20videos/home-b-unitep.webp" alt="Unit.e.p tablet scoring screen" width="1100" height="648" loading="lazy">
+        <span class="card-text">
+          <span class="card-tag">Unit.e.p · Tablet</span>
+          <span class="card-title">From paper scoring to live field data</span>
+        </span>
+        <span class="arrow-btn" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <div class="note">
+        <svg aria-hidden="true" width="28" height="34" viewBox="0 0 34 40" fill="none"><path d="M20 38 C 8 30, 6 16, 14 4 M14 4 L 7 10 M14 4 L 19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--accent);"/></svg>
+        <p>real-time candidate scoring for the IDF’s Oketz unit</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ─── Scale the desktop board to the window ─── */
+  (function () {
+    var desk = document.querySelector('.desk');
+    function fit() {
+      var s = Math.min(window.innerWidth / 1440, window.innerHeight / 900);
+      s = Math.max(0.55, Math.min(s, 1.35));
+      desk.style.setProperty('--s', s.toFixed(4));
+    }
+    fit();
+    window.addEventListener('resize', fit);
+  })();
+
+  /* ─── Contact popovers (nav + "Let's talk") ─── */
+  (function () {
+    var triggers = document.querySelectorAll('[data-contact-trigger]');
+    function closeAll(except) {
+      triggers.forEach(function (t) {
+        var m = t.nextElementSibling;
+        if (m === except) return;
+        m.classList.remove('open');
+        t.setAttribute('aria-expanded', 'false');
+        m.setAttribute('aria-hidden', 'true');
+      });
+    }
+    triggers.forEach(function (btn) {
+      var menu = btn.nextElementSibling;
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closeAll(menu);
+        var open = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+        menu.setAttribute('aria-hidden', String(!open));
+      });
+    });
+    document.querySelectorAll('[data-copy]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var val = el.getAttribute('data-copy');
+        var done = function () { el.classList.add('copied'); setTimeout(function () { el.classList.remove('copied'); }, 1400); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(val).then(done, function () { fallback(val); done(); });
+        } else { fallback(val); done(); }
+      });
+    });
+    function fallback(val) {
+      var t = document.createElement('textarea');
+      t.value = val; document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(t);
+    }
+    document.addEventListener('click', function () { closeAll(null); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(null); });
+    window.addEventListener('scroll', function () { closeAll(null); }, { passive: true });
+  })();
+</script>
+</body>
+</html>

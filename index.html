@@ -3,6 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ─── A/B TEST: homepage ───
+       ?v=a / ?v=b → force a version (tagged "assigned")
+       otherwise → random 50/50, remembered per browser
+       version B lives in home-b.html -->
+  <script>
+    (function () {
+      var v = null, q = null;
+      try { q = new URLSearchParams(location.search).get('v'); } catch (e) {}
+      try {
+        if (q === 'a' || q === 'b') {
+          v = q; localStorage.setItem('abHome', v); localStorage.setItem('abHomeSrc', 'assigned');
+        } else {
+          v = localStorage.getItem('abHome');
+          if (v !== 'a' && v !== 'b') {
+            v = Math.random() < 0.5 ? 'a' : 'b';
+            localStorage.setItem('abHome', v); localStorage.setItem('abHomeSrc', 'random');
+          }
+        }
+      } catch (e) { v = q === 'b' ? 'b' : 'a'; }
+      if (v === 'b') location.replace('home-b.html' + location.search + location.hash);
+    })();
+  </script>
   <title>Adi Mizrahi — Senior Product Designer</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">

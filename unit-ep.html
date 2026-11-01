@@ -7,825 +7,243 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <style>
-    /* ─────────────────────────────────────────
-       TOKENS  (identical to design system)
-    ───────────────────────────────────────── */
-    :root {
-      --page-bg:     #E2DED6;
-      --hero-bg:     #F5F3EF;
-      --surface:     #F5F3EF;
-      --dark:        #0C0B0A;
-      --warm-dark:   #F5F3F0;
-      --text:        #0C0B0A;
-      --text-muted:  #5A544C;
-      --text-soft:   #7A736A;
-      --text-subtle: #B0AAA2;
-      --accent:      #59D7A1;
-      --font:        'Poppins', sans-serif;
-      --pad:         20px;
-      --gap:         12px;
-      --radius-hero: 48px;
-      --radius-card: 36px;
-      --radius-sm:   16px;
-      --radius-pill: 999px;
-    }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font);
-      background: var(--page-bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+/* Layout: Adi's existing visual system (warm stone page, rounded cream cards, pink accent) carrying the new case-study skeleton: outcome hero → TL;DR table + stat tiles → sticky one-word TOC beside label/claim/proof sections. Single light theme to match adimiz.com. */
+:root{
+  --text:#0C0B0A; --text-muted:#5A544C; --text-soft:#7A736A; --dark:#0C0B0A; --radius-pill:999px;
+  --page-bg:#E2DED6; --surface:#F5F3EF; --ink:#0C0B0A; --muted:#5A544C; --soft:#7A736A; --line:#D3CEC5;
+  --accent:#1E6A64; --accent-wash:#DCF2E7; --ok:#2F7D5B; --ok-wash:#DCEFE5;
+  --font:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --r-hero:40px; --r-card:28px; --r-sm:16px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--page-bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+img,video{max-width:100%;display:block;height:auto}
+h1,h2,h3,h4{text-wrap:balance;margin:0;line-height:1.2}
+p{margin:0}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding-top:96px}
+@media (max-width:768px){.wrap{padding-top:16px}}
 
-    .page-wrapper {
-      padding: var(--pad);
-      padding-bottom: calc(var(--pad) + 96px);
-      display: flex;
-      flex-direction: column;
-      gap: var(--gap);
-    }
+/* hero top */
+.hero-back{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--muted);text-decoration:none;justify-self:start}
+.hero-back:hover{color:var(--ink)}
+.hero-back:focus-visible,.toc a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+/* hero */
+.hero{background:var(--surface);border-radius:var(--r-hero);padding:clamp(28px,6vw,72px);display:grid;gap:22px}
+.eyebrow{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);font-weight:500}
+.hero h1{font-size:clamp(30px,4.6vw,54px);font-weight:600;letter-spacing:-.02em;max-width:18ch}
+.hero h1 em{font-style:normal}
+.eyebrow{display:flex;align-items:center;gap:8px}
+.eyebrow .logo{height:1em;width:auto;display:block}
+.eyebrow .dot{font-size:0;width:8px;height:8px;border-radius:50%;background:var(--accent);margin:0 4px}
+.meta{display:flex;flex-wrap:wrap;gap:20px 56px;margin-top:8px}
+.meta .k{display:block;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(12,11,10,.4);margin-bottom:6px}
+.meta .v{font-size:14px;font-weight:600}
+.meta .s{margin-top:3px;font-size:12px;color:rgba(12,11,10,.45)}
+.badge{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:var(--ok-wash);color:var(--ok);border-radius:999px;padding:4px 12px}
+.meta .chip{background:var(--page-bg);border-radius:999px;padding:4px 12px}
 
-    /* ─────────────────────────────────────────
-       LABEL
-    ───────────────────────────────────────── */
-    .label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-    .label-light { color: rgba(245,243,239,0.45); }
-    .label-accent { color: var(--accent); }
+/* tldr */
+.tldr{margin-top:12px;background:var(--surface);border-radius:var(--r-card);padding:clamp(22px,4vw,48px);display:grid;grid-template-columns:160px 1fr;gap:24px}
+.tldr > h2{font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.tldr dl{margin:0;display:grid}
+.tldr .row{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:16px 0;border-top:1px solid var(--line)}
+.tldr .row:first-child{border-top:0;padding-top:0}
+.tldr dt{font-size:14px;color:var(--soft)}
+.tldr dd{margin:0;font-size:17px;min-width:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.stat{background:var(--surface);border-radius:var(--r-card);padding:24px 26px}
+.stat .n{font-size:clamp(36px,5vw,56px);font-weight:600;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.stat .n span{color:inherit}
+.stat .l{margin-top:10px;font-size:14px;color:var(--muted)}
 
-    /* ─────────────────────────────────────────
-       01 — HERO  (Bright card, dark visual panel)
-    ───────────────────────────────────────── */
-    .hero {
-      position: relative;
-      background: #F1EFEA;
-      border-radius: var(--radius-hero);
-      overflow: hidden;
-      min-height: calc(100vh - var(--pad) * 2 - 80px);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 48px 56px;
-    }
-    .hero-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .hero-body {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1.05fr 1fr;
-      gap: 56px;
-      align-items: center;
-    }
-    .hero-text {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 24px;
-    }
-    .hero-visual {
-      position: relative;
-      height: 100%;
-      min-height: 380px;
-      border-radius: 28px;
-      overflow: hidden;
-      background: var(--dark);
-      border: 1px solid rgba(12,11,10,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hero-visual img,
-    .hero-visual video,
-    .hero-visual object {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .hero-visual .media-empty {
-      color: rgba(245,243,239,0.45);
-    }
-    .hero-visual .media-empty .media-name { color: var(--accent); }
-    .hero-visual .media-empty .media-hint { color: rgba(245,243,239,0.55); }
-    .hero-brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-    }
-    .hero-brand .logo-dot {
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-    .hero-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-soft);
-      text-decoration: none;
-      transition: color 0.18s ease;
-    }
-    .hero-back:hover { color: var(--text); }
-    .hero-back svg { width: 16px; height: 16px; }
-    .hero-meta-top { text-align: right; }
-    .hero-meta-top .label { margin-bottom: 4px; }
-    .hero-year {
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--text-subtle);
-    }
+/* body layout */
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;margin-top:56px}
+.toc{position:sticky;top:96px;align-self:start}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.toc a{display:block;text-decoration:none;font-size:15px;color:var(--soft);padding:4px 0 4px 14px;border-left:2px solid transparent;transition:color .2s,border-color .2s}
+.toc a:hover{color:var(--ink)}
+.toc a.active{color:var(--ink);font-weight:500;border-left-color:var(--accent)}
 
-    .hero-center {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 96px 0 80px;
-    }
-    .hero-category {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 28px;
-    }
-    .hero-title {
-      font-size: clamp(44px, 5.4vw, 80px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 0.98;
-      color: var(--text);
-      margin-bottom: 32px;
-    }
-    .hero-title .outline {
-      display: block;
-      white-space: nowrap;
-    }
-    .hero-tagline {
-      font-size: clamp(16px, 1.3vw, 19px);
-      font-weight: 400;
-      color: var(--text-muted);
-      line-height: 1.5;
-      max-width: 520px;
-    }
-    .hero-bottom {
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-start;
-      border-top: 1px solid rgba(12,11,10,0.1);
-      padding-top: 24px;
-    }
-    .hero-meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 56px;
-    }
-    .hero-meta-cell .label {
-      display: block;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(12,11,10,0.4);
-      margin-bottom: 6px;
-    }
-    .hero-meta-cell .value {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .hero-meta-cell .sub {
-      margin-top: 3px;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(12,11,10,0.45);
-    }
+main{display:grid;gap:12px;min-width:0}
+.sec{background:var(--surface);border-radius:var(--r-card);padding:clamp(24px,4.5vw,56px);display:grid;gap:20px;scroll-margin-top:84px}
+.sec > .label{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.sec h2{font-size:clamp(24px,3vw,36px);font-weight:600;letter-spacing:-.015em;max-width:24ch}
+.sec .lead{font-size:17px;color:var(--muted);max-width:62ch}
+.sec .lead strong{color:var(--ink);font-weight:500}
+figure{margin:0;display:grid;gap:10px}
+figure img,figure video{border-radius:var(--r-sm);width:100%;background:var(--page-bg)}
+figcaption{font-size:13px;color:var(--soft)}
 
-    /* ─────────────────────────────────────────
-       META ROW
-    ───────────────────────────────────────── */
-    .meta-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      background: var(--surface);
-      border-radius: var(--radius-card);
-      overflow: hidden;
-    }
-    .meta-card {
-      padding: 28px 32px;
-      position: relative;
-    }
-    .meta-card + .meta-card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 20%; bottom: 20%;
-      width: 1px;
-      background: rgba(12,11,10,0.1);
-    }
-    .meta-card .label { display: block; margin-bottom: 10px; }
-    .meta-value {
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-    .meta-sub { font-size: 13px; color: var(--text-soft); }
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{background:var(--page-bg);border-radius:var(--r-sm);padding:20px;display:grid;gap:8px;align-content:start;min-width:0}
+.card h3{font-size:16px;font-weight:600}
+.card p{font-size:14px;color:var(--muted)}
+.card .tag{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.card.focus{background:var(--ink);color:var(--surface)}
+.card.focus p,.card.focus .tag{color:#CFC9C0}
 
-    /* ─────────────────────────────────────────
-       GENERIC SECTION
-    ───────────────────────────────────────── */
-    .section {
-      background: var(--surface);
-      border-radius: var(--radius-card);
-      padding: 64px 56px;
-    }
-    .section.dark {
-      background: var(--warm-dark);
-      color: var(--text);
-    }
-    .section.accent { background: var(--accent); }
+.callout{border-left:3px solid var(--accent);padding:4px 0 4px 18px;font-size:clamp(20px,2.4vw,26px);font-weight:500;line-height:1.35;max-width:30ch}
 
-    .section-num-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 14px;
-      display: block;
-    }
-    .section.dark .section-num-label { color: var(--accent); }
-    .section.dark .section-title-large { color: var(--text); }
-    .section.accent .section-num-label { color: rgba(12,11,10,0.6); }
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.chain .step{background:var(--page-bg);border-radius:999px;padding:8px 16px;font-size:14px;font-weight:500}
+.chain .arr{color:var(--soft)}
 
-    .section-title-large {
-      font-size: clamp(28px, 3.5vw, 48px);
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      line-height: 1.1;
-      color: var(--text);
-      max-width: 880px;
-    }
-    .section.accent .section-title-large { color: var(--dark); }
+.option{background:var(--page-bg);border-radius:var(--r-sm);padding:16px;display:grid;gap:10px;align-content:start;min-width:0;border:2px solid transparent}
+.option img{border-radius:10px;background:var(--surface);width:100%}
+.option .num{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.option h3{font-size:16px;font-weight:600}
+.option p{font-size:14px;color:var(--muted)}
+.option .risk{font-size:13px;color:#9A4A2E}
+.option.chosen{border-color:var(--accent);background:var(--surface)}
+.option .pick{background:var(--accent);color:#fff;border-radius:999px;padding:2px 10px;letter-spacing:.04em}
 
-    .section-body {
-      font-size: 18px;
-      line-height: 1.7;
-      color: var(--text-muted);
-      max-width: 780px;
-    }
-    .section.dark .section-body { color: var(--text-muted); }
-    .section.accent .section-body { color: rgba(12,11,10,0.78); }
+.obs{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:var(--page-bg);border-radius:var(--r-sm);padding:20px}
+.obs .k{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);padding-top:3px;white-space:nowrap}
+.obs p{font-size:17px}
 
-    .section-body + .section-body { margin-top: 18px; }
+.fix{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:center}
 
-    /* ─────────────────────────────────────────
-       OVERVIEW - 2-col text + image
-    ───────────────────────────────────────── */
-    .overview-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.5fr;
-      gap: 56px;
-      align-items: center;
-    }
-    .overview-text { display: flex; flex-direction: column; gap: 14px; }
-    .overview-text .section-num-label { margin-bottom: 0; }
-    .overview-text .section-body { margin: 0; max-width: none; }
-    .overview-image {
-      border-radius: 24px;
-      overflow: hidden;
-      background: var(--page-bg);
-      aspect-ratio: 4/3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 320px;
-      border: 1px solid rgba(12,11,10,0.10);
-    }
-    .overview-image img,
-    .overview-image video,
-    .overview-image object {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+.outcome{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.outcome .stat{background:var(--page-bg)}
+.gallery{min-width:0}
+.subhead{display:grid;gap:6px;margin-top:16px}
+.subhead h3{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.subhead p{font-size:15px;color:var(--muted);max-width:60ch}
+.gallery-ctrl{display:none}
+.gallery-btns{display:flex;gap:8px}
+.gallery-btns button{width:40px;height:40px;border-radius:50%;border:1px solid var(--ink);background:transparent;color:var(--ink);font:500 16px var(--font);cursor:pointer;display:grid;place-items:center}
+.gallery-btns button:disabled{opacity:.3;cursor:default}
+.gallery-btns button:focus-visible,.gallery-track:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.gallery-count{font-size:13px;color:var(--soft);font-variant-numeric:tabular-nums}
 
-    /* ─────────────────────────────────────────
-       CHALLENGE / STRATEGY / RESULTS (intro trio)
-    ───────────────────────────────────────── */
-    .intro-trio {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--gap);
-    }
-    .intro-card {
-      background: var(--surface);
-      border-radius: var(--radius-card);
-      padding: 40px 36px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .intro-card h3 {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--text);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .intro-card h3 .arrow { color: var(--accent); }
-    .intro-card p {
-      font-size: 16px;
-      line-height: 1.7;
-      color: var(--text-muted);
-    }
+.lessons{display:grid;gap:18px}
+.lessons p{font-size:16px;color:var(--muted);max-width:64ch}
+.lessons strong{color:var(--ink);font-weight:600}
 
-    /* ─────────────────────────────────────────
-       BULLET LIST (used in problem, options, impact, edge cases)
-    ───────────────────────────────────────── */
-    .bullet-list {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      margin-top: 32px;
-      max-width: 900px;
-    }
-    .bullet-item {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      padding-bottom: 18px;
-      border-bottom: 1px solid rgba(12,11,10,0.07);
-    }
-    .bullet-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .bullet-marker {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-top: 9px;
-      flex-shrink: 0;
-    }
-    .bullet-icon {
-      width: 44px; height: 44px;
-      border-radius: 10px;
-      background: rgba(184,134,90,0.14);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: var(--accent);
-    }
-    .bullet-icon svg { width: 22px; height: 22px; }
-    .section.dark .bullet-icon {
-      background: #EEE4DA;
-      color: var(--accent);
-    }
-    .bullet-text {
-      font-size: 17px;
-      line-height: 1.65;
-      color: var(--text-muted);
-    }
-    .bullet-text strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-    .bullet-text em {
-      font-style: italic;
-      color: var(--accent);
-    }
-    .section.dark .bullet-item { border-color: rgba(12,11,10,0.1); }
-    .section.dark .bullet-text { color: var(--text-muted); }
-    .section.dark .bullet-text strong { color: var(--text); }
-    .section.accent .bullet-item { border-color: rgba(12,11,10,0.15); }
-    .section.accent .bullet-text { color: rgba(12,11,10,0.78); }
-    .section.accent .bullet-text strong { color: var(--dark); }
+.more{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.more a{background:var(--surface);border-radius:var(--r-card);padding:26px;text-decoration:none;display:grid;gap:6px;transition:transform .2s}
+.more a:hover{transform:translateY(-2px)}
+.more .dir{font-size:13px;color:var(--soft)}
+.more .t{font-size:20px;font-weight:600}
+.more .c{font-size:14px;color:var(--muted)}
 
-    /* ─────────────────────────────────────────
-       OPTIONS CARDS (User Flow Mapping)
-    ───────────────────────────────────────── */
-    .options-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--gap);
-      margin-top: 32px;
-    }
-    .option-card {
-      background: var(--page-bg);
-      border-radius: var(--radius-sm);
-      padding: 20px 20px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      border: 2px solid transparent;
-      transition: border-color 0.18s ease;
-    }
-    .option-image {
-      width: 100%;
-      aspect-ratio: 16/10;
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--surface);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 4px;
-    }
-    .option-image img,
-    .option-image object,
-    .option-image video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .option-image .media-empty {
-      gap: 8px;
-      padding: 12px;
-    }
-    .option-image .media-empty svg { width: 28px; height: 28px; }
-    .option-image .media-empty .media-name { font-size: 10px; }
-    .option-image .media-empty .media-hint { display: none; }
-    .option-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .option-num {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    .option-title {
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--text);
-      line-height: 1.35;
-    }
-    .option-desc {
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--text-muted);
-    }
-    .option-risk {
-      font-size: 14px;
-      font-style: italic;
-      color: var(--text-soft);
-      padding-top: 14px;
-      border-top: 1px solid rgba(12,11,10,0.1);
-    }
-    .option-card.chosen {
-      border-color: var(--accent);
-      background: var(--page-bg);
-    }
-    .chosen-badge {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      background: var(--accent);
-      color: var(--hero-bg);
-    }
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr;gap:12px;margin-top:12px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--tb,60px));z-index:4;background:var(--surface);border-radius:999px;padding:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;transition:box-shadow .2s}
+  .toc::-webkit-scrollbar{display:none}
+  .toc.stuck{box-shadow:0 6px 18px rgba(12,11,10,.08)}
+  .toc ol{display:flex;flex-wrap:nowrap;gap:2px;width:max-content}
+  .toc a{padding:6px 14px;border-left:0;border-radius:999px;white-space:nowrap}
+  .sec{scroll-margin-top:calc(var(--tb,60px) + 64px)}
+  .toc a.active{border-left:0;color:var(--surface);background:var(--ink)}
+  .outcome{grid-template-columns:1fr}
+  .gallery{margin-inline:calc(-1 * clamp(24px,4.5vw,56px))}
+  .gallery-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-inline:clamp(24px,4.5vw,56px);scroll-padding-inline:clamp(24px,4.5vw,56px);gap:12px}
+  .gallery-track::-webkit-scrollbar{display:none}
+  .gallery-track .option{flex:0 0 82%;scroll-snap-align:start}
+  .gallery-ctrl{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-inline:clamp(24px,4.5vw,56px)}
+  .tldr{grid-template-columns:1fr;gap:12px}
+}
+@media (max-width:640px){
+  .grid2,.more,.fix{grid-template-columns:1fr}
+  .stats .stat{padding:16px 14px}.stats .n{font-size:30px}.stats .l{font-size:12px}
+  .tldr .row{grid-template-columns:1fr;gap:4px}
+}
 
-    /* ─────────────────────────────────────────
-       DECISION CALLOUT
-    ───────────────────────────────────────── */
-    .decision-block {
-      margin-top: 40px;
-      padding: 32px 36px;
-      background: var(--page-bg);
-      border: 2px solid var(--accent);
-      border-radius: 14px;
-    }
-    .decision-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 10px;
-    }
-    .decision-text {
-      font-size: 16px;
-      line-height: 1.7;
-      color: var(--text);
-    }
+/* CopyCat additions */
+.gallery-ctrl.always{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:12px}
+.steps::-webkit-scrollbar{display:none}
+.steps figure{flex:0 0 78%;scroll-snap-align:start}
+.steps{align-items:flex-start}
+.steps img{aspect-ratio:16/10;object-fit:cover;object-position:top left;border:1px solid var(--line)}
+.steps figcaption b{color:var(--ink);font-weight:600}
+.scale{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:2px solid var(--line);padding-top:14px;gap:12px}
+.scale .tick{display:grid;gap:2px;position:relative}
+.scale .tick::before{content:"";position:absolute;top:-21px;left:0;width:12px;height:12px;border-radius:50%;background:var(--line)}
+.scale .tick.goal::before{background:var(--ink)}
+.scale .v{font-size:clamp(22px,3vw,32px);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.scale .k{font-size:13px;color:var(--soft)}
+.tools{display:grid;gap:10px}
+.tools-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tools-k{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);width:64px}
+.tools .t{background:var(--page-bg);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(12,11,10,.3)}
+.tools .t.one{background:var(--ink);color:var(--surface);text-decoration:none;font-weight:500}
+.rules{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.rules > div{background:var(--page-bg);border-radius:var(--r-sm);padding:16px;display:grid;gap:6px;align-content:start;min-width:0}
+.rules h3{font-size:14px;font-weight:600}
+.rules p{font-size:13px;color:var(--muted)}
+.state{display:grid;gap:10px;align-content:start;min-width:0}
+.state-h{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;gap:8px}
+.pill{font-size:11px;font-weight:600;letter-spacing:.04em;border-radius:999px;padding:2px 10px;background:var(--page-bg);color:var(--muted)}
+.pill.err{background:#F6DCD3;color:#9A3B1E}
+.pill.next{background:var(--accent-wash);color:#164F4A}
+.mock{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:8px;font-size:13px;color:var(--ink);min-height:118px;align-content:start}
+.mock.err{border-color:#E5B4A3;background:#FDF5F2}
+.mock.warn mark{background:#FBE7A8;padding:0 2px;border-radius:3px}
+.sk{height:9px;border-radius:5px;background:linear-gradient(90deg,#ECE8E2,#F6F3EF,#ECE8E2);background-size:200% 100%;animation:sk 1.4s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.sk{animation:none}}
+.mock-foot{font-size:12px;color:var(--soft)}
+.mock-btns{display:flex;gap:6px;flex-wrap:wrap}
+.mb{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.mb.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+.state p{font-size:13px;color:var(--muted)}
+.deep{display:grid;gap:36px;margin-top:12px;padding-top:28px;border-top:1px solid var(--line)}
+.deep-k{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.deep-item{display:grid;gap:14px}
+.deep-item .subhead{margin-top:0}
+.fine{font-size:13px;color:var(--soft);max-width:70ch}
+.outcome.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.try{position:relative}
+.try-tag{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:var(--ink);color:var(--surface);font-size:13px;font-weight:500;border-radius:999px;padding:8px 16px;white-space:nowrap}
+@media (max-width:900px){
+  .grid3{grid-template-columns:1fr}
+  .rules{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .outcome.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps figure{flex-basis:86%}
+}
+@media (max-width:640px){
+  .rules{grid-template-columns:1fr}
+  .try-tag{font-size:11px;padding:6px 12px}
+}
 
-    /* ─────────────────────────────────────────
-       MEDIA PLACEHOLDER  (SVG upload slot)
-       ─── Swap the inner block with: <img src="your-file.svg" alt="..."> ───
-    ───────────────────────────────────────── */
-    .media-slot {
-      margin-top: 40px;
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      background: var(--page-bg);
-      position: relative;
-      aspect-ratio: 16/9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .media-slot.tall { aspect-ratio: 4/3; }
-    .media-slot.wide { aspect-ratio: 21/9; }
-    .media-slot.video { aspect-ratio: 16/9; }
-    .media-slot.dark {
-      background: var(--surface);
-      border: 1px solid rgba(12,11,10,0.08);
-    }
-    .media-slot img,
-    .media-slot object,
-    .media-slot video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-    .media-empty {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      color: var(--text-subtle);
-      text-align: center;
-      padding: 24px;
-    }
-    .media-slot.dark .media-empty { color: var(--text-subtle); }
-    .media-empty svg {
-      width: 42px; height: 42px;
-      opacity: 0.5;
-    }
-    .media-empty .media-name {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    .media-empty .media-hint {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-      line-height: 1.5;
-      max-width: 320px;
-    }
-    .media-slot.dark .media-empty .media-hint { color: var(--text-soft); }
-    .media-caption {
-      margin-top: 12px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      text-align: center;
-    }
+/* Unit.e.p additions */
+.stat .n.has-was{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:12px}
+.stat .n .was{font-size:.4em;font-weight:500;letter-spacing:0;color:var(--soft);text-decoration:line-through;text-decoration-thickness:2px}
+.eyebrow .client{font-weight:600;color:var(--ink)}
+.iter{display:grid;gap:14px;padding-top:28px;margin-top:8px;border-top:1px solid var(--line)}
+.iter-head{display:grid;gap:4px}
+.iter-n{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.iter h3{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.result{display:flex;flex-wrap:wrap;gap:8px}
+.res{font-size:13px;font-weight:500;border-radius:999px;padding:6px 14px;background:var(--page-bg);color:var(--muted)}
+.res.good{background:var(--accent-wash);color:#164F4A;box-shadow:inset 0 0 0 1px #9ED3BD}
+.res.good::before{content:"+ "}
+.res.bad{background:#F6DCD3;color:#9A3B1E;box-shadow:inset 0 0 0 1px #E3AE9C}
+.res.bad::before{content:"– "}
+.photos{display:grid;grid-template-columns:1fr 1fr 1.6fr;gap:12px}
+.photos img{width:100%;height:240px;object-fit:cover;border-radius:var(--r-sm)}
+.tablet{background:#0f1514;border-radius:28px;padding:14px}
+.rating-anim{position:relative;aspect-ratio:2473/1727;border-radius:14px;overflow:hidden;background:#F3F5F5}
+.rating-anim img{position:absolute;inset:0;width:100%;height:100%;border-radius:0;background:transparent}
+.rating-anim img:not(:first-child){opacity:0;animation-duration:4.5s;animation-timing-function:step-end;animation-iteration-count:infinite}
+.rating-anim .f1{animation-name:rf1}.rating-anim .f2{animation-name:rf2}.rating-anim .f3{animation-name:rf3}.rating-anim .f4{animation-name:rf4}
+@keyframes rf1{0%,13.32%{opacity:0}13.33%,100%{opacity:1}}
+@keyframes rf2{0%,26.66%{opacity:0}26.67%,100%{opacity:1}}
+@keyframes rf3{0%,39.99%{opacity:0}40%,100%{opacity:1}}
+@keyframes rf4{0%,53.32%{opacity:0}53.33%,100%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.rating-anim img:not(:first-child){animation:none}.rating-anim .f4{opacity:1}}
+@media (max-width:640px){.photos{grid-template-columns:1fr 1fr}.photos figure:last-child{grid-column:1/-1}.photos img{height:180px}.tablet{padding:8px;border-radius:18px}}
 
-    /* ── Filled slots fit to media's natural ratio ── */
-    .overview-image:has(img, video, object),
-    .option-image:has(img, video, object),
-    .media-slot:has(img, video, object) {
-      aspect-ratio: auto;
-      min-height: 0;
-    }
-    /* ── Soft shadow behind all filled media ── */
-    .hero-visual:has(img, video, object),
-    .overview-image:has(img, video, object),
-    .option-image:has(img, video, object),
-    .media-slot:has(img, video, object) {
-      box-shadow: 0 18px 45px rgba(12,11,10,0.14);
-    }
-    /* ── Transparent image placements ── */
-    .media-slot,
-    .media-slot.dark,
-    .media-slot:has(img, video, object) {
-      background: transparent;
-      border: none;
-      box-shadow: none;
-    }
-    /* ── Image lightbox ── */
-    .lightbox {
-      position: fixed; inset: 0; z-index: 9999;
-      display: none; align-items: center; justify-content: center;
-      background: rgba(10,10,10,0.85); padding: 24px; cursor: zoom-out;
-    }
-    .lightbox.open { display: flex; }
-    .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; background: #fff; }
-
-    /* ── Tablet mockup frame ── */
-    .overview-image.tablet-frame {
-      background: #0A0A0A;
-      border: none;
-      border-radius: 32px;
-      padding: 16px;
-      box-shadow: 0 18px 45px rgba(12,11,10,0.14), inset 0 0 0 2px #2A2A2A;
-    }
-    .overview-image.tablet-frame video {
-      height: auto;
-      border-radius: 14px;
-    }
-
-    .overview-image:has(img, video, object) img,
-    .overview-image:has(img, video, object) video,
-    .overview-image:has(img, video, object) object,
-    .option-image:has(img, video, object) img,
-    .option-image:has(img, video, object) video,
-    .option-image:has(img, video, object) object,
-    .media-slot:has(img, video, object) img,
-    .media-slot:has(img, video, object) video,
-    .media-slot:has(img, video, object) object {
-      height: auto;
-      object-fit: contain;
-    }
-    /* Scale down the option cards' media a touch */
-    .option-image:has(img, video, object) img,
-    .option-image:has(img, video, object) video,
-    .option-image:has(img, video, object) object {
-      max-height: 300px;
-      width: auto;
-      max-width: 100%;
-      margin: 0 auto;
-    }
-
-    /* ─────────────────────────────────────────
-       FIGMA / EXTERNAL LINK
-    ───────────────────────────────────────── */
-    .ext-link {
-      margin-top: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      text-decoration: none;
-      padding: 12px 20px;
-      border-radius: var(--radius-pill);
-      background: var(--page-bg);
-      transition: background 0.18s ease, transform 0.18s ease;
-    }
-    .ext-link:hover {
-      background: var(--accent);
-      color: var(--hero-bg);
-      transform: translateY(-1px);
-    }
-    .ext-link.dark {
-      background: var(--surface);
-      color: var(--text);
-    }
-    .ext-link.dark:hover { background: var(--accent); color: var(--hero-bg); }
-    .ext-link svg { width: 14px; height: 14px; }
-
-    /* ─────────────────────────────────────────
-       SUB-SECTION (inside dark/light parents)
-    ───────────────────────────────────────── */
-    .subsection { margin-top: 56px; }
-    .subsection:first-of-type { margin-top: 0; }
-    .subsection-title {
-      font-size: clamp(22px, 2.4vw, 32px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-      color: var(--text);
-      margin-bottom: 18px;
-    }
-    .section.dark .subsection-title { color: var(--text); }
-    .subsection-body {
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--text-muted);
-      max-width: 780px;
-    }
-    .section.dark .subsection-body { color: var(--text-muted); }
-    .subsection-body + .subsection-body { margin-top: 14px; }
-    .subsection-body strong { color: var(--text); font-weight: 600; }
-    .section.dark .subsection-body strong { color: var(--text); }
-
-    .subsection-h4 {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--text);
-      margin-top: 28px;
-      margin-bottom: 14px;
-    }
-    .section.dark .subsection-h4 { color: var(--text); }
-
-    .quote-callout {
-      margin-top: 28px;
-      padding: 28px 32px;
-      background: var(--page-bg);
-      border-radius: 14px;
-      border: 2px solid var(--accent);
-      font-size: 16px;
-      line-height: 1.65;
-      font-style: italic;
-      color: var(--text);
-      max-width: 820px;
-    }
-    .section.dark .quote-callout {
-      background: #FFFFFF;
-      color: var(--text);
-    }
-
-    .self-note {
-      margin-top: 14px;
-      font-size: 12px;
-      font-style: italic;
-      color: var(--text-subtle);
-    }
-
-    /* ─────────────────────────────────────────
-       RESULTS GRID
-    ───────────────────────────────────────── */
-    .results-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 40px;
-    }
-    .result-stat {
-      padding: 28px 26px;
-      background: rgba(12,11,10,0.08);
-      border-radius: 16px;
-    }
-    .result-num {
-      font-size: clamp(32px, 3.5vw, 48px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--dark);
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .result-label {
-      font-size: 15px;
-      color: rgba(12,11,10,0.78);
-      line-height: 1.5;
-    }
-
-    /* ─────────────────────────────────────────
-       PROJECT NAV
-    ───────────────────────────────────────── */
-    .project-nav {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--gap);
-    }
-    .project-nav-card {
-      background: var(--surface);
-      border-radius: var(--radius-sm);
-      padding: 28px 32px;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-    .project-nav-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.07);
-    }
-    .project-nav-card.next { align-items: flex-end; text-align: right; }
-    .nav-direction {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-subtle);
-    }
-    .nav-project-name {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--text);
-    }
-    .nav-project-cat { font-size: 11px; color: var(--text-muted); }
-
-    /* ─────────────────────────────────────────
+/* ─────────────────────────────────────────
        GLASS NAV
     ───────────────────────────────────────── */
     .glass-nav {
@@ -937,436 +355,216 @@
     }
     .contact-item:hover { background: rgba(12,11,10,0.06); color: var(--dark); }
     .contact-hint { font-size: 11px; font-weight: 400; color: rgba(12,11,10,0.45); }
-    .contact-item.copied .contact-hint::after { content: " - copied"; color: #B8865A; }
+    .contact-item.copied .contact-hint::after { content: " — copied"; color: #B8865A; }
 
-    /* ─────────────────────────────────────────
-       RESPONSIVE
-    ───────────────────────────────────────── */
-    @media (max-width: 768px) {
-      :root {
-        --pad: 12px;
-        --gap: 10px;
-        --radius-hero: 28px;
-        --radius-card: 24px;
-      }
-      .hero { padding: 28px 22px; min-height: auto; }
-      .hero-center { flex: none; justify-content: flex-start; padding: 28px 0 0; }
-      .hero-title { font-size: clamp(30px, 9vw, 70px); margin-bottom: 28px; }
-      .hero-title .outline { white-space: normal; }
-      .hero-tagline { margin-bottom: 32px; }
-      .hero-meta-row { flex-direction: column; gap: 20px; }
-      .hero-body { grid-template-columns: 1fr; gap: 28px; }
-      .hero-visual { min-height: 260px; aspect-ratio: 4/3; }
-      .meta-row { grid-template-columns: 1fr; }
-      .meta-card + .meta-card::before { top: 0; bottom: auto; left: 20%; right: 20%; width: auto; height: 1px; }
-      .intro-trio { grid-template-columns: 1fr; }
-      /* Body copy → 14px on mobile */
-      .section-body, .subsection-body { font-size: 14px !important; }
-      .overview-grid { grid-template-columns: 1fr; }
-      /* Scale the overview image up on mobile: bleed to the section edges */
-      .overview-image { margin: 0 -24px; width: calc(100% + 48px); max-width: none; aspect-ratio: 1/1; }
-      .overview-image img { width: 100%; height: auto; object-fit: contain; }
-      .overview-image.tablet-frame { margin: 0; width: 100%; aspect-ratio: auto; padding: 10px; border-radius: 22px; }
-      .section { padding: 40px 24px; }
-      .options-grid { grid-template-columns: 1fr; }
-      .results-grid { grid-template-columns: 1fr; }
-      .project-nav { grid-template-columns: 1fr; }
-      .glass-nav { top: auto; right: auto; bottom: var(--pad); left: 50%; transform: translateX(-50%); max-width: calc(100vw - var(--pad) * 2); padding: 8px 12px; }
+    
+@media (max-width: 768px) {
+      .glass-nav { top: auto; right: auto; bottom: 12px; left: 50%; transform: translateX(-50%); max-width: calc(100vw - 20px); padding: 8px 12px; gap: 0; }
       .glass-nav.nav-hidden { transform: translate(-50%, calc(100% + 40px)); }
-      .contact-menu { top: auto; bottom: calc(100% + 12px); transform: translateY(6px); }
+      .contact-menu { top: auto; bottom: calc(100% + 12px); transform: translateY(6px); min-width: 220px; }
       .contact-menu.open { transform: translateY(0); }
-      .nav-link { padding: 6px 10px; font-size: 10px; }
-
-      /* ── Mobile UX refinements (mobile-only) ── */
-      body { overflow-x: hidden; -webkit-text-size-adjust: 100%; }
-
-      /* Floating nav: keep on-screen + 44px tap targets */
-      .glass-nav { max-width: calc(100vw - 20px); gap: 0; }
-      .nav-link { display: inline-flex; align-items: center; min-height: 44px; }
+      .nav-link { padding: 6px 10px; font-size: 10px; display: inline-flex; align-items: center; min-height: 44px; }
       .nav-cta { min-height: 44px; display: inline-flex; align-items: center; }
       .contact-item { min-height: 44px; }
-      .contact-menu { min-width: 220px; }
-
-      /* Comfortable reading sizes for scanning long copy */
-      .section-body { font-size: 14px; line-height: 1.65; }
-      .bullet-text { font-size: 13.5px; }
-
-      /* Keep the 3 result metrics side-by-side so they stay comparable */
-      .results-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        margin-top: 28px;
-      }
-      .result-stat { padding: 16px 12px; border-radius: 12px; }
-      .result-num { font-size: clamp(20px, 7vw, 28px); }
-      .result-label { font-size: 10px; line-height: 1.35; }
-
-      /* Chip spacing avoids mis-taps */
-      .hero-pills { gap: 10px; }
+      body { padding-bottom: 96px; }
     }
-
-    /* ── Small phones ── */
-    @media (max-width: 400px) {
-      .hero { padding: 24px 18px; }
-      .section { padding: 36px 18px; }
-      .result-stat { padding: 14px 8px; }
-      .nav-link { padding: 6px 8px; font-size: 9.5px; }
-    }
-    /* ── Rating menu animation ── */
-    .media-slot.rating-slot { aspect-ratio: auto; padding: 8% 0; }
-    .media-slot .rating-tablet { width: 58%; background: #0c0b0a; padding: clamp(6px, 1.5vw, 18px); border-radius: clamp(10px, 2.4vw, 30px); box-shadow: 0 0 0 1px #2a2927 inset, 0 12px 32px rgba(12,11,10,0.18); }
-    .media-slot .rating-anim { position: relative; width: 100%; aspect-ratio: 1194 / 834; border-radius: clamp(3px, 0.7vw, 8px); overflow: hidden; }
-    .media-slot .rating-anim img { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .media-slot .rating-anim img:not(:first-child) { opacity: 0; animation-duration: 4.5s; animation-timing-function: step-end; animation-iteration-count: infinite; }
-    .media-slot .rating-anim .f1 { animation-name: rm-f1; }
-    .media-slot .rating-anim .f2 { animation-name: rm-f2; }
-    .media-slot .rating-anim .f3 { animation-name: rm-f3; }
-    .media-slot .rating-anim .f4 { animation-name: rm-f4; }
-    @keyframes rm-f1 { 0%, 13.32% { opacity: 0; } 13.33%, 100% { opacity: 1; } }
-    @keyframes rm-f2 { 0%, 26.66% { opacity: 0; } 26.67%, 100% { opacity: 1; } }
-    @keyframes rm-f3 { 0%, 39.99% { opacity: 0; } 40%, 100% { opacity: 1; } }
-    @keyframes rm-f4 { 0%, 53.32% { opacity: 0; } 53.33%, 100% { opacity: 1; } }
-  </style>
+    @media (max-width: 400px) { .nav-link { padding: 6px 8px; font-size: 9.5px; } }
+.map-btn{justify-self:start;display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;border:0;background:var(--accent);color:#fff;font:600 14px var(--font);cursor:pointer}
+.map-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.proto-embed{border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line);background:#fff}
+.proto-frame{display:block;width:100%;height:760px;border:0}
+.proto-mobile{display:none}
+@media (max-width:768px){.proto-embed{display:none}.proto-mobile{display:grid;gap:10px}.proto-mobile p{font-size:13px;color:var(--soft)}}
+</style>
   <link rel="stylesheet" href="mobile-polish.css">
   <script src="analytics-tracker.js" defer></script>
   <script src="mobile-zoom.js" defer></script>
 </head>
 <body>
 
-<div class="page-wrapper">
 
-  <!-- ──────────────────────────────────────
-       01 · HERO  (header + image combined)
-  ─────────────────────────────────────────── -->
-  <section class="hero">
-    <div class="hero-top">
-      <a href="index.html#card-unit-ep" class="hero-back">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M10 12L6 8l4-4"/>
-        </svg>
-        Back to Work
-      </a>
-      <div class="hero-brand">
-        Oketz · IDF
-      </div>
-    </div>
-
-    <div class="hero-center">
-      <div class="hero-category">Product Design · Assessment System · Field Ops</div>
-      <h1 class="hero-title">
-        Unit.e.p App
-        <span class="outline">Oketz Unit Sorting</span>
-      </h1>
-      <p class="hero-tagline">
-        A digital evaluation platform for the IDF's elite canine unit (Oketz) — turning their high-stakes annual sorting camp into a centralized, live diagnostic system.
-      </p>
-    </div>
-
-    <div class="hero-bottom">
-      <div class="hero-meta-row">
-        <div class="hero-meta-cell">
-          <span class="label">My role</span>
-          <div class="value">Solo Product Designer</div>
-          <div class="sub">Freelance · Research · UX · UI · Prototyping</div>
-        </div>
-        <div class="hero-meta-cell">
-          <span class="label">Team</span>
-          <div class="value">Design · Behavioral · Engineering</div>
-          <div class="sub">1 Social Behavioral Commander · 1 Engineer</div>
-        </div>
-        <div class="hero-meta-cell">
-          <span class="label">Duration</span>
-          <div class="value">6 months</div>
-          <div class="sub">End-to-end engagement</div>
-        </div>
-      </div>
+<div class="wrap">
+  <section class="hero" id="top">
+    <a href="index.html#card-unit-ep" class="hero-back">← Back to work</a>
+    <div class="eyebrow"><span class="client">IDF · Oketz unit</span><span class="dot">·</span><span>Freelance · Field assessment</span></div>
+    <h1>Replacing pen-and-paper scoring with a live tablet system for an elite military unit.</h1>
+    <div class="meta">
+      <div class="cell"><span class="k">My role</span><div class="v">Solo Product Designer</div><div class="s">Freelance · Research · UX · UI · Prototyping</div></div>
+      <div class="cell"><span class="k">Team</span><div class="v">1 Behavioral Commander · 1 Engineer</div><div class="s">Design · Behavioral · Engineering</div></div>
+      <div class="cell"><span class="k">Duration</span><div class="v">6 months</div><div class="s">End-to-end engagement</div></div>
     </div>
   </section>
 
-
-  <!-- ──────────────────────────────────────
-       03 · OVERVIEW
-  ─────────────────────────────────────────── -->
-  <section class="section">
-    <div class="overview-grid">
-      <div class="overview-text">
-        <span class="section-num-label">Overview</span>
-        <h2 class="section-title-large">Overview</h2>
-        <p class="section-body">
-          O-Assessment System (Unit.e.p app) is a custom, complex digital evaluation platform built for the IDF's elite canine unit (Oketz) to optimize their high-stakes annual candidate sorting camp through a centralized, live diagnostic ecosystem.
-        </p>
-        <p class="section-body">
-          It replaces paper-and-pen scoring with centralized digital trackers that map candidate parameters, groups, and stations - and processes candidate rankings in real time, making data visible and syncable immediately rather than after the camp ends.
-        </p>
-      </div>
-
-      <!-- ── OVERVIEW IMAGE PLACEHOLDER ────────────── -->
-      <!-- SWAP: replace inner div with  <img loading="lazy" decoding="async" src="overview.svg" alt="Overview image">  -->
-      <div class="overview-image tablet-frame">
-        <video src="images and videos/unit-ep-overview.mp4" autoplay muted loop playsinline></video>
-      </div>
-    </div>
+  <section class="tldr" aria-label="TL;DR">
+    <h2>TL;DR</h2>
+    <dl>
+      <div class="row"><dt>Background</dt><dd>Oketz, the IDF's elite canine unit, selects its candidates in an intense sorting camp held once a year.</dd></div>
+      <div class="row"><dt>Problem</dt><dd>Assessors scored candidates on paper at separate stations, then needed a 3-hour cross-department meeting to align the results.</dd></div>
+      <div class="row"><dt>Approach</dt><dd>Field research at the camp, then a tablet app built around the camp's own flow: candidate, group, station, board review.</dd></div>
+      <div class="row"><dt>Outcome</dt><dd>The 3-hour sync meeting shrank to 30 minutes. No paper logs, and live candidate scores for assessors for the first time.</dd></div>
+    </dl>
   </section>
-
-
-  <!-- ──────────────────────────────────────
-       04 · CHALLENGE / STRATEGY / RESULTS
-  ─────────────────────────────────────────── -->
-  <div class="intro-trio">
-    <div class="intro-card">
-      <h3>Challenge <span class="arrow">→</span></h3>
-      <p>Held once a year under intense field conditions, the sorting camp tracked candidate metrics by hand - creating disconnected data silos and a grueling 3-hour end-of-camp alignment meeting that delayed reserve officers and formed a major administrative bottleneck.</p>
-    </div>
-    <div class="intro-card">
-      <h3>Strategy <span class="arrow">→</span></h3>
-      <p>Design a custom, end-to-end mobile (tablet) platform engineered for extreme field conditions - unifying raw observations, real-time tracking, and automated score compiling into a single interface to eliminate post-camp operational drag.</p>
-    </div>
-    <div class="intro-card">
-      <h3>Results <span class="arrow">→</span></h3>
-      <p>A semi-automated field assessment interface that streamlined information architecture, cut post-camp alignment and grading time, and gave assessors instant, analytical visibility over candidate scores for the first time.</p>
-    </div>
+  <div class="stats">
+    <div class="stat"><div class="n has-was">30 min<span class="was">3 hrs</span></div><div class="l">end-of-camp sync meeting, down from 3 hours</div></div>
+    <div class="stat"><div class="n">Live</div><div class="l">candidate scores, for the first time</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">paper logs at the camp</div></div>
   </div>
 
+  <div class="layout">
+    <nav class="toc" aria-label="Sections">
+      <ol>
+        <li><a href="#background">Background</a></li>
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#exploration">Exploration</a></li>
+        <li><a href="#iterations">Iterations</a></li>
+        <li><a href="#solution">Solution</a></li>
+        <li><a href="#control">Human control</a></li>
+        <li><a href="#outcome">Outcome</a></li>
+        <li><a href="#learned">Learned</a></li>
+      </ol>
+    </nav>
 
-  <!-- ──────────────────────────────────────
-       05 · DEFINING THE PROBLEM
-  ─────────────────────────────────────────── -->
-  <section class="section">
-    <span class="section-num-label">Defining the Problem</span>
-    <h2 class="section-title-large">How can we unify all field observations into one smooth digital workflow?</h2>
-    <p class="section-body" style="margin-top:28px">
-      The assessors managed a fragmented, manual workflow - tracking fast-paced data points on paper logs before manually syncing with multiple departments:
-    </p>
+    <main>
+      <section class="sec" id="background">
+        <div class="label">Background</div>
+        <h2>One camp a year. Decisions that shape a soldier's path.</h2>
+        <p class="lead">Unit.e.p is a custom evaluation platform for <strong>Oketz</strong>, the IDF's elite canine unit. It runs their annual candidate sorting camp: mapping candidates, groups and stations, and calculating rankings live instead of after the camp ends.</p>
+        <figure><video src="images and videos/unit-ep-overview.mp4" autoplay muted loop playsinline aria-label="Unit.e.p app walkthrough"></video></figure>
+      </section>
 
-    <div class="bullet-list">
-      <div class="bullet-item">
-        <div class="bullet-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l3 3v15H5V3z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+      <section class="sec" id="problem">
+        <div class="label">Problem</div>
+        <h2>Every score lived on paper until the camp was over.</h2>
+        <p class="lead">Assessors tracked fast-moving candidates by hand, under field conditions, and only combined their data at the very end.</p>
+        <div class="grid3">
+          <div class="card"><h3>Paper forms</h3><p>Every parameter written by hand, at each separate station.</p></div>
+          <div class="card"><h3>Hand-drawn sprint tables</h3><p>At the sprint station, assessors scribbled circles and numbers to track arrival order.</p></div>
+          <div class="card focus"><h3>A 3-hour sync meeting</h3><p>All departments aligned the results manually at the end of camp. The core bottleneck.</p></div>
         </div>
-        <div class="bullet-text"><strong>Physical Paper Forms:</strong> Every candidate parameter was captured by hand on printed logs across distinct physical stations.</div>
-      </div>
-      <div class="bullet-item">
-        <div class="bullet-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+        <div class="photos">
+          <figure><img src="images and videos/image 41.webp" alt="Handwritten score sheet"></figure>
+          <figure><img src="images and videos/image 43.webp" alt="Paper log on a clipboard"></figure>
+          <figure><img src="images and videos/image 44.webp" alt="Assessors with candidates in the field"></figure>
         </div>
-        <div class="bullet-text"><strong>Manual Drawings &amp; Tables:</strong> At the fast-paced sprint station, assessors resorted to scribbling circles and numbers to track arrival sequences.</div>
-      </div>
-      <div class="bullet-item">
-        <div class="bullet-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <p class="fine">Before: handwritten logs, drawings and un-synced spreadsheets.</p>
+      </section>
+
+      <section class="sec" id="research">
+        <div class="label">Research</div>
+        <h2>I watched the camp run before designing anything.</h2>
+        <p class="lead">I interviewed the camp's director board, commanders and assessors, then observed the live sorting camp on the ground. That's where I saw exactly where paper failed, like the sprint station's hand-drawn race order.</p>
+        <figure><img src="images and videos/user journy (1).avif" alt="Affinity map of field notes"><figcaption>Field notes organized into an affinity map, which became the user flow</figcaption></figure>
+      </section>
+
+      <section class="sec" id="exploration">
+        <div class="label">Exploration</div>
+        <h2>Three ways to lay out the evaluation page.</h2>
+        <p class="lead">I sketched by hand to get every idea from research onto paper and see what worked: how the candidate list is arranged, and what depends on what.</p>
+        <figure><img src="images and videos/evaluation page sketches.webp" alt="Evaluation page sketches, three options"></figure>
+      </section>
+
+      <section class="sec" id="iterations">
+        <div class="label">Iterations</div>
+        <h2>From a familiar table to a flow built for the field.</h2>
+        <p class="lead">I anchored the interface on the camp's real journey, which turned complex data entry into simple steps.</p>
+        <div class="chain" aria-label="Camp flow">
+          <span class="step">Candidate</span><span class="arr">→</span><span class="step">Group assignment</span><span class="arr">→</span><span class="step">Station observations</span><span class="arr">→</span><span class="step">Final board review</span>
         </div>
-        <div class="bullet-text"><strong>3-Hour Cross-Department Sync:</strong> Aligning all raw observations required a grueling manual meeting at the end of the camp - the core bottleneck.</div>
-      </div>
-    </div>
-
-    <p class="section-body" style="margin-top:32px">
-      To solve this, I conducted extensive user research - interviewing the camp's director board, commanders, and assessors - and paired this with direct on-the-ground observations during the active sorting camp to identify exactly where paper logs failed.
-    </p>
-  </section>
-
-
-  <!-- ──────────────────────────────────────
-       06 · STRATEGY & EXPLORATION
-  ─────────────────────────────────────────── -->
-  <section class="section">
-    <span class="section-num-label">Strategy &amp; Exploration</span>
-    <h2 class="section-title-large">User Flow Mapping</h2>
-    <p class="section-body" style="margin-top:28px">
-      After organizing my field notes and sticky-note affinity mapping, I structured an optimized user flow. This architecture defined how field inputs immediately convert into synchronized system data - paving the way for a continuous, automated flow from live trial to final ranking.
-    </p>
-
-    <!-- ── USER FLOW DIAGRAM PLACEHOLDER ────────────── -->
-    <!-- SWAP: replace inner div with  <img loading="lazy" decoding="async" src="user-flow.svg" alt="User flow / information architecture">  -->
-    <div class="media-slot">
-      <img loading="lazy" decoding="async" src="images and videos/user journy (1).avif" alt="User flow / information architecture diagram">
-    </div>
-
-    <div class="subsection">
-      <h3 class="subsection-title">Product Context</h3>
-      <p class="subsection-body">
-        Prior to this design, the sorting camp had absolutely no digital interface for real-time calculation, leaving assessors isolated from statistical analysis. I transformed this entirely manual, paper-heavy environment into a holistic, digital internal platform capable of coordinating field data with administrative decision-makers instantly.
-      </p>
-      <h4 class="subsection-h4">Before &amp; After</h4>
-      <div class="bullet-list" style="margin-top:0">
-        <div class="bullet-item">
-          <div class="bullet-marker"></div>
-          <div class="bullet-text"><strong>Before the redesign:</strong> Handwritten logs, manual paper drawings, and un-synced spreadsheets.</div>
+        <div class="iter">
+          <div class="iter-head"><span class="iter-n">Iteration 1</span><h3>A familiar grid</h3></div>
+          <figure><img src="images and videos/1st itaration HIFI.webp" alt="First iteration: candidate grid and arrival-order modal"></figure>
+          <div class="result"><span class="res good">Familiar, like tools they already knew</span><span class="res bad">Didn't fit the activity in the field</span><span class="res bad">No navigation</span></div>
         </div>
-        <div style="display:flex; gap:16px; margin:16px 0; align-items:stretch">
-          <img loading="lazy" decoding="async" class="zoomable" src="images and videos/image 41.webp" alt="Before the redesign: handwritten logs" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:transparent; cursor:zoom-in">
-          <img loading="lazy" decoding="async" class="zoomable" src="images and videos/image 43.webp" alt="Before the redesign: manual paper drawings" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:transparent; cursor:zoom-in">
-          <img loading="lazy" decoding="async" class="zoomable" src="images and videos/image 44.webp" alt="Before the redesign: un-synced spreadsheets" style="flex:1 1 0; min-width:0; aspect-ratio:1/1; object-fit:contain; border-radius:16px; background:transparent; cursor:zoom-in">
+        <div class="iter">
+          <div class="iter-head"><span class="iter-n">Final</span><h3>Side navigation, a candidate list, and the station on one screen</h3></div>
+          <figure><img src="images and videos/2nd itaration unitep.webp" alt="Final iteration screens"></figure>
         </div>
-        <div class="bullet-item">
-          <div class="bullet-marker"></div>
-          <div class="bullet-text"><strong>After the redesign:</strong> A centralized digital dashboard with real-time field evaluation inputs.</div>
+      </section>
+
+      <section class="sec" id="solution">
+        <div class="label">Solution</div>
+        <h2>Built for a tablet, outdoors, under pressure.</h2>
+        <p class="lead">Buttons are sized for fingers, not cursors. A side navbar and a tap-friendly candidate list keep the screen usable in the field, and the station and assessment form share one screen so the flow never breaks.</p>
+        <div class="subhead"><h3>The running station</h3><p>Tap candidates in the order they arrive. No more circles and numbers on paper.</p></div>
+        <figure class="tablet"><div class="rating-anim" role="img" aria-label="Running station: tapping candidates records their arrival order">
+          <img src="images and videos/rating-menu/frame-0.webp" alt="">
+          <img class="f1" src="images and videos/rating-menu/frame-1.webp" alt="">
+          <img class="f2" src="images and videos/rating-menu/frame-2.webp" alt="">
+          <img class="f3" src="images and videos/rating-menu/frame-3.webp" alt="">
+          <img class="f4" src="images and videos/rating-menu/frame-4.webp" alt="">
+        </div></figure>
+        <div class="subhead"><h3>Evaluation and insights</h3><p>Pick a candidate from the list to open their evaluation. The switcher at the top right moves between the day's stations.</p></div>
+        <figure><img src="images and videos/dashboard view.webp" alt="Evaluation and group insights screens"></figure>
+      </section>
+
+      <section class="sec" id="control">
+        <div class="label">Human control</div>
+        <h2>The system does the math. A commander makes the call.</h2>
+        <div class="grid2">
+          <div class="card"><span class="tag">Enforced order</span><h3>Scores unlock after field data</h3><p>The candidate's summary score stays locked until the station data, like sprint times, is entered. Then the system aggregates everything into one view.</p></div>
+          <div class="card"><span class="tag">Human sign-off</span><h3>A manual final check</h3><p>When grading finishes, the row changes state, but a commander still signs off. These scores decide a soldier's placement, so full automation would create anxiety and distrust.</p></div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <div class="subsection">
-      <div style="display:flex; flex-wrap:wrap; gap:32px; align-items:center">
-        <div style="flex:1 1 280px; min-width:0">
-          <h3 class="subsection-title">Sketching to Think</h3>
-          <p class="subsection-body">
-            I started with hand sketches to visualize the design. They let me get every idea from the research stage and the design process onto paper, so I could see what worked and what didn't.
-          </p>
-          <p class="subsection-body">
-            These wireframes show the evaluation page: how the candidate list is arranged, and what is determined by the configuration of other features and components.
-          </p>
+      <section class="sec" id="outcome">
+        <div class="label">Outcome</div>
+        <h2>From paper and meetings to live data.</h2>
+        <div class="outcome">
+          <div class="stat"><div class="n has-was">30 min<span class="was">3 hrs</span></div><div class="l">end-of-camp sync meeting, down from 3 hours. The data now arrives already aligned.</div></div>
+          <div class="stat"><div class="n">Live</div><div class="l">candidate scoring for assessors, available for the first time.</div></div>
+          <div class="stat"><div class="n">0</div><div class="l">paper logs, replaced by one digital field interface.</div></div>
         </div>
-        <img loading="lazy" decoding="async" class="zoomable" src="images and videos/evaluation page sketches.webp" srcset="images%20and%20videos/evaluation%20page%20sketches.webp 2498w" sizes="1440px" alt="Evaluation page sketches" style="flex:1.4 1 360px; min-width:0; max-width:100%; border-radius:16px; background:transparent; cursor:zoom-in">
-      </div>
-    </div>
-  </section>
+      </section>
 
-
-  <!-- ──────────────────────────────────────
-       07 · DESIGN SOLUTIONS
-  ─────────────────────────────────────────── -->
-  <section class="section dark">
-    <span class="section-num-label">Design Solutions</span>
-    <h2 class="section-title-large">From complex data entries to simple, sequential workflows</h2>
-    <p class="section-body" style="margin-top:28px">
-      By anchoring the interface around the structural journey of the camp - Candidate → Group Assignment → Station Observations → Final Board Review - I turned complex data entries into simple, sequential workflows.
-    </p>
-    <p class="section-body" style="margin-top:16px">
-      Here is the first iteration:
-    </p>
-
-    <!-- ── 7a · Migrating the assessment tasks list ── -->
-    <div class="subsection">
-      <!-- ── TASKS LIST WIREFRAME PLACEHOLDER ── -->
-      <!-- SWAP: replace inner div with  <img loading="lazy" decoding="async" src="tasks-list.svg" alt="Group tracking list">  -->
-      <div class="media-slot dark">
-        <img loading="lazy" decoding="async" class="zoomable" src="images and videos/1st itaration HIFI.webp" srcset="images%20and%20videos/1st%20itaration%20HIFI.webp 3535w" sizes="1230px" alt="Group tracking list" style="width:80%; height:auto; max-height:100%; margin:0 auto">
-      </div>
-
-      <h3 class="subsection-title" style="margin-top:40px">First Iteration: Pros &amp; Cons</h3>
-      <div style="display:flex; flex-wrap:wrap; gap:40px; margin-top:24px">
-        <div style="flex:1 1 280px; min-width:0">
-          <h4 class="subsection-h4">Pros</h4>
-          <div class="bullet-list" style="margin-top:0">
-            <div class="bullet-item">
-              <div class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg></div>
-              <div class="bullet-text">Similar to other products that are familiar to the user.</div>
-            </div>
-          </div>
+      <section class="sec" id="learned">
+        <div class="label">Learned</div>
+        <h2>Observe the field. Automate the math, not the decision.</h2>
+        <div class="lessons">
+          <p><strong>Interviews aren't enough in the field.</strong> The sprint station's hand-drawn race order only showed up when I watched the camp live, and it became one of the app's key screens.</p>
+          <p><strong>Keep people in charge of high-stakes calls.</strong> Automating aggregation removed hours of work. Keeping the final sign-off manual is what made commanders trust the system.</p>
         </div>
-        <div style="flex:1 1 280px; min-width:0">
-          <h4 class="subsection-h4">Cons</h4>
-          <div class="bullet-list" style="margin-top:0">
-            <div class="bullet-item">
-              <div class="bullet-icon" style="color:#D64545"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
-              <div class="bullet-text">Does not perfectly fit the activities in the field.</div>
-            </div>
-            <div class="bullet-item">
-              <div class="bullet-icon" style="color:#D64545"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
-              <div class="bullet-text">Lacking navigation.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <h3 class="subsection-title" style="margin-top:40px">I went through a few more iterations until I arrived at this one</h3>
-      <div class="media-slot dark">
-        <img loading="lazy" decoding="async" class="zoomable" src="images and videos/2nd itaration unitep.webp" srcset="images%20and%20videos/2nd%20itaration%20unitep.webp 3535w" sizes="1440px" alt="Second iteration" style="width:80%; height:auto; max-height:100%; margin:0 auto">
-      </div>
-      <h3 class="subsection-title" style="margin-top:40px;margin-bottom:0">Running station flow animation</h3>
-      <div class="media-slot dark rating-slot" style="margin-top:16px">
-        <div class="rating-tablet">
-        <div class="rating-anim">
-          <img src="images and videos/rating-menu/frame-0.webp" srcset="images%20and%20videos/rating-menu/frame-0.webp 2473w" sizes="1194px" alt="Rating menu interaction">
-          <img class="f1" src="images and videos/rating-menu/frame-1.webp" srcset="images%20and%20videos/rating-menu/frame-1.webp 2473w" sizes="1194px" alt="">
-          <img class="f2" src="images and videos/rating-menu/frame-2.webp" srcset="images%20and%20videos/rating-menu/frame-2.webp 2473w" sizes="1194px" alt="">
-          <img class="f3" src="images and videos/rating-menu/frame-3.webp" srcset="images%20and%20videos/rating-menu/frame-3.webp 2473w" sizes="1194px" alt="">
-          <img class="f4" src="images and videos/rating-menu/frame-4.webp" srcset="images%20and%20videos/rating-menu/frame-4.webp 2473w" sizes="1194px" alt="">
-        </div>
-        </div>
-      </div>
-
-      <h3 class="subsection-title" style="margin-top:40px">Designed for the Tablet and the Field</h3>
-      <p class="subsection-body">
-        I sized the buttons for the interface they live in, so they are easy to tap. A side navbar and a candidate list sized for finger interaction keep the screen comfortable to use in the field. The layout is adjusted to the tablet's width.
-      </p>
-      <p class="subsection-body">
-        To keep the flow uninterrupted, I kept the tabs of the running station and the assessment form on the same screen. Selecting a candidate from the list on the left opens their evaluation page. The button at the top right lets the user move between the stations scheduled for that day.
-      </p>
-    </div>
-
-    <div class="media-slot dark">
-      <img loading="lazy" decoding="async" class="zoomable" src="images and videos/dashboard view.webp" srcset="images%20and%20videos/dashboard%20view.webp 4000w" sizes="1440px" alt="Dashboard view">
-    </div>
-
-    <!-- ── 7b · Connecting Assessment and Evaluation creation flow ── -->
-    <div class="subsection">
-      <h3 class="subsection-title">Connecting Assessment &amp; Evaluation creation flow</h3>
-      <p class="subsection-body">
-        A key design challenge was managing functional dependencies. To rate a candidate's high-level behavioral attributes, an assessor first needed to input structural data from specific station tasks (like sprint times or drill performance). I designed a nested interface that structurally enforces this operational sequence.
-      </p>
-      <p class="subsection-body">
-        The final candidate summary score remains inactive until granular task parameters are entered. Once those field trials are populated, the system automatically aggregates the analytics - unlocking the macro review pipeline in a single view.
-      </p>
-    </div>
-
-    <div class="subsection">
-      <h3 class="subsection-title">Balancing Automation with User Control</h3>
-      <p class="subsection-body">
-        When the final grading process finishes, the candidate task row changes states to visually signal completion. I intentionally preserved a manual final "Sign-off" check.
-      </p>
-      <p class="subsection-body">
-        Because these evaluations determine a candidate's military placement and future trajectory, a fully automated decision engine would introduce user anxiety and operational distrust. Giving commanders final approval authority maintains psychological safety and human oversight.
-      </p>
-    </div>
-  </section>
-
-
-  <!-- ──────────────────────────────────────
-       10 · RESULTS
-  ─────────────────────────────────────────── -->
-  <section class="section accent" style="background:#9FE5C7;">
-    <span class="section-num-label">Results</span>
-    <h2 class="section-title-large">The Impact</h2>
-    <p class="section-body" style="margin-top:28px">
-      I replaced paper-based logs with a semi-automated field assessment interface. This solution streamlined information architecture, cutting post-camp alignment and grading time while giving assessors instant, analytical visibility over candidate scores for the first time.
-    </p>
-
-    <div class="results-grid">
-      <div class="result-stat">
-        <div class="result-num">3 Hours</div>
-        <div class="result-label">of post-camp cross-department alignment meetings eliminated.</div>
-      </div>
-      <div class="result-stat">
-        <div class="result-num">Real-Time</div>
-        <div class="result-label">candidate scoring visibility for assessors - available for the first time.</div>
-      </div>
-      <div class="result-stat">
-        <div class="result-num">Zero</div>
-        <div class="result-label">paper logs - replaced by a centralized digital field interface.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ──────────────────────────────────────
-       PROJECT NAV
-  ─────────────────────────────────────────── -->
-  <div class="project-nav">
-    <a href="seller-platform.html" class="project-nav-card prev">
-      <div class="nav-direction">← Previous</div>
-      <div class="nav-project-name">Seller Platform</div>
-      <div class="nav-project-cat">Product Design · SaaS · B2B</div>
-    </a>
-    <a href="copycat-v2.html" class="project-nav-card next">
-      <div class="nav-direction">Next →</div>
-      <div class="nav-project-name">Copycat Internal Platform</div>
-      <div class="nav-project-cat">Product Design · Internal Platform · AI</div>
-    </a>
+      </section>
+    </main>
   </div>
 
+  <nav class="more" aria-label="More case studies">
+    <a href="seller-platform.html"><span class="dir">← Previous</span><span class="t">Seller Platform</span><span class="c">Product Design · SaaS · B2B</span></a>
+    <a href="copycat-v2.html"><span class="dir">Next →</span><span class="t">CopyCat</span><span class="c">Internal AI platform</span></a>
+  </nav>
 </div>
 
-
-
+<script>
+(function(){
+  document.querySelectorAll('[data-gallery]').forEach(function(g){
+    var tr=g.querySelector('.gallery-track'),pv=g.querySelector('.g-prev'),nx=g.querySelector('.g-next'),ct=g.querySelector('.gallery-count');
+    var cards=[].slice.call(tr.children);
+    function step(){return cards[1].offsetLeft-cards[0].offsetLeft}
+    function upd(){var i=Math.round(tr.scrollLeft/step());i=Math.max(0,Math.min(cards.length-1,i));
+      if(tr.scrollLeft+tr.clientWidth>=tr.scrollWidth-4)i=cards.length-1;
+      ct.textContent=(i+1)+' / '+cards.length;pv.disabled=tr.scrollLeft<4;nx.disabled=i===cards.length-1;}
+    pv.addEventListener('click',function(){tr.scrollBy({left:-step(),behavior:'smooth'})});
+    nx.addEventListener('click',function(){tr.scrollBy({left:step(),behavior:'smooth'})});
+    tr.addEventListener('scroll',upd,{passive:true});window.addEventListener('resize',upd);upd();
+  });
+  var toc=document.querySelector('.toc'),bar=null;document.documentElement.style.setProperty('--tb','12px');
+  function setTb(){if(bar)document.documentElement.style.setProperty('--tb',bar.offsetHeight+'px')}
+  setTb();window.addEventListener('resize',setTb);
+  window.addEventListener('scroll',function(){
+    var lim=bar?bar.offsetHeight:12;
+    toc.classList.toggle('stuck',window.innerWidth<=900&&toc.getBoundingClientRect().top<=lim+1&&window.scrollY>200);
+  },{passive:true});
+  var links=[].slice.call(document.querySelectorAll('.toc a')),map={};
+  links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){links.forEach(function(a){a.classList.remove('active')});var a=map[e.target.id];if(a){a.classList.add('active');
+        if(toc.scrollWidth>toc.clientWidth){toc.scrollTo({left:a.offsetLeft-toc.clientWidth/2+a.offsetWidth/2,behavior:'smooth'});}}}
+    })},{rootMargin:'-30% 0px -60% 0px'});
+    document.querySelectorAll('main .sec').forEach(function(s){io.observe(s)});
+  }
+})();
+</script>
 <!-- ──────────────────────────────────────
      GLASS NAV
 ─────────────────────────────────────────── -->

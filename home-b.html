@@ -155,6 +155,12 @@
       .card:hover .card-logo, .card:hover .card-org, .card:hover .card-tags,
       .card:focus-visible .card-logo, .card:focus-visible .card-org, .card:focus-visible .card-tags { opacity: 1; transform: none; }
       .card:hover .arrow-btn, .card:focus-visible .arrow-btn { transform: rotate(-45deg); background: var(--accent); }
+      .desk .card { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
+      .desk .card:hover, .desk .card:focus-visible {
+        transform: rotate(var(--r, 0deg)) scale(1.06);
+        z-index: 6;
+        box-shadow: 0 2px 4px rgba(60,45,30,.12), 0 16px 30px -12px rgba(60,45,30,.32);
+      }
     }
 
     /* ─── Desktop: one 1440×900 table, scaled to fit the window ─── */
@@ -191,7 +197,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .arrow-btn, .contact-menu, .card-logo, .card-org, .card-tags { transition: none !important; }
+      .card, .arrow-btn, .contact-menu, .card-logo, .card-org, .card-tags { transition: none !important; }
     }
   </style>
   <script src="analytics-tracker.js" defer></script>

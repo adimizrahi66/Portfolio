@@ -1,6 +1,6 @@
 # Adi Mizrahi
 
-Senior Product Designer
+Product Designer
 
 ## Contact
 
@@ -11,7 +11,7 @@ Senior Product Designer
 
 ## Summary
 
-I am a data-driven Senior Product Designer specializing in high-traffic B2C and SaaS products. I turn user research, A/B testing, and behavioral data into interfaces that measurably lift engagement and conversion. Owning the full lifecycle—from user flows to high-fidelity UI and prototypes—I bring strong problem-solving and communication skills to fast-paced teams, balancing user needs with business goals and technical constraints.
+Product Designer with 6 years of experience, mostly in the Ad-tech industry, designing high-traffic B2C, B2B, and SaaS products. I simplify complex workflows and turn user research, A/B testing, and behavioral data into interfaces that measurably lift engagement and conversion. I manage end-to-end product design from concept to delivery and use AI tools for rapid prototyping. I do well in fast-paced teams, balancing user needs with business goals and technical constraints.
 
 ## Work Experience
 
@@ -22,7 +22,7 @@ May 2024 – Jul 2026 · Israel
 * **Led end-to-end product design** across diverse, fast-paced initiatives, aligning high-quality visual and UX solutions with core business goals and technical feasibility.  
 * **Optimized affiliate e-commerce platforms** through rapid A/B test analysis, translating data insights into design iterations that **boosted conversion metrics by 2%–5%** at a scale of millions of users.  
 * **Drove a 60% increase in user onboarding** for a seller-facing SaaS platform by execution of a strategic, comprehensive UX/UI redesign that balanced user experience with business growth.  
-* **Designed a high-impact internal system** for the Meta Acquisition team, **cutting content production time by 75%** to significantly drive scalability and profitability.  
+* **Designed a high-impact internal system** for the Meta Acquisition team, **slashing operational task time by over 50%** to significantly drive scalability and profitability.  
 * **Conducted continuous user, competitor, and market research** to validate concepts and establish data-driven foundations for product features before development.  
 * **Leveraged cutting-edge AI tools** to build advanced, functional prototypes, accelerating cross-functional alignment with Product, Engineering, BD, and Acquisition teams.
 
@@ -55,11 +55,9 @@ Nov 2020 – Jun 2023 · Israel
 
 B.Des, Industrial & Product Design 2016 – 2020
 
-## Certifications
+### Netcraft Academy
 
-### UX/UI Designer
-
-Netcraft Academy Oct 2020
+UX/UI Designer · Oct 2020
 
 ## Skills
 

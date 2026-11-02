@@ -154,6 +154,13 @@ COMPACT_CSS = """
   .block + .block { margin-top:16px; }
   .section-label { margin-bottom:9px; }
   .summary, .skill-list { font-size:8.5pt; }
+  .header { padding:22px 40px 16px 40px; }
+  .main { padding-bottom:6px; }
+  .job { margin-bottom:9px; }
+  ul.bullets li { line-height:1.3; margin-bottom:1px; }
+  .job-meta { margin:1px 0 5px 0; }
+  .main .block { margin-bottom:16px; }
+  .summary { font-size:9pt; line-height:1.4; }
 """
 
 
@@ -244,11 +251,14 @@ def build_html(doc, compact=False):
         contact_top = f'<div class="contact-top">{contact_html}</div>'
 
     sidebar = "".join([
-        block("Summary", f'<div class="summary">{summary_html}</div>' if summary_html else ""),
         block("Education", edu_html),
         block("Skills", skills_html),
         block("Tools", f'<div class="tools">{tools_html}</div>' if tools_html else ""),
         block("Certifications", certs_html),
+    ])
+
+    main_summary = "".join([
+        block("Summary", f'<div class="summary">{summary_html}</div>' if summary_html else ""),
     ])
 
     out = TEMPLATE.format(
@@ -256,6 +266,7 @@ def build_html(doc, compact=False):
         role=inline(doc["role"]),
         contact_top=contact_top,
         jobs=jobs_html,
+        summary=main_summary,
         sidebar=sidebar,
     )
     if compact:
@@ -315,6 +326,7 @@ TEMPLATE = """<!DOCTYPE html>
   .skill-heading {{ font-size:9pt; font-weight:700; color:#111; margin-bottom:4px; }}
   .skill-list {{ font-size:9pt; color:#3a3a3a; line-height:1.55; }}
   .tools {{ font-size:9.5pt; color:#3a3a3a; line-height:1.7; }}
+  .main .block {{ margin-bottom:22px; }}
   .summary {{ font-size:9.5pt; color:#2e2e2e; line-height:1.55; }}
 </style></head><body>
 <div class="page">
@@ -324,7 +336,7 @@ TEMPLATE = """<!DOCTYPE html>
     {contact_top}
   </div>
   <div class="body">
-    <div class="main">
+    <div class="main">{summary}
       <div class="section">
         <div class="section-label">Experience</div>{jobs}
       </div>

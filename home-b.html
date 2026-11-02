@@ -155,11 +155,12 @@
       .card:hover .card-logo, .card:hover .card-org, .card:hover .card-tags,
       .card:focus-visible .card-logo, .card:focus-visible .card-org, .card:focus-visible .card-tags { opacity: 1; transform: none; }
       .card:hover .arrow-btn, .card:focus-visible .arrow-btn { transform: rotate(-45deg); background: var(--accent); }
-      .desk .card { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
+      /* Big hover: each card grows in toward the centre (origin = its own corner), over everything else */
+      .desk .card { transform-origin: var(--o, center); transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease; }
       .desk .card:hover, .desk .card:focus-visible {
-        transform: rotate(var(--r, 0deg)) scale(1.06);
-        z-index: 6;
-        box-shadow: 0 2px 4px rgba(60,45,30,.12), 0 16px 30px -12px rgba(60,45,30,.32);
+        transform: rotate(0deg) scale(1.45);
+        z-index: 30;
+        box-shadow: 0 2px 6px rgba(60,45,30,.14), 0 30px 60px -20px rgba(60,45,30,.45);
       }
     }
 
@@ -241,7 +242,7 @@
     </div>
 
     <!-- Top-left -->
-    <a class="card" href="seller-platform.html" style="--r: -4deg; left: 30px; top: 38px;">
+    <a class="card" href="seller-platform.html" style="--r: -4deg; --o: top left; left: 30px; top: 38px;">
       <img class="shot" src="images%20and%20videos/home-b-seller.webp" alt="Seller Platform overview screen on a laptop" width="1100" height="648">
       <span class="card-text">
         <img class="card-logo" src="images%20and%20videos/black%20logo%20roundforest.svg" alt="Roundforest" width="117" height="13">
@@ -252,7 +253,7 @@
     </a>
 
     <!-- Top-right -->
-    <a class="card" href="copycat-v2.html" style="--r: 4deg; right: 35px; top: 56px;">
+    <a class="card" href="copycat-v2.html" style="--r: 4deg; --o: top right; right: 35px; top: 56px;">
       <img class="shot" src="images%20and%20videos/home-b-copycat.webp" alt="CopyCat dashboard on a laptop" width="1100" height="648">
       <span class="card-text">
         <img class="card-logo" src="images%20and%20videos/black%20logo%20roundforest.svg" alt="Roundforest" width="117" height="13">
@@ -263,7 +264,7 @@
     </a>
 
     <!-- Bottom-left -->
-    <a class="card" href="cs2-funnel.html" style="--r: 3deg; left: 32px; top: 538px;">
+    <a class="card" href="cs2-funnel.html" style="--r: 3deg; --o: bottom left; left: 32px; top: 538px;">
       <img class="shot" src="images%20and%20videos/home-b-funnel.webp" alt="Mobile comparison funnel screen on a phone" width="1100" height="648">
       <span class="card-text">
         <img class="card-logo" src="images%20and%20videos/black%20logo%20roundforest.svg" alt="Roundforest" width="117" height="13">
@@ -274,7 +275,7 @@
     </a>
 
     <!-- Bottom-right -->
-    <a class="card" href="unit-ep.html" style="--r: -3deg; right: 27px; top: 527px;">
+    <a class="card" href="unit-ep.html" style="--r: -3deg; --o: bottom right; right: 27px; top: 527px;">
       <img class="shot" src="images%20and%20videos/home-b-unitep.webp" alt="Unit.e.p tablet scoring screen" width="1100" height="648">
       <span class="card-text">
         <span class="card-org">Freelance · IDF</span>

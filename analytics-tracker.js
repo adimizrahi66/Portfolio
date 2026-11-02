@@ -23,6 +23,9 @@
     try { var abM = document.cookie.match(/(?:^|; )abHome=([ab])/); if (abM) abV = abM[1]; } catch (e) {}
   }
 
+  /* Opening home-b.html directly = Adi testing → this browser is left out of all stats (GoatCounter + Clarity) */
+  if (abSrc === 'direct') { try { localStorage.setItem('skipgc', 't'); } catch (e) {} }
+
   /* Version B visitors: links back to the homepage ("Home", "Back to work") go straight to home-b.html */
   if (abV === 'b') {
     var fixHomeLinks = function () {

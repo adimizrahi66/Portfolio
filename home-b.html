@@ -9,14 +9,17 @@
     (function () {
       var q = null;
       try { q = new URLSearchParams(location.search).get('v'); } catch (e) {}
-      try {
-        if (q === 'a') {
-          localStorage.setItem('abHome', 'a'); localStorage.setItem('abHomeSrc', 'assigned');
-          location.replace('index.html' + location.search + location.hash); return;
-        }
-        if (q === 'b') { localStorage.setItem('abHome', 'b'); localStorage.setItem('abHomeSrc', 'assigned'); }
-        else if (localStorage.getItem('abHome') !== 'b') { localStorage.setItem('abHome', 'b'); localStorage.setItem('abHomeSrc', 'direct'); }
-      } catch (e) {}
+      function remember(val, src) {
+        try { localStorage.setItem('abHome', val); localStorage.setItem('abHomeSrc', src); } catch (e) {}
+        try { document.cookie = 'abHome=' + val + '; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {}
+      }
+      if (q === 'a') { remember('a', 'assigned'); location.replace('index.html' + location.search + location.hash); return; }
+      if (q === 'b') { remember('b', 'assigned'); }
+      else {
+        var cur = null; try { cur = localStorage.getItem('abHome'); } catch (e) {}
+        if (cur !== 'b') remember('b', 'direct');
+        else { try { document.cookie = 'abHome=b; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {} }
+      }
     })();
   </script>
   <title>Adi Mizrahi — Senior Product Designer</title>
@@ -197,8 +200,21 @@
       .mob .card-tags { gap: 8px; margin-top: 2px; }
     }
 
+    /* ─── Breathing: each card slowly swells and settles, out of sync with the others ─── */
+    @keyframes breathe {
+      0%, 100% { scale: 1; }
+      50%      { scale: 1.018; }
+    }
+    .card { animation: breathe 6s ease-in-out infinite; }
+    .card:nth-of-type(2) { animation-delay: -1.5s; }
+    .card:nth-of-type(3) { animation-delay: -3s; }
+    .card:nth-of-type(4) { animation-delay: -4.5s; }
+    .mob .card { animation-duration: 7s; }
+    .card:hover, .card:focus-visible { animation-play-state: paused; }
+
     @media (prefers-reduced-motion: reduce) {
       .card, .arrow-btn, .contact-menu, .card-logo, .card-org, .card-tags { transition: none !important; }
+      .card { animation: none !important; }
     }
   
     /* WhatsApp contact */

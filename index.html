@@ -9,19 +9,20 @@
        version B lives in home-b.html -->
   <script>
     (function () {
-      var v = null, q = null;
+      var v = null, q = null, ck = null;
       try { q = new URLSearchParams(location.search).get('v'); } catch (e) {}
-      try {
-        if (q === 'a' || q === 'b') {
-          v = q; localStorage.setItem('abHome', v); localStorage.setItem('abHomeSrc', 'assigned');
-        } else {
-          v = localStorage.getItem('abHome');
-          if (v !== 'a' && v !== 'b') {
-            v = Math.random() < 0.5 ? 'a' : 'b';
-            localStorage.setItem('abHome', v); localStorage.setItem('abHomeSrc', 'random');
-          }
-        }
-      } catch (e) { v = q === 'b' ? 'b' : 'a'; }
+      try { var m = document.cookie.match(/(?:^|; )abHome=([ab])/); ck = m && m[1]; } catch (e) {}
+      function remember(val, src) {
+        try { localStorage.setItem('abHome', val); localStorage.setItem('abHomeSrc', src); } catch (e) {}
+        try { document.cookie = 'abHome=' + val + '; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {}
+      }
+      if (q === 'a' || q === 'b') { v = q; remember(v, 'assigned'); }
+      else {
+        try { v = localStorage.getItem('abHome'); } catch (e) {}
+        if (v !== 'a' && v !== 'b') v = ck;
+        if (v !== 'a' && v !== 'b') { v = Math.random() < 0.5 ? 'a' : 'b'; remember(v, 'random'); }
+        else if (!ck) { try { document.cookie = 'abHome=' + v + '; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {} }
+      }
       if (v === 'b') location.replace('home-b.html' + location.search + location.hash);
     })();
   </script>

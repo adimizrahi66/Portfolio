@@ -19,6 +19,21 @@
   /* ── A/B test: homepage version (set by index.html / home-b.html) ── */
   var abV = null, abSrc = null;
   try { abV = localStorage.getItem('abHome'); abSrc = localStorage.getItem('abHomeSrc'); } catch (e) {}
+  if (abV !== 'a' && abV !== 'b') {
+    try { var abM = document.cookie.match(/(?:^|; )abHome=([ab])/); if (abM) abV = abM[1]; } catch (e) {}
+  }
+
+  /* Version B visitors: links back to the homepage ("Home", "Back to work") go straight to home-b.html */
+  if (abV === 'b') {
+    var fixHomeLinks = function () {
+      document.querySelectorAll('a[href]').forEach(function (a) {
+        var h = a.getAttribute('href');
+        var m = h.match(/^(?:\.\/|\/)?(?:index\.html)?(#.*)?$/);
+        if (h && m && (h.indexOf('index.html') > -1 || h === '/' || h === './')) a.setAttribute('href', 'home-b.html' + (m[1] || ''));
+      });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fixHomeLinks); else fixHomeLinks();
+  }
   var abTag = (abV === 'a' || abV === 'b') ? abV.toUpperCase() + (abSrc === 'assigned' ? '-assigned' : '') : null;
   var AB_EVENTS = /^(resume-open|contact-|cs-open|home-view)/;
 

@@ -68,6 +68,7 @@
     var copy = el.getAttribute('data-copy') || '';
 
     if (/resume\.pdf/i.test(href))            send('resume-open', 'Resume opened · ' + slug);
+    else if (/wa\.me\/|whatsapp\.com/i.test(href)) send('contact-phone', 'WhatsApp · ' + slug);
     else if (/linkedin\.com/i.test(href))     send('contact-linkedin', 'LinkedIn · ' + slug);
     else if (/^mailto:/i.test(href) || copy.indexOf('@') > -1) send('contact-email', 'Email · ' + slug);
     else if (/^tel:/i.test(href) || /^\+?\d[\d\s-]{6,}$/.test(copy)) send('contact-phone', 'Phone · ' + slug);

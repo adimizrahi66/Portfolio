@@ -792,3 +792,18 @@ Card 3 on `index.html` (formerly "Affiliate Storefront") now links to `cs2-funne
 - Added to `unit-ep.html` below `2nd itaration unitep.svg` under title "Running station flow animation" (tight spacing), inside black tablet bezel, 58% slot width
 - Removed from unit-ep: Connecting section content below intro paras (task-dependency, Connecting Data to Actions, step-by-step review), "Signed-Off Task State" placeholder, "Interactive Prototype" section
 - index.html: Unit.e.p card published (links `unit-ep.html`, chip/overlay removed); "Questionnaire Engagement Strategy" card hidden (`hidden`, `display:none`)
+
+## Homepage Redesign + A/B Test (2026-11-01 → 11-02)
+- Explored directions on a design canvas (A–F2); chose F2 "beige work table" for new homepage = version B
+- `home-b.html` (version B): beige table bg `#E2DED6` + grain, cream nav pill (`#F5F3EF`, no Home), headline "Design that moves the needle." (Fraunces 92px) + subtitle "I'm Adi Mizrahi, / senior product designer.", Let's talk + Download CV
+- B cards: 4 white cards at corners (no edge cut), tight warm shadows, title only by default; hover = Roundforest logo (Unit.e.p: "Freelance · IDF") + tags fade in, arrow → blue `#2F5FE0` ↗, card scales 1.45 toward page centre, over other elements
+- B breathing: cards slowly scale 1 → 1.018 (6s, staggered); pauses on hover; off for reduced motion
+- B mobile: no hero button, cards higher (first card above fold), order CopyCat → Funnel → Seller → Unit.e.p, logo + tags always shown with extra text spacing
+- New CS card titles: CopyCat "Six ad tools, one AI production platform"; Funnel "Helping millions of shoppers choose faster"; Seller "Moving Amazon sellers to a new platform in one step"; Unit.e.p "From paper scoring to live field data"
+- Card images: `images and videos/home-b-*.webp` (device centred on tinted bg)
+- A/B split: `index.html` head assigns 50/50 (localStorage + cookie), B → `home-b.html`; `?v=a` / `?v=b` force a version ("assigned"); B is `noindex`
+- B visitors: Home / Back to work links rewritten to `home-b.html` (`analytics-tracker.js`); inner pages get B nav via `ab-b-nav.css` + `html.ab-b`
+- Analytics: events tagged `ab/A|B[-assigned]/…` (home-view, cs-open-*, resume, contact); Clarity tag `home_variant`; `analytics.html` has "Homepage A/B test" section
+- Contact (A + B homepages): Phone → WhatsApp (`wa.me/972544304626`) with green logo; A nav "Contact" restyled like other links
+- Favicon: gradient circle (pink → lavender → mint + peach)
+- Pending: WhatsApp on About/CS contact menus; push latest changes via GitHub Desktop

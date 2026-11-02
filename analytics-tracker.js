@@ -39,6 +39,26 @@
   var abTag = (abV === 'a' || abV === 'b') ? abV.toUpperCase() + (abSrc === 'assigned' ? '-assigned' : '') : null;
   var AB_EVENTS = /^(resume-open|contact-|cs-open|home-view)/;
 
+  /* ── Visitor ID: anonymous random ID per browser, so one person's visits connect across days.
+     ?who=name (e.g. adimiz.com/?v=b&who=wix) labels this browser from then on ── */
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} try { document.cookie = k + '=' + v + '; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {} }
+  function recall(k) {
+    var v = null;
+    try { v = localStorage.getItem(k); } catch (e) {}
+    if (!v) { try { var m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]+)')); if (m) v = m[1]; } catch (e) {} }
+    return v;
+  }
+  var vid = recall('vid');
+  if (!vid || !/^[a-z0-9]{6,12}$/.test(vid)) { vid = Math.random().toString(36).slice(2, 10); store('vid', vid); }
+  var who = null;
+  try { who = new URLSearchParams(location.search).get('who'); } catch (e) {}
+  who = (who || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 24);
+  if (who) store('vidName', who); else who = (recall('vidName') || '').replace(/[^a-z0-9_-]/g, '');
+  // Appended to every title GoatCounter receives → read back by the visit log on analytics.html
+  var idTag = ' [@' + vid + (abV === 'a' || abV === 'b' ? ' ' + abV.toUpperCase() : '') + (who ? ' ' + who : '') + ']';
+  window.goatcounter = window.goatcounter || {};
+  window.goatcounter.title = function (t) { return (t || document.title || '') + idTag; };
+
   function send(name, title) {
     sendRaw(name, title);
     if (abTag && AB_EVENTS.test(name)) sendRaw('ab/' + abTag + '/' + name, '[' + abTag + '] ' + (title || name));
@@ -47,7 +67,7 @@
   function sendRaw(name, title) {
     var gc = window.goatcounter;
     if (gc && typeof gc.count === 'function') {
-      try { gc.count({ path: name, title: title || name, event: true }); } catch (e) {}
+      try { gc.count({ path: name, title: (title || name) + idTag, event: true }); } catch (e) {}
     } else {
       queue.push([name, title]);
     }
@@ -72,6 +92,7 @@
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, 'clarity', 'script', CLARITY_ID);
     if (abTag) { try { window.clarity('set', 'home_variant', abV.toUpperCase()); window.clarity('set', 'variant_source', abSrc || 'unknown'); } catch (e) {} }
+    try { window.clarity('identify', vid, null, null, who || vid); window.clarity('set', 'visitor_id', vid); if (who) window.clarity('set', 'visitor_name', who); } catch (e) {}
   }
 
   /* ── Homepage view, tagged by version ── */

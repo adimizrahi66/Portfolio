@@ -147,6 +147,24 @@
     .v-arrow { color: var(--text-subtle, #C0BCB5); font-size: 12px; }
     .v-act { font-size: 12px; font-weight: 600; color: var(--good); }
     .vl-more { margin-top: 12px; }
+    .vl-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-bottom: 18px; }
+    .vl-day { background: var(--card-soft); border-radius: 14px; padding: 10px 12px; min-width: 0; }
+    .vl-day b { display: block; font-size: 12px; font-weight: 600; }
+    .vl-day .n { font-family: var(--serif); font-size: 24px; font-weight: 600; line-height: 1.1; margin: 4px 0 2px; }
+    .vl-day span { display: block; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+    .vl-day span i { font-style: normal; color: var(--text); font-weight: 600; }
+    .person { padding: 18px 0; border-top: 1px solid var(--grid); }
+    .person:first-child { border-top: 0; padding-top: 4px; }
+    .p-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-bottom: 4px; }
+    .p-head .p-name { font-size: 15px; font-weight: 600; margin-right: 4px; }
+    .p-head .p-name small { font-weight: 400; color: var(--text-muted); font-size: 12px; margin-left: 6px; }
+    .tag.ret { background: rgba(46,125,79,0.12); color: var(--good); }
+    .tag.ver { background: var(--text); color: #fff; }
+    .tag.who { background: var(--mark); color: #fff; }
+    .p-visits { list-style: none; }
+    .p-visits .visit { padding: 10px 0; border-top: 1px dashed var(--line); }
+    .p-visits .visit:first-child { border-top: 0; }
+    @media (max-width: 760px) { .vl-days { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
     @media (max-width: 720px) {
       .visit { grid-template-columns: 1fr; }
       .vl-tools input { max-width: none; }
@@ -157,6 +175,10 @@
     .ab-verdict b { font-family: var(--serif); font-size: 22px; font-weight: 600; line-height: 1.2; }
     .ab-verdict span { font-size: 13px; color: var(--text-2); line-height: 1.5; }
     .ab-verdict.early b { color: var(--text-2); }
+    .ab-rules { background: var(--card-soft); border-radius: 16px; padding: 12px 18px; margin-bottom: 16px; font-size: 13px; color: var(--text-2); }
+    .ab-rules summary { cursor: pointer; font-weight: 600; color: var(--text); }
+    .ab-rules ul { margin: 10px 0 2px 18px; display: flex; flex-direction: column; gap: 6px; line-height: 1.5; }
+    .ab-rules b { color: var(--text); font-weight: 600; }
     .ab-sub { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; margin: 22px 0 8px; }
     .ab-ver { display: inline-flex; align-items: center; gap: 8px; }
     .ab-ver i { width: 22px; height: 22px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-size: 11px; font-weight: 700; color: #fff; }
@@ -290,12 +312,25 @@
 
     <section class="card span-12" id="abCard">
       <div class="card-h"><h2>Homepage A/B test</h2><span class="hint">A = current homepage · B = new homepage (home-b) · random 50/50 split</span></div>
+      <details class="ab-rules">
+        <summary>Who sees A and who sees B</summary>
+        <ul>
+          <li><b>adimiz.com</b> (no link parameter) → random 50/50 on the first visit. That browser keeps the same version for a year.</li>
+          <li><b>adimiz.com/?v=a</b> → always A · <b>adimiz.com/?v=b</b> → always B. Counted as "your test links", not in the comparison.</li>
+          <li><b>adimiz.com/home-b.html</b> opened directly → B from then on.</li>
+          <li>Visitors who land straight on a case study or About page get no version until they open the homepage.</li>
+          <li>B visitors' "Home" and "Back to work" links lead back to version B.</li>
+          <li>Add <b>&amp;who=name</b> to any link (e.g. ?v=b&amp;who=wix) to name that visitor in the Visitors list.</li>
+        </ul>
+      </details>
       <div class="ab-verdict" id="abVerdict"></div>
       <div class="table-scroll"><table id="abTable"></table></div>
       <div class="ab-sub">Which case study they opened · random split only</div>
       <div class="table-scroll"><table id="abCsTable"></table></div>
       <div class="ab-sub" id="abAssignedH" hidden>Visitors from your test links · not part of the comparison</div>
       <div class="table-scroll"><table id="abAssigned"></table></div>
+      <div class="ab-sub">By person · from the visitor log · named visitors excluded</div>
+      <div class="table-scroll"><table id="abPeople"></table></div>
     </section>
 
     <section class="card span-12">
@@ -305,9 +340,18 @@
     </section>
 
     <section class="card span-12" id="visitLog">
-      <div class="card-h"><h2>Visit log</h2><span class="hint">Each row is one visit · times in your local time</span></div>
+      <div class="card-h"><h2>Visitors</h2><span class="hint">One card per person (same browser) · all their visits, newest first · local time</span></div>
+      <div class="vl-days" id="vlDays"></div>
+      <div class="chips" id="vlChips">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="new">New</button>
+        <button type="button" data-f="returning">Returning</button>
+        <button type="button" data-f="A">Version A</button>
+        <button type="button" data-f="B">Version B</button>
+        <button type="button" data-f="named">Named links</button>
+      </div>
       <div class="vl-tools">
-        <input id="vlFilter" type="search" placeholder="Filter by source, country, page…" aria-label="Filter visits">
+        <input id="vlFilter" type="search" placeholder="Filter by name, source, country, page…" aria-label="Filter visitors">
         <button class="ghost" type="button" id="vlUpdate">Update log</button>
         <span class="vl-note" id="vlNote"></span>
       </div>
@@ -916,10 +960,14 @@
     var rows = parseCSV(text); if (!rows.length) return [];
     var head = rows[0].map(function (h) { return h.toLowerCase().replace(/^\d+/, '').replace(/[^a-z]/g, ''); });
     var col = function (n) { return head.indexOf(n); };
-    var C = { path: col('path'), event: col('event'), session: col('session'), bot: col('bot'), ref: col('referrer'), size: col('screensize'), loc: col('location'), date: col('date'), first: col('firstvisit'), browser: col('browser'), system: col('system') };
+    var C = { path: col('path'), title: col('title'), event: col('event'), session: col('session'), bot: col('bot'), ref: col('referrer'), size: col('screensize'), loc: col('location'), date: col('date'), first: col('firstvisit'), browser: col('browser'), system: col('system') };
     return rows.slice(1).map(function (r) {
       var g = function (k) { return C[k] > -1 ? (r[C[k]] || '') : ''; };
-      return { p: g('path'), e: /^(true|1)$/i.test(g('event')), s: g('session'), b: parseInt(g('bot') || '0', 10) || 0, r: g('ref'), z: g('size'), l: g('loc'), d: g('date'), f: /^(true|1)$/i.test(g('first')), br: g('browser'), sy: g('system') };
+      var h = { p: g('path'), e: /^(true|1)$/i.test(g('event')), s: g('session'), b: parseInt(g('bot') || '0', 10) || 0, r: g('ref'), z: g('size'), l: g('loc'), d: g('date'), f: /^(true|1)$/i.test(g('first')), br: g('browser'), sy: g('system') };
+      // Visitor tag added by analytics-tracker.js: "Title [@vid A|B name]"
+      var m = g('title').match(/\[@([a-z0-9]{6,12})(?: ([AB]))?(?: ([a-z0-9_-]+))?\]\s*$/);
+      if (m) { h.v = m[1]; if (m[2]) h.ab = m[2]; if (m[3]) h.w = m[3]; }
+      return h;
     }).filter(function (h) { return h.d && !h.b; });
   }
 
@@ -987,98 +1035,229 @@
     return r.split('/')[0];
   }
 
-  function buildSessions(hits) {
-    var bySes = {};
-    hits.forEach(function (h, i) {
-      var key = h.s || ('x' + i);
-      (bySes[key] = bySes[key] || []).push(h);
+  /* One visit = one GoatCounter session (new visit after 30 min of silence).
+     Visits are grouped into people by the visitor ID the tracker adds to titles.
+     Hits from before visitor IDs existed stay grouped by session only. */
+  var VISIT_GAP = 30 * 60 * 1000;
+
+  function buildVisit(hs) {
+    var steps = [], bySlug = {}, actions = [], ref = '', loc = '', dev = '', returning = false;
+    hs.forEach(function (h) {
+      if (!loc && h.l) loc = countryName(h.l);
+      if (!dev && h.z) dev = deviceName(h.z);
+      var p = h.p.replace(/^\//, '');
+      if (h.e) {
+        if (/^ab\//.test(p)) return;
+        var m = p.match(/^(time|scroll|read)-([^/]+)\/(.+)$/);
+        if (m) {
+          var st = bySlug[m[3]]; if (!st) return;
+          if (m[1] === 'scroll') st.scroll = Math.max(st.scroll, parseInt(m[2], 10) || 0);
+          else { var sec = { '10s': 10, '30s': 30, '60s': 60, '3m': 180, '5m': 300 }[m[2]] || 0; st.time = Math.max(st.time, sec); }
+        } else if (EVENT_NAMES[p]) actions.push(EVENT_NAMES[p]);
+        return;
+      }
+      if (!ref) ref = cleanRef(h.r) || '';
+      if (h.f === false && steps.length === 0) returning = true;
+      var slug = pageSlug(h.p);
+      var last = steps[steps.length - 1];
+      if (last && last.slug === slug) return;
+      var stp = { slug: slug, name: PAGE_NAMES[slug] || slug, time: 0, scroll: 0, at: h.d };
+      steps.push(stp); bySlug[slug] = stp;
     });
-    return Object.keys(bySes).map(function (k) {
-      var hs = bySes[k].sort(function (a, b) { return a.d < b.d ? -1 : 1; });
-      var steps = [], bySlug = {}, actions = [], ref = '', loc = '', dev = '', returning = false;
-      hs.forEach(function (h) {
-        if (!loc && h.l) loc = countryName(h.l);
-        if (!dev && h.z) dev = deviceName(h.z);
-        if (h.e) {
-          var m = h.p.replace(/^\//, '').match(/^(time|scroll|read)-([^/]+)\/(.+)$/);
-          if (m) {
-            var st = bySlug[m[3]]; if (!st) return;
-            if (m[1] === 'scroll') st.scroll = Math.max(st.scroll, parseInt(m[2], 10) || 0);
-            else { var sec = { '10s': 10, '30s': 30, '60s': 60, '3m': 180, '5m': 300 }[m[2]] || 0; st.time = Math.max(st.time, sec); }
-          } else if (EVENT_NAMES[h.p.replace(/^\//, '')]) actions.push(EVENT_NAMES[h.p.replace(/^\//, '')]);
-          return;
-        }
-        if (!ref) ref = cleanRef(h.r) || '';
-        if (h.f === false && steps.length === 0) returning = true;
-        var slug = pageSlug(h.p);
-        var last = steps[steps.length - 1];
-        if (last && last.slug === slug) return;
-        var stp = { slug: slug, name: PAGE_NAMES[slug] || slug, time: 0, scroll: 0, at: h.d };
-        steps.push(stp); bySlug[slug] = stp;
-      });
-      return { start: hs[0].d, steps: steps, actions: actions, ref: ref, loc: loc, dev: dev, returning: returning };
-    }).filter(function (v) { return v.steps.length; })
-      .sort(function (a, b) { return a.start < b.start ? 1 : -1; });
+    return { start: hs[0].d, end: hs[hs.length - 1].d, steps: steps, actions: actions, ref: ref, loc: loc, dev: dev, returning: returning };
   }
 
-  function timeLabel(sec) { return sec >= 300 ? '5m+' : sec >= 180 ? '3–5m' : sec >= 60 ? '1–3m' : sec >= 30 ? '30s–1m' : sec >= 10 ? '10–30s' : '<10s'; }
+  function buildPeople(hits) {
+    // A session that carries a visitor ID anywhere lends it to all its hits
+    var sesVid = {}, sesAb = {}, sesWho = {};
+    hits.forEach(function (h) {
+      if (!h.s) return;
+      if (h.v && !sesVid[h.s]) sesVid[h.s] = h.v;
+      if (h.ab) sesAb[h.s] = h.ab;
+      if (h.w) sesWho[h.s] = h.w;
+    });
+    var byPerson = {};
+    hits.forEach(function (h, i) {
+      var vid = h.v || sesVid[h.s];
+      var key = vid ? 'v:' + vid : 's:' + (h.s || i);
+      var P = byPerson[key] = byPerson[key] || { key: key, vid: vid || null, hits: [], ab: null, who: null };
+      P.hits.push(h);
+      var ab = h.ab || sesAb[h.s], w = h.w || sesWho[h.s];
+      if (ab) P.ab = ab;
+      if (w) P.who = w;
+    });
+    return Object.keys(byPerson).map(function (k) {
+      var P = byPerson[k];
+      var hs = P.hits.sort(function (a, b) { return a.d < b.d ? -1 : 1; });
+      var groups = [], cur = null, lastT = 0;
+      hs.forEach(function (h) {
+        var t = new Date(h.d).getTime();
+        if (!cur || (h.s && cur.s && h.s !== cur.s && !h.e) || t - lastT > VISIT_GAP) { cur = { s: h.s, hits: [] }; groups.push(cur); }
+        if (!cur.s && h.s) cur.s = h.s;
+        cur.hits.push(h); lastT = t;
+      });
+      var visits = groups.map(function (g) { return buildVisit(g.hits); }).filter(function (v) { return v.steps.length || v.actions.length; });
+      if (!visits.length) return null;
+      var first = visits[0];
+      var days = {}; visits.forEach(function (v) { days[dayKey(v.start)] = 1; });
+      return {
+        key: P.key, vid: P.vid, ab: P.ab, who: P.who,
+        visits: visits, first: first.start, last: visits[visits.length - 1].start,
+        ref: first.ref || visits.map(function (v) { return v.ref; }).filter(Boolean)[0] || '',
+        loc: first.loc || '', dev: first.dev || '',
+        // returning = came back on another visit, or GoatCounter already knew them before the log started
+        returning: visits.length > 1 || first.returning,
+        days: Object.keys(days).length,
+        cs: visits.some(function (v) { return v.steps.some(function (s) { return CASE_STUDIES.some(function (c) { return c.slug === s.slug; }); }); }),
+        reached: visits.some(function (v) { return v.actions.length > 0; })
+      };
+    }).filter(Boolean).sort(function (a, b) { return a.last < b.last ? 1 : -1; });
+  }
 
-  function sampleVisits() {
-    var now = Date.now(), H = 3600e3, mk = function (ago, ref, loc, dev, steps, acts) {
+  function dayKey(d) { d = new Date(d); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function timeLabel(sec) { return sec >= 300 ? '5m+' : sec >= 180 ? '3–5m' : sec >= 60 ? '1–3m' : sec >= 30 ? '30s–1m' : sec >= 10 ? '10–30s' : '<10s'; }
+  function personName(p) { return p.who ? p.who : p.vid ? 'Visitor ' + p.vid.slice(0, 4) : 'Visitor'; }
+
+  function samplePeople() {
+    var now = Date.now(), H = 3600e3;
+    var v = function (ago, ref, loc, dev, steps, acts) {
       return { start: new Date(now - ago * H).toISOString(), ref: ref, loc: loc, dev: dev, actions: acts || [], steps: steps.map(function (x) { return { slug: x[0], name: PAGE_NAMES[x[0]], time: x[1], scroll: x[2] }; }) };
     };
+    var p = function (vid, ab, who, visits, firstRet) {
+      var f = visits[visits.length - 1], days = {}; visits.forEach(function (x) { days[dayKey(x.start)] = 1; });
+      return { key: vid, vid: vid, ab: ab, who: who, visits: visits.slice().reverse(), first: f.start, last: visits[0].start, ref: f.ref, loc: f.loc, dev: f.dev,
+        returning: visits.length > 1 || !!firstRet, days: Object.keys(days).length,
+        cs: visits.some(function (x) { return x.steps.some(function (s) { return s.slug !== 'home' && s.slug !== 'home-b' && s.slug !== 'about'; }); }),
+        reached: visits.some(function (x) { return x.actions.length; }) };
+    };
     return [
-      mk(2, 'Greenhouse', 'Israel', 'Desktop', [['home', 30, 75], ['copycat-v2', 180, 90], ['cs2-funnel', 60, 50]], ['Opened resume']),
-      mk(5, 'LinkedIn', 'Israel', 'Phone', [['home', 10, 25], ['seller-platform', 30, 50]]),
-      mk(26, '', 'United States', 'Desktop', [['home', 10, 50], ['about', 30, 90]], ['Clicked LinkedIn']),
-      mk(30, 'Google', 'Israel', 'Desktop', [['home', 0, 0]]),
-      mk(52, 'Greenhouse', 'Germany', 'Desktop', [['home', 60, 90], ['unit-ep', 60, 75], ['copycat-v2', 30, 50]])
+      p('k7f2q9ab', 'B', 'wix', [v(1, '', 'Israel', 'Desktop', [['home-b', 30, 75], ['seller-platform', 180, 90]], ['Opened resume', 'Clicked LinkedIn']), v(23, 'LinkedIn', 'Israel', 'Desktop', [['home-b', 60, 90], ['copycat-v2', 180, 90]])]),
+      p('m3d8x1cc', 'A', null, [v(3, 'Greenhouse', 'Israel', 'Desktop', [['home', 30, 75], ['copycat-v2', 180, 90], ['cs2-funnel', 60, 50]], ['Opened resume'])]),
+      p('p0q4z7rt', 'B', null, [v(5, 'LinkedIn', 'Israel', 'Phone', [['home-b', 10, 25], ['seller-platform', 30, 50]])]),
+      p('a9c2w4ee', 'A', null, [v(26, '', 'United States', 'Desktop', [['home', 10, 50], ['about', 30, 90]], ['Clicked LinkedIn']), v(50, 'Google', 'United States', 'Desktop', [['home', 10, 25]])]),
+      p('r5t1y8uu', 'B', null, [v(52, 'Greenhouse', 'Germany', 'Desktop', [['home-b', 60, 90], ['unit-ep', 60, 75], ['copycat-v2', 30, 50]])])
     ];
+  }
+
+  var vlFilterMode = 'all';
+  document.querySelectorAll('#vlChips button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      vlFilterMode = b.dataset.f; vlShown = 25;
+      document.querySelectorAll('#vlChips button').forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+      renderVisits();
+    });
+  });
+
+  function renderDays(people) {
+    var box = $('vlDays'); box.textContent = '';
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    for (var i = 6; i >= 0; i--) {
+      var d = new Date(today - i * 864e5), k = dayKey(d);
+      var seen = people.filter(function (p) { return p.visits.some(function (v) { return dayKey(v.start) === k; }); });
+      var fresh = seen.filter(function (p) { return dayKey(p.first) === k && !p.visits[0].returning; }).length;
+      var c = el('div', 'vl-day');
+      c.appendChild(el('b', null, i === 0 ? 'Today' : i === 1 ? 'Yesterday' : d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' })));
+      c.appendChild(el('div', 'n', String(seen.length)));
+      var s1 = el('span'); s1.appendChild(el('i', null, String(fresh))); s1.appendChild(document.createTextNode(' new'));
+      var s2 = el('span'); s2.appendChild(el('i', null, String(seen.length - fresh))); s2.appendChild(document.createTextNode(' returning'));
+      c.appendChild(s1); c.appendChild(s2);
+      box.appendChild(c);
+    }
+  }
+
+  function renderABPeople(people) {
+    var t = $('abPeople'); t.textContent = '';
+    var hr = el('tr');
+    [['Version', ''], ['People', 'num'], ['Opened a case study', 'num'], ['Reached out / resume', 'num'], ['Came back', 'num']].forEach(function (h) { hr.appendChild(el('th', h[1], h[0])); });
+    var th = el('thead'); th.appendChild(hr); t.appendChild(th);
+    var tb = el('tbody');
+    var S = {};
+    ['A', 'B'].forEach(function (L) {
+      var g = people.filter(function (p) { return p.ab === L && !p.who; });
+      S[L] = { n: g.length, cs: g.filter(function (p) { return p.cs; }).length, re: g.filter(function (p) { return p.reached; }).length, back: g.filter(function (p) { return p.visits.length > 1; }).length };
+    });
+    ['A', 'B'].forEach(function (L) {
+      var s = S[L], o = S[L === 'A' ? 'B' : 'A'];
+      var r = function (k) { return s.n ? s[k] / s.n : 0; }, ro = function (k) { return o.n ? o[k] / o.n : 0; };
+      var tr = el('tr'), n = el('td'); n.appendChild(abVer(L)); tr.appendChild(n);
+      tr.appendChild(el('td', 'num', fmt.format(s.n)));
+      tr.appendChild(rateCell(s.cs, s.n, s.n && o.n && r('cs') > ro('cs')));
+      tr.appendChild(rateCell(s.re, s.n, s.n && o.n && r('re') > ro('re')));
+      tr.appendChild(rateCell(s.back, s.n, s.n && o.n && r('back') > ro('back')));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+  }
+
+  function visitRow(v) {
+    var li = el('li', 'visit'), d = new Date(v.start);
+    var when = el('div', 'v-when');
+    when.appendChild(el('b', null, d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })));
+    when.appendChild(el('span', null, d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + (v.ref ? ' · from ' + v.ref : '')));
+    li.appendChild(when);
+    var path = el('div', 'v-path');
+    v.steps.forEach(function (s, i) {
+      if (i) path.appendChild(el('span', 'v-arrow', '→'));
+      var b = el('div', 'v-step'); b.appendChild(el('b', null, s.name));
+      b.appendChild(el('span', null, timeLabel(s.time) + (s.scroll ? ' · scrolled ' + s.scroll + '%' : '')));
+      path.appendChild(b);
+    });
+    v.actions.forEach(function (a, i) { if (v.steps.length || i) path.appendChild(el('span', 'v-arrow', '→')); path.appendChild(el('span', 'v-act', a)); });
+    li.appendChild(path);
+    return li;
   }
 
   function renderVisits() {
     var list = $('vlList'); list.textContent = '';
-    var visits, st = vlStore();
-    if (state.mode !== 'live') { visits = sampleVisits(); vlNoteSet('Sample visits'); }
+    var people, st = vlStore();
+    if (state.mode !== 'live') { people = samplePeople(); vlNoteSet('Sample visitors'); }
     else {
-      visits = buildSessions(st.hits);
+      people = buildPeople(st.hits);
       var since = Date.now() - state.range * 864e5;
-      visits = visits.filter(function (v) { return new Date(v.start).getTime() >= since; });
+      people = people.filter(function (p) { return new Date(p.last).getTime() >= since; });
       vlNoteSet(st.at ? 'Updated ' + new Date(st.at).toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '');
     }
-    var q = ($('vlFilter').value || '').trim().toLowerCase();
-    if (q) visits = visits.filter(function (v) {
-      return [v.ref || 'direct', v.loc, v.dev].concat(v.steps.map(function (s) { return s.name; }), v.actions).join(' ').toLowerCase().indexOf(q) > -1;
+    renderDays(people);
+    renderABPeople(people);
+
+    var f = vlFilterMode;
+    if (f !== 'all') people = people.filter(function (p) {
+      return f === 'new' ? !p.returning : f === 'returning' ? p.returning : f === 'named' ? !!p.who : p.ab === f;
     });
-    if (!visits.length) {
+    var q = ($('vlFilter').value || '').trim().toLowerCase();
+    if (q) people = people.filter(function (p) {
+      return [personName(p), p.ref || 'direct', p.loc, p.dev, p.ab ? 'version ' + p.ab : ''].concat.apply([], p.visits.map(function (v) {
+        return v.steps.map(function (s) { return s.name; }).concat(v.actions, [v.ref]);
+      })).join(' ').toLowerCase().indexOf(q) > -1;
+    });
+    if (!people.length) {
       list.appendChild(el('li', 'empty', state.mode === 'live' && !st.at
         ? 'No log yet. Click "Update log". Visits are recorded from the day "Individual pageviews" was turned on.'
-        : 'No visits match this period or filter.'));
+        : 'No visitors match this period or filter.'));
       $('vlMore').hidden = true; return;
     }
-    visits.slice(0, vlShown).forEach(function (v) {
-      var li = el('li', 'visit'), d = new Date(v.start);
-      var when = el('div', 'v-when');
-      when.appendChild(el('b', null, d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })));
-      when.appendChild(el('span', null, d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })));
-      li.appendChild(when);
-      var body = el('div'), meta = el('div', 'v-meta');
-      meta.appendChild(el('span', 'tag src', v.ref ? 'From ' + v.ref : 'Direct'));
-      if (v.loc) meta.appendChild(el('span', 'tag', v.loc));
-      if (v.dev) meta.appendChild(el('span', 'tag', v.dev));
-      if (v.returning) meta.appendChild(el('span', 'tag', 'Returning'));
-      body.appendChild(meta);
-      var path = el('div', 'v-path');
-      v.steps.forEach(function (s, i) {
-        if (i) path.appendChild(el('span', 'v-arrow', '→'));
-        var b = el('div', 'v-step'); b.appendChild(el('b', null, s.name));
-        b.appendChild(el('span', null, timeLabel(s.time) + (s.scroll ? ' · scrolled ' + s.scroll + '%' : '')));
-        path.appendChild(b);
-      });
-      v.actions.forEach(function (a) { path.appendChild(el('span', 'v-arrow', '→')); path.appendChild(el('span', 'v-act', a)); });
-      body.appendChild(path); li.appendChild(body); list.appendChild(li);
+    people.slice(0, vlShown).forEach(function (p) {
+      var li = el('li', 'person');
+      var head = el('div', 'p-head');
+      var nm = el('span', 'p-name', personName(p));
+      var fd = new Date(p.first);
+      nm.appendChild(el('small', null, p.returning
+        ? p.visits.length + ' visit' + (p.visits.length > 1 ? 's' : '') + (p.days > 1 ? ' over ' + p.days + ' days' : '') + ' · first seen ' + fd.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })
+        : 'First visit'));
+      head.appendChild(nm);
+      if (p.who) head.appendChild(el('span', 'tag who', 'Named link'));
+      if (p.ab) head.appendChild(el('span', 'tag ver', 'Version ' + p.ab));
+      head.appendChild(el('span', 'tag ' + (p.returning ? 'ret' : ''), p.returning ? 'Returning' : 'New'));
+      head.appendChild(el('span', 'tag src', p.ref ? 'From ' + p.ref : 'Direct'));
+      if (p.loc) head.appendChild(el('span', 'tag', p.loc));
+      if (p.dev) head.appendChild(el('span', 'tag', p.dev));
+      li.appendChild(head);
+      var ul = el('ul', 'p-visits');
+      p.visits.slice().reverse().forEach(function (v) { ul.appendChild(visitRow(v)); });
+      li.appendChild(ul);
+      list.appendChild(li);
     });
-    $('vlMore').hidden = visits.length <= vlShown;
+    $('vlMore').hidden = people.length <= vlShown;
   }
 
   $('vlUpdate').addEventListener('click', updateVisits);

@@ -1,0 +1,91 @@
+/* ─────────────────────────────────────────
+   A/B test · version B nav on inner pages
+   Active only when <html> has .ab-b (set in each page's <head>
+   for visitors who see homepage version B). Matches home-b.html.
+───────────────────────────────────────── */
+html.ab-b .nav-bar,
+html.ab-b .glass-nav {
+  background: #F5F3EF !important;
+  border: 1px solid #D3CEC5 !important;
+  box-shadow: 0 8px 20px -12px rgba(60, 45, 30, .35) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* No "Home" (in version B, "Work" is the homepage) and no divider */
+html.ab-b .nav-bar .nav-links > li:first-child,
+html.ab-b .glass-nav > .nav-link:first-child,
+html.ab-b .nav-bar .nav-divider,
+html.ab-b .glass-nav .nav-divider { display: none !important; }
+
+/* Links + Contact: same warm grey text, beige highlight */
+html.ab-b .nav-bar .nav-links a,
+html.ab-b .glass-nav .nav-link,
+html.ab-b .nav-bar .nav-cta,
+html.ab-b .glass-nav .nav-cta {
+  font-family: 'Poppins', sans-serif;
+  color: #5A544C !important;
+  background: none !important;
+  font-weight: 400 !important;
+  border-radius: 999px;
+  opacity: 1 !important;
+  transition: background .2s, color .2s;
+}
+html.ab-b .nav-bar .nav-links a:hover,
+html.ab-b .glass-nav .nav-link:hover,
+html.ab-b .nav-bar .nav-cta:hover,
+html.ab-b .glass-nav .nav-cta:hover,
+html.ab-b .nav-bar .nav-cta[aria-expanded="true"],
+html.ab-b .glass-nav .nav-cta[aria-expanded="true"],
+html.ab-b .nav-bar .nav-links a.active,
+html.ab-b .glass-nav .nav-link.active {
+  background: #E2DED6 !important;
+  color: #1E1E1E !important;
+}
+html.ab-b .nav-bar .nav-links a.active,
+html.ab-b .glass-nav .nav-link.active { font-weight: 500 !important; }
+
+/* Desktop sizing to match home-b.html */
+@media (min-width: 769px) {
+  html.ab-b .nav-bar,
+  html.ab-b .glass-nav { padding: 6px !important; gap: 4px !important; }
+  html.ab-b .nav-bar .nav-links { gap: 4px; }
+  html.ab-b .nav-bar .nav-links a,
+  html.ab-b .glass-nav .nav-link,
+  html.ab-b .nav-bar .nav-cta,
+  html.ab-b .glass-nav .nav-cta {
+    font-size: 14px !important;
+    padding: 10px 16px !important;
+    line-height: normal;
+  }  html.ab-b .nav-bar .nav-cta { position: relative; top: 2px; } /* optical align with link text */
+}
+
+/* Phones: even, readable items like home-b.html */
+@media (max-width: 768px) {
+  html.ab-b .nav-bar,
+  html.ab-b .glass-nav {
+    padding: 4px !important;
+    gap: 0 !important;
+    width: calc(100vw - 40px) !important;
+    max-width: 480px !important;
+    justify-content: space-between !important;
+  }
+  html.ab-b .nav-bar .nav-links { flex: 3; justify-content: space-between !important; }
+  html.ab-b .nav-bar .nav-links > li { flex: 1; display: flex; }
+  html.ab-b .nav-bar .nav-links > li:first-child { display: none !important; }
+  html.ab-b .nav-bar .nav-contact-wrap { flex: 1; }
+  html.ab-b .glass-nav > .nav-link,
+  html.ab-b .glass-nav .nav-contact-wrap { flex: 1; }
+  html.ab-b .nav-bar .nav-links a,
+  html.ab-b .glass-nav .nav-link,
+  html.ab-b .nav-bar .nav-cta,
+  html.ab-b .glass-nav .nav-cta {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    font-size: 14px !important;
+    padding: 12px 0 !important;
+    min-height: 44px;
+    line-height: normal;
+  }
+}

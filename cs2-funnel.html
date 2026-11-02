@@ -419,6 +419,9 @@ figure.phone-pair img{max-width:420px;margin-inline:auto;background:transparent}
   <link rel="stylesheet" href="mobile-polish.css">
   <script src="analytics-tracker.js" defer></script>
   <script src="mobile-zoom.js" defer></script>
+  <!-- A/B test: version B visitors get the version B nav (see ab-b-nav.css) -->
+  <script>(function(){var v=null;try{v=localStorage.getItem('abHome')}catch(e){}if(v!=='a'&&v!=='b'){try{var m=document.cookie.match(/(?:^|; )abHome=([ab])/);v=m&&m[1]}catch(e){}}if(v==='b')document.documentElement.classList.add('ab-b');})();</script>
+  <link rel="stylesheet" href="ab-b-nav.css">
 </head>
 <body>
 

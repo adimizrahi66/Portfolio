@@ -31,6 +31,8 @@
         var m = h.match(/^(?:\.\/|\/)?(?:index\.html)?(#.*)?$/);
         if (h && m && (h.indexOf('index.html') > -1 || h === '/' || h === './')) a.setAttribute('href', 'home-b.html' + (m[1] || ''));
       });
+      var cta = document.getElementById('contactBtn');
+      if (cta && /Contact\s*\+/.test(cta.textContent)) cta.textContent = 'Contact';
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fixHomeLinks); else fixHomeLinks();
   }

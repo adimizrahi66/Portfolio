@@ -17,7 +17,7 @@
         try { document.cookie = 'abHome=' + val + '; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {}
       }
       if (q === 'a' || q === 'b') { v = q; remember(v, 'assigned'); }
-      else { v = 'b'; remember(v, 'direct'); }
+      else { v = 'b'; remember(v, 'full'); }
       if (v === 'b') location.replace('home-b.html' + location.search + location.hash);
     })();
   </script>

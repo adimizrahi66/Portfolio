@@ -42,6 +42,11 @@
   var abTag = (abV === 'a' || abV === 'b') ? abV.toUpperCase() + (abSrc === 'assigned' ? '-assigned' : '') : null;
   var AB_EVENTS = /^(resume-open|contact-|cs-open|home-view)/;
 
+  /* ── A/B test: desktop card order on home-b (set by home-b.html) ── */
+  var abO = null, abOSrc = null;
+  try { abO = localStorage.getItem('abOrder'); abOSrc = localStorage.getItem('abOrderSrc'); } catch (e) {}
+  var orderTag = (abV === 'b' && (abO === 'a' || abO === 'b')) ? abO.toUpperCase() + (abOSrc === 'assigned' ? '-assigned' : '') : null;
+
   /* ── Visitor ID: anonymous random ID per browser, so one person's visits connect across days.
      ?who=name (e.g. adimiz.com/?v=b&who=wix) labels this browser from then on ── */
   function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} try { document.cookie = k + '=' + v + '; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {} }
@@ -65,6 +70,7 @@
   function send(name, title) {
     sendRaw(name, title);
     if (abTag && AB_EVENTS.test(name)) sendRaw('ab/' + abTag + '/' + name, '[' + abTag + '] ' + (title || name));
+    if (orderTag && AB_EVENTS.test(name)) sendRaw('order/' + orderTag + '/' + name, '[Order ' + orderTag + '] ' + (title || name));
   }
 
   function sendRaw(name, title) {
@@ -94,6 +100,7 @@
       t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, 'clarity', 'script', CLARITY_ID);
+    if (orderTag) { try { window.clarity('set', 'card_order', orderTag); } catch (e) {} }
     if (abTag) { try { window.clarity('set', 'home_variant', abV.toUpperCase()); window.clarity('set', 'variant_source', abSrc || 'unknown'); } catch (e) {} }
     try { window.clarity('identify', vid, null, null, who || vid); window.clarity('set', 'visitor_id', vid); if (who) window.clarity('set', 'visitor_name', who); } catch (e) {}
   }

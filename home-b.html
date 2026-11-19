@@ -22,6 +22,24 @@
       }
     })();
   </script>
+  <!-- ─── A/B TEST: desktop card order ───
+       A = CopyCat top-left, Seller top-right · B = Seller top-left, CopyCat top-right
+       ?o=a / ?o=b → force (tagged "assigned") · otherwise random 50/50 on desktop, remembered · mobile not in test -->
+  <script>
+    (function () {
+      var o = null, q = null;
+      try { q = new URLSearchParams(location.search).get('o'); } catch (e) {}
+      function keep(val, src) {
+        try { localStorage.setItem('abOrder', val); localStorage.setItem('abOrderSrc', src); } catch (e) {}
+      }
+      if (q === 'a' || q === 'b') { o = q; keep(o, 'assigned'); }
+      else {
+        try { o = localStorage.getItem('abOrder'); } catch (e) {}
+        if ((o !== 'a' && o !== 'b') && window.innerWidth >= 900) { o = Math.random() < 0.5 ? 'a' : 'b'; keep(o, 'random'); }
+      }
+      if (o === 'a' || o === 'b') document.documentElement.classList.add('order-' + o);
+    })();
+  </script>
   <title>Adi Mizrahi — Senior Product Designer</title>
   <meta name="description" content="Adi Mizrahi, Senior Product Designer. Design that moves the needle across B2C, SaaS and AI products.">
   <meta name="robots" content="noindex">
@@ -181,6 +199,10 @@
     }
     .hero-actions { display: flex; gap: 10px; margin-top: 16px; }
 
+    /* ─── A/B card order · version A: CopyCat top-left, Seller top-right ─── */
+    html.order-a .stage .card-seller  { --r: 4deg !important;  --o: top right !important; left: auto !important; right: 35px !important; top: 56px !important; }
+    html.order-a .stage .card-copycat { --r: -4deg !important; --o: top left !important;  right: auto !important; left: 30px !important; top: 38px !important; }
+
     /* ─── Mobile ─── */
     .mob { display: none; }
     @media (max-width: 899px) {
@@ -263,7 +285,7 @@
     </div>
 
     <!-- Top-left -->
-    <a class="card" href="seller-platform.html" style="--r: -4deg; --o: top left; left: 30px; top: 38px;">
+    <a class="card card-seller" href="seller-platform.html" style="--r: -4deg; --o: top left; left: 30px; top: 38px;">
       <img class="shot" src="images%20and%20videos/home-b-seller.webp" alt="Seller Platform overview screen on a laptop" width="1100" height="648">
       <span class="card-text">
         <img class="card-logo" src="images%20and%20videos/black%20logo%20roundforest.svg" alt="Roundforest" width="117" height="13">
@@ -274,7 +296,7 @@
     </a>
 
     <!-- Top-right -->
-    <a class="card" href="copycat-v2.html" style="--r: 4deg; --o: top right; right: 35px; top: 56px;">
+    <a class="card card-copycat" href="copycat-v2.html" style="--r: 4deg; --o: top right; right: 35px; top: 56px;">
       <img class="shot" src="images%20and%20videos/home-b-copycat.webp" alt="CopyCat dashboard on a laptop" width="1100" height="648">
       <span class="card-text">
         <img class="card-logo" src="images%20and%20videos/black%20logo%20roundforest.svg" alt="Roundforest" width="117" height="13">

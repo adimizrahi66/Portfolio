@@ -311,7 +311,7 @@
     <div class="kpis" id="kpis"></div>
 
     <section class="card span-12" id="abCard">
-      <div class="card-h"><h2>Homepage A/B test</h2><span class="hint">A = current homepage · B = new homepage (home-b) · random 50/50 split</span></div>
+      <div class="card-h"><h2>Homepage A/B test</h2><span class="hint">Ended Nov 19 · A = current homepage · B = new homepage (home-b) · B now gets 100%</span></div>
       <details class="ab-rules">
         <summary>Who sees A and who sees B</summary>
         <ul>
@@ -331,6 +331,25 @@
       <div class="table-scroll"><table id="abAssigned"></table></div>
       <div class="ab-sub">By person · from the visitor log · named visitors excluded</div>
       <div class="table-scroll"><table id="abPeople"></table></div>
+    </section>
+
+    <section class="card span-12" id="orderCard">
+      <div class="card-h"><h2>Card order A/B test</h2><span class="hint">From Nov 19 · home-b, desktop only · A = CopyCat top-left · B = Seller Platform top-left · random 50/50</span></div>
+      <details class="ab-rules">
+        <summary>Who sees A and who sees B</summary>
+        <ul>
+          <li>Desktop visitors (900px wide or more) → random 50/50 on the first homepage visit. That browser keeps the same order.</li>
+          <li><b>A</b>: CopyCat top-left, Seller Platform top-right · <b>B</b>: Seller Platform top-left, CopyCat top-right. Bottom cards are the same.</li>
+          <li><b>adimiz.com/?o=a</b> or <b>?o=b</b> → force an order. Counted as "your test links", not in the comparison.</li>
+          <li>Mobile visitors are not in this test (same list for everyone).</li>
+        </ul>
+      </details>
+      <div class="ab-verdict" id="orderVerdict"></div>
+      <div class="table-scroll"><table id="orderTable"></table></div>
+      <div class="ab-sub">Which case study they opened · random split only</div>
+      <div class="table-scroll"><table id="orderCsTable"></table></div>
+      <div class="ab-sub" id="orderAssignedH" hidden>Visitors from your test links · not part of the comparison</div>
+      <div class="table-scroll"><table id="orderAssigned"></table></div>
     </section>
 
     <section class="card span-12">
@@ -599,6 +618,14 @@
       events['ab/' + x[0] + '/resume-open'] = Math.round(hv * x[3]);
       events['ab/' + x[0] + '/contact-linkedin'] = Math.round(hv * x[4]);
     });
+    [['A', 0.4, 0.42, 0.12, 0.07], ['B', 0.4, 0.36, 0.11, 0.06]].forEach(function (x) {
+      var hv = Math.round(pages['home-b'] * x[1] * 2);
+      events['order/' + x[0] + '/home-view'] = hv;
+      var o = Math.round(hv * x[2]);
+      [0.3, 0.3, 0.25, 0.15].forEach(function (w, i) { events['order/' + x[0] + '/cs-open-' + CASE_STUDIES[i].slug] = Math.round(o * w); });
+      events['order/' + x[0] + '/resume-open'] = Math.round(hv * x[3]);
+      events['order/' + x[0] + '/contact-linkedin'] = Math.round(hv * x[4]);
+    });
     var dist = function (list) { return list.map(function (x) { return { name: x[0], n: Math.max(1, Math.round(x[1] * f)) }; }); };
     return {
       visitors: total, prevVisitors: Math.round(total * 0.82), daily: daily, pages: pages, events: events,
@@ -686,6 +713,7 @@
     t.appendChild(tb);
 
     renderAB(d);
+    renderOrder(d);
     renderAttention(d);
     renderVisits();
 
@@ -697,20 +725,23 @@
   }
 
   /* ── Homepage A/B test ── */
-  function abStats(ev, tag) {
-    var g = function (k) { return ev['ab/' + tag + '/' + k] || 0; };
+  function abStats(ev, tag, pre) {
+    pre = pre || 'ab';
+    var g = function (k) { return ev[pre + '/' + tag + '/' + k] || 0; };
     var cs = {}; CASE_STUDIES.forEach(function (c) { cs[c.slug] = g('cs-open-' + c.slug); });
     return {
       views: g('home-view'),
-      opens: sumEvents(ev, 'ab/' + tag + '/cs-open-'),
+      opens: sumEvents(ev, pre + '/' + tag + '/cs-open-'),
       resume: g('resume-open'),
-      contact: sumEvents(ev, 'ab/' + tag + '/contact-'),
+      contact: sumEvents(ev, pre + '/' + tag + '/contact-'),
       cs: cs
     };
   }
-  function abVer(letter, sub) {
+  var AB_LABELS = { A: 'Current homepage', B: 'New homepage' };
+  var ORDER_LABELS = { A: 'CopyCat top-left', B: 'Seller top-left' };
+  function abVer(letter, sub, labels) {
     var w = el('span', 'ab-ver'), i = el('i', letter.toLowerCase(), letter);
-    w.appendChild(i); w.appendChild(el('span', null, letter === 'A' ? 'Current homepage' : 'New homepage'));
+    w.appendChild(i); w.appendChild(el('span', null, (labels || AB_LABELS)[letter]));
     if (sub) w.appendChild(el('small', null, sub));
     return w;
   }
@@ -723,14 +754,14 @@
     if (lead) td.appendChild(el('span', 'ab-lead', 'leads'));
     return td;
   }
-  function abTable(t, rows) {
+  function abTable(t, rows, labels) {
     t.textContent = '';
     var hr = el('tr');
     [['Version', ''], ['Homepage visitors', 'num'], ['Case study opens', 'num'], ['Open rate', 'num'], ['Resume opens', 'num'], ['Contact clicks', 'num'], ['Reach-out rate', 'num']].forEach(function (h) { hr.appendChild(el('th', h[1], h[0])); });
     var th = el('thead'); th.appendChild(hr); t.appendChild(th);
     var tb = el('tbody');
     rows.forEach(function (r) {
-      var tr = el('tr'), n = el('td'); n.appendChild(abVer(r.letter, r.sub)); tr.appendChild(n);
+      var tr = el('tr'), n = el('td'); n.appendChild(abVer(r.letter, r.sub, labels)); tr.appendChild(n);
       tr.appendChild(el('td', 'num', fmt.format(r.s.views)));
       tr.appendChild(el('td', 'num', fmt.format(r.s.opens)));
       tr.appendChild(rateCell(r.s.opens, r.s.views, r.leadOpen));
@@ -792,6 +823,58 @@
     if (Ba.views || Ba.opens) rows.push({ letter: 'B', sub: 'test link', s: Ba });
     $('abAssignedH').hidden = !rows.length;
     if (rows.length) abTable($('abAssigned'), rows); else $('abAssigned').textContent = '';
+  }
+
+  /* ── Card order A/B test (home-b, desktop) ── */
+  function renderOrder(d) {
+    var A = abStats(d.events, 'A', 'order'), B = abStats(d.events, 'B', 'order');
+    var rA = A.views ? A.opens / A.views : 0, rB = B.views ? B.opens / B.views : 0;
+    var cA = A.views ? (A.resume + A.contact) / A.views : 0, cB = B.views ? (B.resume + B.contact) / B.views : 0;
+    var MIN = 100;
+    var v = $('orderVerdict'); v.textContent = ''; v.className = 'ab-verdict';
+    if (!A.views && !B.views) {
+      v.className += ' early';
+      v.appendChild(el('b', null, 'No test data yet'));
+      v.appendChild(el('span', null, 'Results show up here once desktop visitors land on the homepage.'));
+    } else {
+      var leader = rA === rB ? null : (rB > rA ? 'B' : 'A');
+      var diff = Math.abs(Math.round(rB * 100) - Math.round(rA * 100));
+      var lead = leader ? 'Version ' + leader + ' (' + ORDER_LABELS[leader] + ') leads on case study opens by ' + diff + ' points' : 'Both orders are tied on case study opens';
+      if (A.views < MIN || B.views < MIN) {
+        v.className += ' early';
+        v.appendChild(el('b', null, 'Too early to call'));
+        v.appendChild(el('span', null, 'So far: ' + lead.charAt(0).toLowerCase() + lead.slice(1) + '. A has ' + fmt.format(A.views) + ' and B has ' + fmt.format(B.views) + ' homepage visitors. Aim for about ' + MIN + ' each before deciding.'));
+      } else {
+        v.appendChild(el('b', null, lead));
+        v.appendChild(el('span', null, 'Open rate ' + pct(A.opens, A.views) + '% (A) vs ' + pct(B.opens, B.views) + '% (B) · reach-out rate ' + pct(A.resume + A.contact, A.views) + '% vs ' + pct(B.resume + B.contact, B.views) + '%.'));
+      }
+    }
+    abTable($('orderTable'), [
+      { letter: 'A', s: A, leadOpen: rA > rB, leadReach: cA > cB },
+      { letter: 'B', s: B, leadOpen: rB > rA, leadReach: cB > cA }
+    ], ORDER_LABELS);
+
+    var t = $('orderCsTable'); t.textContent = '';
+    var hr = el('tr');
+    [['Case study', ''], ['A · opens', 'num'], ['A · % of visitors', 'num'], ['B · opens', 'num'], ['B · % of visitors', 'num']].forEach(function (h) { hr.appendChild(el('th', h[1], h[0])); });
+    var th = el('thead'); th.appendChild(hr); t.appendChild(th);
+    var tb = el('tbody');
+    CASE_STUDIES.forEach(function (c) {
+      var tr = el('tr'), n = el('td'); n.appendChild(el('span', 'cs-name', c.name)); tr.appendChild(n);
+      tr.appendChild(el('td', 'num', fmt.format(A.cs[c.slug])));
+      tr.appendChild(rateCell(A.cs[c.slug], A.views, false));
+      tr.appendChild(el('td', 'num', fmt.format(B.cs[c.slug])));
+      tr.appendChild(rateCell(B.cs[c.slug], B.views, false));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+
+    var Aa = abStats(d.events, 'A-assigned', 'order'), Ba = abStats(d.events, 'B-assigned', 'order');
+    var rows = [];
+    if (Aa.views || Aa.opens) rows.push({ letter: 'A', sub: 'test link', s: Aa });
+    if (Ba.views || Ba.opens) rows.push({ letter: 'B', sub: 'test link', s: Ba });
+    $('orderAssignedH').hidden = !rows.length;
+    if (rows.length) abTable($('orderAssigned'), rows, ORDER_LABELS); else $('orderAssigned').textContent = '';
   }
 
   /* ── Time on page ── */

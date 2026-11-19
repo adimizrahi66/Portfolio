@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- ─── A/B TEST: homepage ───
        ?v=a / ?v=b → force a version (tagged "assigned")
-       otherwise → random 50/50, remembered per browser
+       otherwise → 100% version B
        version B lives in home-b.html -->
   <script>
     (function () {
@@ -17,12 +17,7 @@
         try { document.cookie = 'abHome=' + val + '; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {}
       }
       if (q === 'a' || q === 'b') { v = q; remember(v, 'assigned'); }
-      else {
-        try { v = localStorage.getItem('abHome'); } catch (e) {}
-        if (v !== 'a' && v !== 'b') v = ck;
-        if (v !== 'a' && v !== 'b') { v = Math.random() < 0.5 ? 'a' : 'b'; remember(v, 'random'); }
-        else if (!ck) { try { document.cookie = 'abHome=' + v + '; path=/; max-age=31536000; SameSite=Lax'; } catch (e) {} }
-      }
+      else { v = 'b'; remember(v, 'direct'); }
       if (v === 'b') location.replace('home-b.html' + location.search + location.hash);
     })();
   </script>
